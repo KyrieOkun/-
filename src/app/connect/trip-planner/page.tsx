@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
 import { cities } from "@/data/cities";
 import { vehicles } from "@/data/vehicles";
+import { stations } from "@/data/charging";
 import { Container, Eyebrow } from "@/components/ui/primitives";
 import { TripPlanner } from "@/components/connect/trip-planner";
 
@@ -23,7 +24,7 @@ export default async function TripPlannerPage({ searchParams }: { searchParams: 
         </Container>
       </section>
       <Container className="py-12 pb-24">
-        <TripPlanner cities={cities} vehicles={vehicles.filter((v) => v.availability !== "overseas")} initialVehicle={vehicle} />
+        <TripPlanner cities={cities} vehicles={vehicles.filter((v) => v.availability !== "overseas")} initialVehicle={vehicle} stations={stations.map((s) => ({ id: s.id, name: s.name, network: s.network, lat: s.lat, lng: s.lng, maxKw: s.maxKw, cityId: s.cityId }))} />
       </Container>
     </div>
   );

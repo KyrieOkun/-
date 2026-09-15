@@ -11,10 +11,11 @@ import { useI18n } from "@/lib/i18n/provider";
 import { cn, formatCNY } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge, FieldError, Label, Select } from "@/components/ui/primitives";
+import { NetworkMap, type MapStation } from "@/components/charging/network-map";
 
 const NETWORK_LABEL = { tesla: { zh: "特斯拉超充", en: "Tesla" }, xiaomi: { zh: "小米超充", en: "Xiaomi" }, partner: { zh: "合作网络", en: "Partner" } } as const;
 
-export function TripPlanner({ cities, vehicles, initialVehicle }: { cities: City[]; vehicles: Vehicle[]; initialVehicle?: string }) {
+export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { cities: City[]; vehicles: Vehicle[]; initialVehicle?: string; stations: MapStation[] }) {
   const { t, pick, locale } = useI18n();
   const [originId, setOriginId] = useState("beijing");
   const [destinationId, setDestinationId] = useState("shanghai");
@@ -159,6 +160,17 @@ export function TripPlanner({ cities, vehicles, initialVehicle }: { cities: City
                 {plan.fuelLitres ? <span className="flex items-center gap-1"><Fuel className="size-3.5" />{locale === "zh" ? "增程油耗" : "Fuel"} {plan.fuelLitres} L</span> : null}
               </div>
             </div>
+
+            <NetworkMap
+              stations={stations}
+              route={[
+                { lat: plan.origin.lat, lng: plan.origin.lng, label: plan.origin.name, kind: "origin" },
+                ...plan.via.map((c) => ({ lat: c.lat, lng: c.lng, label: c.name, kind: "via" as const })),
+                { lat: plan.destination.lat, lng: plan.destination.lng, label: plan.destination.name, kind: "destination" },
+              ]}
+              stops={plan.stops.map((s) => ({ lat: s.station.lat, lng: s.station.lng, label: s.station.name, network: s.station.network, kind: "stop" as const }))}
+              compact
+            />
 
             <RouteStrip plan={plan} />
 
