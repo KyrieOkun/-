@@ -74,15 +74,19 @@ export async function POST(request: Request) {
     paidAt: now,
   };
   await store.put("orders", order, { owner: user?.id });
-  await store.setLookup("orders", "phone", `${order.id}:${parsed.data.buyer.phone}`, order.id);
+  // Secondary index by buyer phone so guest orders surface once the buyer signs up.
+  await store.put("orders", order, { owner: `phone:${parsed.data.buyer.phone}` });
   return created({ order });
 }
 
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return fail("UNAUTHORIZED", 401);
-  const orders = await store.list<OrderRecord>("orders", user.id);
-  orders.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const own = await store.list<OrderRecord>("orders", user.id);
+  const byPhone = user.phone ? await store.list<OrderRecord>("orders", `phone:${user.phone}`) : [];
+  const merged = new Map<string, OrderRecord>();
+  for (const o of [...own, ...byPhone]) merged.set(o.id, o);
+  const orders = Array.from(merged.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   return ok({ orders });
 }
 

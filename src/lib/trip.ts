@@ -53,7 +53,7 @@ export interface TripError {
 const HIGHWAY_FACTOR = 0.74; // CLTC → sustained 100 km/h real-world
 const SEASON_FACTOR = { mild: 1, summer: 0.95, winter: 0.8 } as const;
 const AVERAGE_SPEED_KMH = 92;
-const ROAD_FACTOR = 1.2;
+const ROAD_FACTOR = 1.12; // per-hop detour on top of dense waypoint routing
 const MAX_EDGE_KM = 360;
 const STATION_SNAP_KM = 70;
 const RESERVE_SOC = 8;
