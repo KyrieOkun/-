@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 小米汽车 × 特斯拉 高级定制中心 · MI × TESLA ATELIER
 
-## Getting Started
+> 两大电动先锋，一个定制殿堂。  
+> 面向中国大陆上线的联名高级定制官网：全系车型在线选配、跨品牌联动、充电互通、行程规划、数字钥匙、置换与服务预约，桌面 / 平板 / 手机三端自适应，中英双语。
 
-First, run the development server:
+![CI](https://github.com/KyrieOkun/-/actions/workflows/ci.yml/badge.svg)
+
+---
+
+## 功能总览
+
+| 模块 | 路径 | 说明 |
+| --- | --- | --- |
+| 首页 | `/` | 全屏车型陈列（Tesla / 小米官网式分屏）、联动亮点、充电网络、定制工坊、资讯 |
+| 车型 | `/vehicles` `/vehicles/[slug]` | 10 款在售车型（新一代 SU7、YU7 系列、SU7 Ultra、YU7 GT、澎程 N90、Model 3 / Y / S / X、Cybertruck）品牌 / 车身 / 排序筛选，详情页含版本、亮点、颜色轮毂内饰、图集、参数、质保、JSON-LD |
+| 在线选配 | `/vehicles/[slug]/design` | 版本 → 车漆 → 轮毂 → 内饰 → 选装，实时计价（含 2026-2027 购置税减半估算、月供、交付周期、续航修正），URL 可分享 |
+| 车型对比 | `/compare` | 最多 4 款跨品牌对比，版本切换，仅显示差异 |
+| 联动中心 | `/connect` | 九大联动能力总览与四步接入 |
+| 跨品牌车库 | `/connect/garage` | 登录后添加小米 / 特斯拉车辆，实时状态（电量、续航、位置、胎压、软件版本）与远程控制（锁车、空调、闪灯、充电、哨兵、温度） |
+| 行程规划 | `/connect/trip-planner` | 250+ 城市节点公路图 + 470+ 超充站，按车型真实能耗与充电曲线规划特斯拉 / 小米混合补能方案 |
+| 数字钥匙 | `/connect/keys` | 手机 / 手表 / NFC 钥匙，共享钥匙（驾驶 / 仅解锁 / 代客，有效期，撤销） |
+| 生态互联 | `/connect/ecosystem` | 人车家场景编排（如果…那么…）、功能兼容矩阵 |
+| 软件更新 | `/connect/ota` | 澎湃 OS 与 Tesla 软件版本时间线 |
+| 充电 | `/charging` | 网络数据、跨品牌互通权益、站点实时空闲查询（每分钟刷新，导航跳转高德）、家充桩、费用说明 |
+| 定制工坊 | `/atelier` | 限定车漆、手工内饰、碳纤维套件、私享交付；预约定制顾问 |
+| 试驾 / 订购 / 置换 / 服务 | `/test-drive` `/order` `/order/[id]` `/trade-in` `/service` | 完整表单校验、订单确认与进度查询、置换估价与联名补贴、服务预约 |
+| 账户 | `/account` | 注册 / 登录（手机号或邮箱）、One ID 绑定小米 / Tesla 账号、订单、隐私中心 |
+| 资讯 / 门店 / 支持 / 法律 | `/news` `/stores` `/support` `/legal/*` | 资讯分类与详情、14 家门店、FAQ（含 FAQPage JSON-LD）、隐私政策与服务条款（PIPL 合规结构） |
+
+### 车型资料来源（2026 年 9 月核实）
+
+- 小米：新一代 SU7（2026-03-19 上市，21.99 / 24.99 / 30.39 万，CLTC 720 / 902 / 835 km，全系激光雷达 + Thor 700 TOPS）、SU7 Ultra（52.99 / 62.99 / 81.49 万）、YU7 系列（2026-05-21 升级，23.35 – 32.99 万）、YU7 GT（38.99 / 42.99 万）、澎程 N90（2026-09-07 上市，26.99 / 29.99 万）。
+- 特斯拉中国：2026 款 Model 3（23.55 – 33.95 万）、Model Y（26.35 – 33.95 万，含六座 Model Y L 33.9 万）、Model S / X 全轮驱动现车（84.29 / 88.29 万）、Cybertruck（海外车型，登记关注）。参数取自 tesla.cn 参数表。
+- 充电网络：特斯拉中国大陆 2,100+ 超充站 / 12,000+ 桩，1,000+ 站向非特斯拉车辆开放；小米充电地图 170 万+ 桩（17 万+ 超充）。
+
+价格与参数以品牌官方最新公布为准，站内已在相关页面标注。
+
+---
+
+## 技术栈
+
+- **Next.js 15 (App Router) · React 19 · TypeScript 严格模式**
+- **Tailwind CSS v4** 设计系统（Tesla 中性灰阶 + 小米橙 / 特斯拉红点缀 + 定制金）
+- **Zod** 请求校验，**jose** 会话 JWT（httpOnly Cookie），`scrypt` 密码哈希
+- 持久化：Upstash Redis（REST，零依赖）或内存存储（开发 / 预览）
+- **Vitest + Testing Library**：44 项单元 / 组件测试（计价、购置税、行程规划、置换、i18n 键一致性、数据完整性、鉴权、组件渲染）
+- SEO：`sitemap.xml`、`robots.txt`、Open Graph 图、Car / NewsArticle / FAQPage JSON-LD、canonical
+- PWA：`manifest.webmanifest` 与动态生成的图标
+- 安全：CSP、HSTS、X-Frame-Options、Referrer-Policy、Permissions-Policy、速率限制
+
+---
+
+## 本地开发
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # 填写 AUTH_SECRET（≥16 字符）
+npm run dev                  # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+常用脚本：
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| 命令 | 说明 |
+| --- | --- |
+| `npm run dev` | 开发服务器 |
+| `npm run lint` | ESLint（零警告） |
+| `npm run typecheck` | TypeScript 检查 |
+| `npm test` | Vitest 单元 / 组件测试 |
+| `npm run build` / `npm start` | 生产构建与启动 |
+| `npm run check` | lint + typecheck + test + build 一键检查 |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 部署
 
-To learn more about Next.js, take a look at the following resources:
+### Vercel（推荐）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. 导入仓库，框架自动识别为 Next.js（`vercel.json` 已指定 `hkg1` / `sin1` 区域）。
+2. 在 Environment Variables 中设置：`AUTH_SECRET`、`NEXT_PUBLIC_SITE_URL`、`UPSTASH_REDIS_REST_URL`、`UPSTASH_REDIS_REST_TOKEN`（可在 Vercel Marketplace 一键创建 Upstash Redis），可选 `NEXT_PUBLIC_ICP`、`NEXT_PUBLIC_PSB`。
+3. 绑定域名，Vercel 自动签发 HTTPS。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Docker / 自建服务器（含中国大陆云厂商）
 
-## Deploy on Vercel
+```bash
+docker build -t mitesla-atelier .
+docker run -d --name atelier -p 3000:3000 \
+  -e AUTH_SECRET=change-me-to-a-long-random-string \
+  -e NEXT_PUBLIC_SITE_URL=https://your-domain.com \
+  -e UPSTASH_REDIS_REST_URL=... -e UPSTASH_REDIS_REST_TOKEN=... \
+  -e NEXT_PUBLIC_ICP=京ICP备XXXXXXXX号 \
+  mitesla-atelier
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+镜像基于 `node:22-alpine`、Next.js standalone 输出，自带 `/api/health` 健康检查；建议前置 Nginx / 云负载均衡终止 TLS 并开启 HTTP/2 与 Brotli。
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 生产清单
+
+- [x] `AUTH_SECRET` 已设置（缺失时生产构建的鉴权接口会拒绝服务）
+- [x] Redis 持久化已配置（否则订单 / 账户在进程重启后丢失）
+- [x] `NEXT_PUBLIC_SITE_URL` 指向正式域名（影响 sitemap / OG / JSON-LD）
+- [x] 中国大陆部署填写 ICP / 公安备案号
+- [ ] 接入正式支付（`/api/orders` 中标注了 PSP 回调位置）与短信服务商
+- [ ] 将 `src/lib/garage.ts` 的模拟遥测替换为小米汽车开放平台 / Tesla Fleet API 适配器（接口已抽象）
+
+---
+
+## 目录结构
+
+```
+src/
+  app/                 页面与 API 路由（App Router）
+  components/          UI 原子组件、布局、车型 / 联动 / 表单组件
+  data/                车型、充电站、城市与走廊、资讯、门店、FAQ、法律文本（中英双语）
+  lib/                 计价、行程规划、置换估价、鉴权、存储、i18n、工具
+public/
+  images/              车型与场景视觉（自制，非官方素材）
+  fonts/               Inter 子集（中文回退系统字体 / MiSans / PingFang）
+```
+
+---
+
+## 商标声明
+
+小米、Xiaomi、SU7、YU7、澎程为小米集团商标；Tesla、Model 3、Model Y、Model S、Model X、Cybertruck 为 Tesla, Inc. 商标。本仓库为联名高级定制服务平台实现，车辆销售与交付遵循各品牌官方政策。
+
+---
+
+## English summary
+
+**MI × TESLA ATELIER** is a production-ready, bilingual (zh-CN / en) Next.js 15 site for a Xiaomi EV × Tesla co-branded bespoke programme: full 2026 line-ups with configurators and live pricing, cross-brand Garage with remote controls, a nationwide charging-aware trip planner, digital key sharing, ecosystem scenes, OTA centre, demo-drive / order / trade-in / service flows, account with One ID linking, news, stores, support and legal pages. Run `npm run check` for lint, typecheck, tests and build; deploy to Vercel or with the included Dockerfile.
