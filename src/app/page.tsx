@@ -34,8 +34,8 @@ export default async function HomePage() {
         <Image src="/images/home/hero.jpg" alt={t.home.heroSubtitle} fill priority sizes="100vw" className="object-cover" />
         <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-1/2" />
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
-        <div className="relative flex flex-1 flex-col items-center justify-end px-5 pb-16 pt-32 text-center sm:pb-24">
-          <Reveal className="flex flex-col items-center">
+        <div className="relative flex flex-1 flex-col items-center justify-between px-5 pb-16 pt-24 text-center sm:pb-20 sm:pt-28">
+          <div className="animate-fade-up flex flex-col items-center">
             <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
               <span className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-mi" />{t.nav.xiaomi}</span>
               <span className="text-white/40">×</span>
@@ -43,15 +43,17 @@ export default async function HomePage() {
             </p>
             <h1 className="max-w-4xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">{t.home.heroTitle}</h1>
             <p className="mt-5 max-w-2xl text-pretty text-base text-white/80 sm:text-xl">{t.home.heroSubtitle}</p>
-            <div className="mt-9 flex w-full max-w-md flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
+          </div>
+          <div className="animate-fade-up flex w-full flex-col items-center [animation-delay:200ms]">
+            <div className="flex w-full max-w-md flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
               <Button href="/vehicles" variant="light" size="lg" className="w-full sm:w-64">{t.home.heroCtaPrimary}</Button>
               <Button href="/test-drive" variant="glass" size="lg" className="w-full sm:w-64">{t.home.heroCtaSecondary}</Button>
             </div>
-          </Reveal>
-          <a href="#featured" className="absolute bottom-5 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-white/60 transition-colors hover:text-white sm:flex">
-            {t.home.scroll}
-            <ChevronDown className="size-4 animate-bounce" />
-          </a>
+            <a href="#featured" className="mt-8 hidden flex-col items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-white/60 transition-colors hover:text-white sm:flex">
+              {t.home.scroll}
+              <ChevronDown className="size-4 animate-bounce" />
+            </a>
+          </div>
         </div>
       </section>
 

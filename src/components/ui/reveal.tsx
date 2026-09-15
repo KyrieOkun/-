@@ -8,37 +8,36 @@ interface RevealProps {
   className?: string;
   delay?: number;
   as?: "div" | "section" | "li" | "article";
-  once?: boolean;
 }
 
-/** Fades content up when it enters the viewport. Renders immediately for reduced-motion users. */
-export function Reveal({ children, className, delay = 0, as = "div", once = true }: RevealProps) {
+/**
+ * Fades content up when it scrolls into view. Content is visible by default
+ * (SSR / no-JS / above-the-fold) and only hidden-then-revealed for elements
+ * that start below the viewport, so LCP and crawlers never see blank space.
+ */
+export function Reveal({ children, className, delay = 0, as = "div" }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
-    if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
+    if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const rect = node.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) return;
+    setHidden(true);
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            if (once) observer.disconnect();
-          } else if (!once) {
-            setVisible(false);
-          }
+        if (entries.some((e) => e.isIntersecting)) {
+          setHidden(false);
+          observer.disconnect();
         }
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0.08 },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [once]);
+  }, []);
 
   const Tag = as as "div";
   return (
@@ -46,8 +45,8 @@ export function Reveal({ children, className, delay = 0, as = "div", once = true
       ref={ref as React.RefObject<HTMLDivElement>}
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
-        "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform",
-        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
+        "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        hidden ? "translate-y-6 opacity-0" : "translate-y-0 opacity-100",
         className,
       )}
     >
