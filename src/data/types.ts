@@ -115,6 +115,8 @@ export interface Vehicle {
   launchDate: string;
   modelYear: number;
   hero: VehicleImage;
+  /** Paint shown in the hero photography; used as the configurator default. */
+  heroPaintId?: string;
   images: VehicleImage[];
   theme: "dark" | "light";
   highlights: { value: string; unit?: string; label: L10n }[];

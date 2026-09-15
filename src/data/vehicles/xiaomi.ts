@@ -63,6 +63,7 @@ export const xiaomiSU7: Vehicle = {
   launchDate: "2026-03-19",
   modelYear: 2026,
   hero: { src: "/images/vehicles/xiaomi-su7/hero.jpg", alt: l("卡布里蓝 新一代小米 SU7", "New-generation Xiaomi SU7 in Capri Blue") },
+  heroPaintId: "capri-blue",
   images: [
     { src: "/images/vehicles/xiaomi-su7/hero.jpg", alt: l("新一代小米 SU7 外观", "New-generation Xiaomi SU7 exterior") },
     { src: "/images/vehicles/xiaomi-su7/interior.jpg", alt: l("新一代小米 SU7 座舱", "New-generation Xiaomi SU7 cabin") },
@@ -268,6 +269,7 @@ export const xiaomiSU7Ultra: Vehicle = {
   launchDate: "2025-02-27",
   modelYear: 2026,
   hero: { src: "/images/vehicles/xiaomi-su7-ultra/hero.jpg", alt: l("闪电黄 小米 SU7 Ultra", "Xiaomi SU7 Ultra in Lightning Yellow") },
+  heroPaintId: "lightning-yellow",
   images: [
     { src: "/images/vehicles/xiaomi-su7-ultra/hero.jpg", alt: l("小米 SU7 Ultra 外观", "Xiaomi SU7 Ultra exterior") },
     { src: "/images/vehicles/xiaomi-su7-ultra/track.jpg", alt: l("小米 SU7 Ultra 赛道", "Xiaomi SU7 Ultra on track") },
@@ -500,6 +502,7 @@ export const xiaomiYU7: Vehicle = {
   launchDate: "2025-06-26",
   modelYear: 2026,
   hero: { src: "/images/vehicles/xiaomi-yu7/hero.jpg", alt: l("宝石绿 小米 YU7", "Xiaomi YU7 in Emerald Green") },
+  heroPaintId: "emerald-green",
   images: [
     { src: "/images/vehicles/xiaomi-yu7/hero.jpg", alt: l("小米 YU7 外观", "Xiaomi YU7 exterior") },
     { src: "/images/vehicles/xiaomi-yu7/interior.jpg", alt: l("小米 YU7 天际屏座舱", "Xiaomi YU7 HyperVision cabin") },
@@ -710,6 +713,7 @@ export const xiaomiYU7GT: Vehicle = {
   launchDate: "2026-05-21",
   modelYear: 2026,
   hero: { src: "/images/vehicles/xiaomi-yu7-gt/hero.jpg", alt: l("熔岩橙 小米 YU7 GT", "Xiaomi YU7 GT in Lava Orange") },
+  heroPaintId: "lava-orange",
   images: [
     { src: "/images/vehicles/xiaomi-yu7-gt/hero.jpg", alt: l("小米 YU7 GT 外观", "Xiaomi YU7 GT exterior") },
     { src: "/images/vehicles/xiaomi-yu7-gt/scene.jpg", alt: l("小米 YU7 GT 山路", "Xiaomi YU7 GT on a mountain road") },
@@ -864,6 +868,7 @@ export const xiaomiN90: Vehicle = {
   launchDate: "2026-09-07",
   modelYear: 2026,
   hero: { src: "/images/vehicles/xiaomi-n90/hero.jpg", alt: l("小米澎程 N90 Max", "Xiaomi SkyNomad N90 Max") },
+  heroPaintId: "canyon-green",
   images: [
     { src: "/images/vehicles/xiaomi-n90/hero.jpg", alt: l("小米澎程 N90 外观", "Xiaomi SkyNomad N90 exterior") },
     { src: "/images/vehicles/xiaomi-n90/scene.jpg", alt: l("小米澎程 N90 露营场景", "Xiaomi SkyNomad N90 camping") },

@@ -33,7 +33,7 @@ export function VehicleCard({ vehicle, locale, className, compact }: { vehicle: 
       </Link>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h3 className="text-xl font-semibold tracking-tight">
               <Link href={`/vehicles/${vehicle.slug}`} className="focus-ring rounded">
                 {pick(vehicle.name, locale)}
@@ -41,9 +41,9 @@ export function VehicleCard({ vehicle, locale, className, compact }: { vehicle: 
             </h3>
             <p className="mt-1 text-sm text-slate">{pick(vehicle.tagline, locale)}</p>
           </div>
-          <div className="text-right">
+          <div className="shrink-0 text-right">
             <p className="text-[11px] uppercase tracking-wider text-ash">{t.common.from}</p>
-            <p className="text-base font-semibold tabular-nums">{formatPriceHeadline(price, locale)}</p>
+            <p className="whitespace-nowrap text-base font-semibold tabular-nums">{formatPriceHeadline(price, locale)}</p>
           </div>
         </div>
         {!compact ? (

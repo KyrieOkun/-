@@ -63,7 +63,7 @@ export default async function HomePage() {
       ))}
 
       {/* Remaining line-up */}
-      <section className="snap-section bg-white py-20 lg:py-28">
+      <section className="bg-white py-20 lg:py-28">
         <Container>
           <SectionHeading
             eyebrow={t.nav.allVehicles}
@@ -82,7 +82,7 @@ export default async function HomePage() {
       </section>
 
       {/* Connect */}
-      <section className="snap-section relative overflow-hidden bg-carbon py-20 text-white lg:py-28">
+      <section className="relative overflow-hidden bg-carbon py-20 text-white lg:py-28">
         <div className="pointer-events-none absolute inset-0 opacity-40" style={{ backgroundImage: "radial-gradient(60% 50% at 20% 10%, rgba(255,105,0,0.25), transparent 60%), radial-gradient(50% 40% at 85% 90%, rgba(232,33,39,0.22), transparent 60%)" }} />
         <Container className="relative">
           <SectionHeading eyebrow={t.connect.title} title={t.home.connectTitle} subtitle={t.home.connectSubtitle} tone="light" action={<Button href="/connect" variant="light" iconRight={<ArrowRight className="size-4" />}>{t.nav.learnMore}</Button>} />
@@ -116,7 +116,7 @@ export default async function HomePage() {
       </section>
 
       {/* Charging */}
-      <section className="snap-section bg-white py-20 lg:py-28">
+      <section className="bg-white py-20 lg:py-28">
         <Container>
           <div className="grid items-center gap-12 lg:grid-cols-2">
             <Reveal>
@@ -144,7 +144,7 @@ export default async function HomePage() {
       </section>
 
       {/* Atelier */}
-      <section className="snap-section bg-cloud py-20 lg:py-28">
+      <section className="bg-cloud py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.nav.atelier} title={t.home.atelierTitle} subtitle={t.home.atelierSubtitle} action={<Button href="/atelier" variant="outline" iconRight={<ArrowRight className="size-4" />}>{t.nav.learnMore}</Button>} />
           <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -169,7 +169,7 @@ export default async function HomePage() {
       </section>
 
       {/* News */}
-      <section className="snap-section bg-white py-20 lg:py-28">
+      <section className="bg-white py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.nav.news} title={t.home.newsTitle} action={<Button href="/news" variant="outline" iconRight={<ArrowRight className="size-4" />}>{t.nav.viewAll}</Button>} />
           <div className="mt-12 grid gap-8 md:grid-cols-3">
@@ -193,7 +193,7 @@ export default async function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="snap-section relative overflow-hidden bg-ink py-24 text-white lg:py-32">
+      <section className="relative overflow-hidden bg-ink py-24 text-white lg:py-32">
         <Image src="/images/vehicles/xiaomi-su7/scene.jpg" alt="" fill sizes="100vw" className="object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
         <Container className="relative text-center">

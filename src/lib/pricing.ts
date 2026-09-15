@@ -83,7 +83,7 @@ export function defaultSelection(vehicle: Vehicle, trimId?: string): VehicleSele
   const interiors = availableInteriors(vehicle, trim.id);
   return {
     trimId: trim.id,
-    paintId: (paints.find((p) => p.price === 0) ?? paints[0]).id,
+    paintId: (paints.find((p) => p.id === vehicle.heroPaintId) ?? paints.find((p) => p.price === 0) ?? paints[0]).id,
     wheelId: (wheels.find((w) => w.price === 0) ?? wheels[0]).id,
     interiorId: (interiors.find((i) => i.price === 0) ?? interiors[0]).id,
     extraIds: [],

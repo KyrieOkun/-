@@ -47,6 +47,7 @@ export default async function VehiclePage({ params }: Params) {
   const isInventory = vehicle.availability === "inventory";
   const related = vehicles.filter((v) => v.slug !== vehicle.slug && (v.bodyType === vehicle.bodyType || v.brand !== vehicle.brand)).slice(0, 3);
   const startingPrice = getStartingPrice(vehicle);
+  const light = vehicle.theme === "light";
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -68,38 +69,47 @@ export default async function VehiclePage({ params }: Params) {
 
   return (
     <div>
-      <HeroOverlay />
+      <HeroOverlay tone={vehicle.theme} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Hero */}
-      <section className="relative flex min-h-[100svh] flex-col overflow-hidden bg-carbon text-white">
+      <section className={`relative flex min-h-[100svh] flex-col overflow-hidden ${light ? "bg-mist text-ink" : "bg-carbon text-white"}`}>
         <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt, locale)} fill priority sizes="100vw" className="object-cover" />
-        <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-2/5" />
-        <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
+        {light ? (
+          <>
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-white/70 via-white/25 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-white/90 via-white/45 to-transparent" />
+          </>
+        ) : (
+          <>
+            <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-2/5" />
+            <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
+          </>
+        )}
         <div className="relative flex flex-1 flex-col justify-end px-5 pb-12 pt-32 sm:px-8 lg:px-12">
           <Reveal className="max-w-3xl">
-            <p className="mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70">
+            <p className={`mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] ${light ? "text-graphite" : "text-white/70"}`}>
               <span className={vehicle.brand === "xiaomi" ? "size-1.5 rounded-full bg-mi" : "size-1.5 rounded-full bg-tesla"} />
               {vehicle.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla} · {pick(vehicle.segment, locale)}
             </p>
             <h1 className="text-balance text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">{pick(vehicle.name, locale)}</h1>
-            <p className="mt-3 text-pretty text-lg text-white/80 sm:text-2xl">{pick(vehicle.tagline, locale)}</p>
+            <p className={`mt-3 text-pretty text-lg sm:text-2xl ${light ? "text-graphite" : "text-white/80"}`}>{pick(vehicle.tagline, locale)}</p>
           </Reveal>
           <Reveal delay={120} className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
             {vehicle.highlights.map((h) => (
-              <Stat key={h.label.zh} value={h.value} unit={h.unit} label={pick(h.label, locale)} tone="light" />
+              <Stat key={h.label.zh} value={h.value} unit={h.unit} label={pick(h.label, locale)} tone={light ? "dark" : "light"} />
             ))}
           </Reveal>
           <Reveal delay={200} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
             {!isOverseas ? (
               <>
-                <Button href={`/vehicles/${vehicle.slug}/design`} variant="light" size="lg" className="sm:w-56">{t.vehicles.designCta}</Button>
-                <Button href={`/test-drive?vehicle=${vehicle.slug}`} variant="glass" size="lg" className="sm:w-56">{t.vehicles.testDriveCta}</Button>
+                <Button href={`/vehicles/${vehicle.slug}/design`} variant={light ? "primary" : "light"} size="lg" className="sm:w-56">{t.vehicles.designCta}</Button>
+                <Button href={`/test-drive?vehicle=${vehicle.slug}`} variant={light ? "light" : "glass"} size="lg" className={`sm:w-56 ${light ? "bg-white/70 backdrop-blur-md hover:bg-white" : ""}`}>{t.vehicles.testDriveCta}</Button>
               </>
             ) : (
               <Button href="#interest" variant="light" size="lg" className="sm:w-56">{locale === "zh" ? "登记关注" : "Register interest"}</Button>
             )}
-            <span className="text-sm text-white/70 sm:ml-4">
+            <span className={`text-sm sm:ml-4 ${light ? "text-graphite" : "text-white/70"}`}>
               {t.common.from} {formatPriceHeadline(startingPrice, locale)}
               {isOverseas && vehicle.trims[0].priceUSD ? ` (${formatUSD(vehicle.trims[0].priceUSD)})` : ""}
               {isInventory ? ` · ${t.common.inventoryOnly}` : ""}
@@ -278,7 +288,7 @@ export default async function VehiclePage({ params }: Params) {
         <Container>
           <SectionHeading eyebrow={t.configurator.title} title={`${t.vehicles.colors} · ${t.vehicles.wheels} · ${t.vehicles.interiors}`} action={!isOverseas ? <Button href={`/vehicles/${vehicle.slug}/design`} iconRight={<ArrowRight className="size-4" />}>{t.vehicles.designCta}</Button> : undefined} />
           <div className="mt-12">
-            <PaintExplorer paints={vehicle.paints} wheels={vehicle.wheels} interiors={vehicle.interiors} />
+            <PaintExplorer paints={vehicle.paints} wheels={vehicle.wheels} interiors={vehicle.interiors} initialPaintId={vehicle.heroPaintId} />
           </div>
         </Container>
       </section>

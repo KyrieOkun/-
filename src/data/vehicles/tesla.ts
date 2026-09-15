@@ -68,6 +68,7 @@ export const teslaModel3: Vehicle = {
   launchDate: "2026-01-06",
   modelYear: 2026,
   hero: { src: "/images/vehicles/tesla-model-3/hero.jpg", alt: l("烈焰红 Model 3", "Model 3 in Ultra Red") },
+  heroPaintId: "ultra-red",
   images: [
     { src: "/images/vehicles/tesla-model-3/hero.jpg", alt: l("Model 3 外观", "Model 3 exterior") },
     { src: "/images/vehicles/tesla-model-3/interior.jpg", alt: l("Model 3 座舱", "Model 3 interior") },
@@ -276,6 +277,7 @@ export const teslaModelY: Vehicle = {
   launchDate: "2026-01-06",
   modelYear: 2026,
   hero: { src: "/images/vehicles/tesla-model-y/hero.jpg", alt: l("快银 Model Y", "Model Y in Quicksilver") },
+  heroPaintId: "quicksilver",
   images: [
     { src: "/images/vehicles/tesla-model-y/hero.jpg", alt: l("Model Y 外观", "Model Y exterior") },
     { src: "/images/vehicles/tesla-model-y/interior.jpg", alt: l("Model Y 座舱", "Model Y interior") },
@@ -511,6 +513,7 @@ export const teslaModelS: Vehicle = {
   launchDate: "2026-02-06",
   modelYear: 2026,
   hero: { src: "/images/vehicles/tesla-model-s/hero.jpg", alt: l("珍珠白 Model S", "Model S in Pearl White") },
+  heroPaintId: "pearl-white",
   images: [
     { src: "/images/vehicles/tesla-model-s/hero.jpg", alt: l("Model S 外观", "Model S exterior") },
     { src: "/images/vehicles/tesla-model-s/interior.jpg", alt: l("Model S 三屏座舱", "Model S three-screen cabin") },
@@ -624,6 +627,7 @@ export const teslaModelX: Vehicle = {
   launchDate: "2026-02-06",
   modelYear: 2026,
   hero: { src: "/images/vehicles/tesla-model-x/hero.jpg", alt: l("深海蓝 Model X 鹰翼门", "Model X in Deep Blue with Falcon Wing doors") },
+  heroPaintId: "deep-blue",
   images: [
     { src: "/images/vehicles/tesla-model-x/hero.jpg", alt: l("Model X 外观", "Model X exterior") },
     { src: "/images/vehicles/tesla-model-x/interior.jpg", alt: l("Model X 座舱", "Model X cabin") },
@@ -739,6 +743,7 @@ export const teslaCybertruck: Vehicle = {
   launchDate: "2023-11-30",
   modelYear: 2026,
   hero: { src: "/images/vehicles/tesla-cybertruck/hero.jpg", alt: l("Cybertruck 峡谷", "Cybertruck in a canyon") },
+  heroPaintId: "stainless",
   images: [
     { src: "/images/vehicles/tesla-cybertruck/hero.jpg", alt: l("Cybertruck 外观", "Cybertruck exterior") },
     { src: "/images/vehicles/tesla-cybertruck/interior.jpg", alt: l("Cybertruck 座舱", "Cybertruck interior") },

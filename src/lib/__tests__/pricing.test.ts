@@ -30,13 +30,22 @@ describe("estimateMonthly", () => {
 describe("computeQuote", () => {
   const su7 = getVehicle("xiaomi-su7")!;
 
-  it("uses free defaults for the base trim", () => {
+  it("defaults to the hero paint with free wheels and interior on the base trim", () => {
     const q = computeQuote(su7, defaultSelection(su7));
     expect(q.trim.id).toBe("standard");
-    expect(q.optionsTotal).toBe(0);
-    expect(q.subtotal).toBe(219_900);
-    expect(q.total).toBe(219_900 + estimatePurchaseTax(219_900));
+    expect(q.paint.id).toBe("capri-blue");
+    expect(q.wheelPrice).toBe(0);
+    expect(q.interiorPrice).toBe(0);
+    expect(q.optionsTotal).toBe(7_000);
+    expect(q.subtotal).toBe(226_900);
+    expect(q.total).toBe(226_900 + estimatePurchaseTax(226_900));
     expect(q.deposit).toBe(5_000);
+  });
+
+  it("falls back to a free paint when no hero paint is defined", () => {
+    const q = computeQuote({ ...su7, heroPaintId: undefined }, defaultSelection({ ...su7, heroPaintId: undefined }));
+    expect(q.paintPrice).toBe(0);
+    expect(q.optionsTotal).toBe(0);
   });
 
   it("adds paint, wheel, interior and extra prices", () => {

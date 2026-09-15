@@ -58,7 +58,8 @@ export function SiteHeader({ vehicles, user }: Props) {
     };
   }, [open]);
 
-  const overlay = mode === "overlay" && !scrolled && !mega && !open;
+  const transparent = mode !== "solid" && !scrolled && !mega && !open;
+  const overlay = mode === "overlay" && transparent;
   const textColor = overlay ? "text-white" : "text-ink";
 
   const openMega = (key: typeof mega) => {
@@ -99,7 +100,7 @@ export function SiteHeader({ vehicles, user }: Props) {
       <header
         className={cn(
           "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
-          overlay ? "bg-transparent" : "glass border-b border-ink/5",
+          transparent ? "bg-transparent" : "glass border-b border-ink/5",
           textColor,
         )}
         onMouseLeave={scheduleClose}

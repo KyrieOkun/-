@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
-type HeaderMode = "overlay" | "solid";
+type HeaderMode = "overlay" | "overlay-dark" | "solid";
 
 const HeaderThemeContext = createContext<{ mode: HeaderMode; setMode: (m: HeaderMode) => void }>({
   mode: "solid",
@@ -19,14 +19,15 @@ export function useHeaderTheme() {
 }
 
 /**
- * Drop this into any page whose top section is a full-bleed dark hero.
- * The header becomes transparent (white text) until the user scrolls.
+ * Drop this into any page whose top section is a full-bleed hero. The header
+ * becomes transparent until the user scrolls; `tone="light"` keeps dark text
+ * for bright imagery.
  */
-export function HeroOverlay() {
+export function HeroOverlay({ tone = "dark" }: { tone?: "dark" | "light" }) {
   const { setMode } = useHeaderTheme();
   useEffect(() => {
-    setMode("overlay");
+    setMode(tone === "light" ? "overlay-dark" : "overlay");
     return () => setMode("solid");
-  }, [setMode]);
+  }, [setMode, tone]);
   return null;
 }

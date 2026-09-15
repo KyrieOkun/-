@@ -6,9 +6,9 @@ import { useI18n } from "@/lib/i18n/provider";
 import { formatCNY } from "@/lib/utils";
 import { InteriorSwatch, PaintPanel, PaintSwatch, WheelGlyph } from "./swatches";
 
-export function PaintExplorer({ paints, wheels, interiors }: { paints: PaintOption[]; wheels: WheelOption[]; interiors: InteriorOption[] }) {
+export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { paints: PaintOption[]; wheels: WheelOption[]; interiors: InteriorOption[]; initialPaintId?: string }) {
   const { t, pick } = useI18n();
-  const [paint, setPaint] = useState(paints[0]);
+  const [paint, setPaint] = useState(paints.find((p) => p.id === initialPaintId) ?? paints[0]);
   const [wheel, setWheel] = useState(wheels[0]);
   const [interior, setInterior] = useState(interiors[0]);
 

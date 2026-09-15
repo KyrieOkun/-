@@ -114,13 +114,13 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
                 </Link>
                 <div className="flex flex-1 flex-col p-6">
                   <div className="flex items-start justify-between gap-4">
-                    <div>
+                    <div className="min-w-0">
                       <h2 className="text-xl font-semibold tracking-tight">{pick(v.name)}</h2>
                       <p className="mt-1 text-sm text-slate">{pick(v.tagline)}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="shrink-0 text-right">
                       <p className="text-[11px] uppercase tracking-wider text-ash">{t.common.from}</p>
-                      <p className="text-base font-semibold tabular-nums">{formatPriceHeadline(v.price, locale)}</p>
+                      <p className="whitespace-nowrap text-base font-semibold tabular-nums">{formatPriceHeadline(v.price, locale)}</p>
                     </div>
                   </div>
                   <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4">
