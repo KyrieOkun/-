@@ -65,8 +65,18 @@ describe("vehicle catalogue integrity", () => {
       for (const img of [v.hero, ...v.images]) {
         expect(existsSync(path.join(PUBLIC, img.src)), img.src).toBe(true);
       }
+      for (const opt of [...v.paints, ...v.wheels, ...v.interiors]) {
+        if (opt.image) expect(existsSync(path.join(PUBLIC, opt.image)), opt.image).toBe(true);
+      }
+      if (v.heroPaintId) expect(v.paints.some((p) => p.id === v.heroPaintId), `${v.slug} heroPaintId`).toBe(true);
     }
     for (const a of articles) expect(existsSync(path.join(PUBLIC, a.image)), a.image).toBe(true);
+  });
+
+  it("backs every Xiaomi paint with an official photograph", () => {
+    for (const v of vehicles.filter((x) => x.brand === "xiaomi" && x.slug !== "xiaomi-su7-ultra")) {
+      for (const p of v.paints) expect(p.image, `${v.slug}/${p.id}`).toBeTruthy();
+    }
   });
 
   it("has bilingual copy everywhere", () => {

@@ -7,33 +7,33 @@ const XIAOMI_WARRANTY = [
   l("首任车主终身免费道路救援", "Lifetime roadside assistance for the first owner"),
 ];
 
+const SU7 = "/images/vehicles/xiaomi-su7";
 const su7Paints: PaintOption[] = [
-  { id: "capri-blue", name: l("卡布里蓝", "Capri Blue"), hex: "#2f5fb3", hex2: "#173b7a", finish: "metallic", price: 7000, isNew: true, family: l("新一代专属色", "New-generation exclusive") },
-  { id: "chixia-red", name: l("赤霞红", "Chixia Red"), hex: "#b8202f", hex2: "#6e0f1a", finish: "metallic", price: 7000, isNew: true, family: l("新一代专属色", "New-generation exclusive") },
-  { id: "indigo-green", name: l("靛石绿", "Indigo Stone Green"), hex: "#2f5d52", hex2: "#173229", finish: "metallic", price: 7000, isNew: true, family: l("新一代专属色", "New-generation exclusive") },
-  { id: "aurora-purple", name: l("霞光紫", "Aurora Purple"), hex: "#6f5c9c", hex2: "#3f3060", finish: "metallic", price: 7000 },
-  { id: "gold-pink", name: l("流金粉", "Rose Gold Pink"), hex: "#e6b5b5", hex2: "#c48a8c", finish: "pearl", price: 7000 },
-  { id: "magenta", name: l("璀璨洋红", "Brilliant Magenta"), hex: "#9b2d5b", hex2: "#5c1633", finish: "pearl", price: 7000 },
-  { id: "elegant-grey", name: l("雅灰", "Elegant Grey"), hex: "#8b9096", hex2: "#565b61", finish: "metallic", price: 0 },
-  { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0 },
-  { id: "obsidian-black", name: l("曜石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0 },
+  { id: "capri-blue", name: l("卡布里蓝", "Capri Blue"), hex: "#2f5fb3", hex2: "#173b7a", finish: "metallic", price: 7000, isNew: true, family: l("新一代专属色", "New-generation exclusive"), image: `${SU7}/paints/capri-blue.jpg` },
+  { id: "chixia-red", name: l("赤霞红", "Chixia Red"), hex: "#b8202f", hex2: "#6e0f1a", finish: "metallic", price: 7000, isNew: true, family: l("新一代专属色", "New-generation exclusive"), image: `${SU7}/paints/chixia-red.jpg` },
+  { id: "indigo-green", name: l("靛石绿", "Indigo Stone Green"), hex: "#2f5d52", hex2: "#173229", finish: "metallic", price: 7000, isNew: true, family: l("新一代专属色", "New-generation exclusive"), image: `${SU7}/paints/indigo-green.jpg` },
+  { id: "aurora-purple", name: l("霞光紫", "Aurora Purple"), hex: "#8f7fb8", hex2: "#5a4a85", finish: "metallic", price: 7000, image: `${SU7}/paints/aurora-purple.jpg` },
+  { id: "elegant-grey", name: l("雅灰", "Elegant Grey"), hex: "#8b9096", hex2: "#565b61", finish: "metallic", price: 0, image: `${SU7}/paints/elegant-grey.jpg` },
+  { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0, image: `${SU7}/paints/pearl-white.jpg` },
+  { id: "gold-pink", name: l("流金粉", "Rose Gold Pink"), hex: "#e6b5b5", hex2: "#c48a8c", finish: "pearl", price: 7000, image: `${SU7}/paints/gold-pink.jpg` },
+  { id: "obsidian-black", name: l("曜石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0, image: `${SU7}/paints/obsidian-black.jpg` },
 ];
 
 const su7Interiors: InteriorOption[] = [
-  { id: "night-black", name: l("暗夜黑", "Night Black"), price: 0, primary: "#1b1b1f", secondary: "#2c2d33", material: l("Nappa 真皮 / 超纤绒", "Nappa leather / microfibre") },
-  { id: "sand-beige", name: l("砂陶米", "Sand Beige"), price: 0, primary: "#c8b699", secondary: "#3a342e", material: l("Nappa 真皮", "Nappa leather") },
-  { id: "mist-purple", name: l("迷雾紫", "Mist Purple"), price: 0, primary: "#6d6280", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather") },
-  { id: "dusk-red", name: l("暮光红", "Dusk Red"), price: 0, primary: "#8e2f3c", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather") },
+  { id: "night-black", name: l("暗夜黑", "Night Black"), price: 0, primary: "#1b1b1f", secondary: "#2c2d33", material: l("Nappa 真皮 / 超纤绒", "Nappa leather / microfibre"), image: `${SU7}/interiors/night-black.jpg` },
+  { id: "sand-beige", name: l("砂陶米", "Sand Beige"), price: 0, primary: "#c8b699", secondary: "#3a342e", material: l("Nappa 真皮", "Nappa leather"), image: `${SU7}/interiors/sand-beige.jpg` },
+  { id: "mist-purple", name: l("迷雾紫", "Mist Purple"), price: 0, primary: "#6d6280", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather"), image: `${SU7}/interiors/mist-purple.jpg` },
+  { id: "dusk-red", name: l("暮光红", "Dusk Red"), price: 0, primary: "#8e2f3c", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather"), image: `${SU7}/interiors/dusk-red.jpg` },
   { id: "capri-special", name: l("暗黑内饰 · 卡布里蓝特别版", "Dark Interior · Capri Blue Edition"), price: 4000, primary: "#1b1b1f", secondary: "#2f5fb3", material: l("Nappa 真皮 + 蓝色缝线", "Nappa leather with blue stitching"), trims: ["max"] },
 ];
 
 const su7Wheels: WheelOption[] = [
-  { id: "19-diamond", name: l("19 英寸钻石轮毂", '19" Diamond wheels'), size: 19, price: 0, style: "aero", description: l("低风阻设计，续航最优", "Low-drag design for maximum range"), rangeDeltaKm: 0 },
-  { id: "20-blade", name: l("20 英寸锋刃轮毂", '20" Blade wheels'), size: 20, price: 8000, style: "sport", rangeDeltaKm: -25 },
-  { id: "20-plum", name: l("20 英寸梅花轮毂", '20" Plum wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -25 },
-  { id: "20-mi", name: l("20 英寸米型轮毂", '20" Mi wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -22 },
-  { id: "21-sport", name: l("21 英寸运动轮毂", '21" Sport wheels'), size: 21, price: 12000, style: "sport", rangeDeltaKm: -45, trims: ["pro", "max"] },
-  { id: "21-forged-plum", name: l("21 英寸双层锻造梅花轮毂", '21" Dual-layer forged Plum wheels'), size: 21, price: 18000, style: "forged", rangeDeltaKm: -45, trims: ["max"] },
+  { id: "19-diamond", name: l("19 英寸钻石轮毂", '19" Diamond wheels'), size: 19, price: 0, style: "aero", description: l("低风阻设计，续航最优", "Low-drag design for maximum range"), rangeDeltaKm: 0, image: `${SU7}/wheels/19-diamond.jpg` },
+  { id: "20-mi", name: l("20 英寸米型轮毂", '20" Mi wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -22, image: `${SU7}/wheels/20-mi.jpg` },
+  { id: "20-plum", name: l("20 英寸梅花轮毂", '20" Plum wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -25, image: `${SU7}/wheels/20-plum.jpg` },
+  { id: "20-blade", name: l("20 英寸锋刃轮毂", '20" Blade wheels'), size: 20, price: 8000, style: "sport", rangeDeltaKm: -25, trims: ["standard", "pro"], image: `${SU7}/wheels/20-blade.jpg` },
+  { id: "21-sport", name: l("21 英寸运动轮毂", '21" Sport wheels'), size: 21, price: 12000, style: "sport", rangeDeltaKm: -45, trims: ["pro", "max"], image: `${SU7}/wheels/21-sport.jpg` },
+  { id: "21-forged-plum", name: l("21 英寸双层锻造梅花轮毂", '21" Dual-layer forged Plum wheels'), size: 21, price: 18000, style: "forged", rangeDeltaKm: -45, trims: ["max"], image: `${SU7}/wheels/21-forged-plum.jpg` },
 ];
 
 const su7Extras: ExtraOption[] = [
@@ -65,11 +65,11 @@ export const xiaomiSU7: Vehicle = {
   hero: { src: "/images/vehicles/xiaomi-su7/hero.jpg", alt: l("卡布里蓝 新一代小米 SU7", "New-generation Xiaomi SU7 in Capri Blue") },
   heroPaintId: "capri-blue",
   images: [
-    { src: "/images/vehicles/xiaomi-su7/hero.jpg", alt: l("新一代小米 SU7 外观", "New-generation Xiaomi SU7 exterior") },
-    { src: "/images/vehicles/xiaomi-su7/interior.jpg", alt: l("新一代小米 SU7 座舱", "New-generation Xiaomi SU7 cabin") },
-    { src: "/images/vehicles/xiaomi-su7/scene.jpg", alt: l("新一代小米 SU7 行驶场景", "New-generation Xiaomi SU7 on the road") },
+    { src: "/images/vehicles/xiaomi-su7/hero.jpg", alt: l("新一代小米 SU7 卡布里蓝 官方图", "New-generation Xiaomi SU7 in Capri Blue, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7/interior.jpg", alt: l("新一代小米 SU7 座舱 官方图", "New-generation Xiaomi SU7 cabin, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7/scene.jpg", alt: l("新一代小米 SU7 尾灯细节 官方图", "New-generation Xiaomi SU7 tail-light detail, official imagery") },
   ],
-  theme: "dark",
+  theme: "light",
   highlights: [
     { value: "902", unit: "km", label: l("CLTC 续航（Pro）", "CLTC range (Pro)") },
     { value: "2.78", unit: "s", label: l("零百加速（Max）", "0–100 km/h (Max)") },
@@ -231,7 +231,7 @@ export const xiaomiSU7: Vehicle = {
     { icon: "zap", title: l("HyperEngine V6s Plus", "HyperEngine V6s Plus"), body: l("22,000 rpm 超级电机，分段磁钢与拓扑优化算法，性能与能效同步提升。", "A 22,000 rpm motor with segmented magnets and topology-optimised power electronics.") },
     { icon: "battery-charging", title: l("准 900V 高压平台", "Near-900 V architecture"), body: l("Max 版 897V，15 分钟补能 510 公里；标准版与 Pro 版升级至 752V。", "897 V on Max adds 510 km in 15 minutes; Standard and Pro move to 752 V.") },
     { icon: "radar", title: l("全系激光雷达", "LiDAR on every trim"), body: l("智驾平权，端到端城市 NOA 与代客泊车全系可用。", "End-to-end urban NOA and valet parking on every trim.") },
-    { icon: "sparkles", title: l("9 色外观 · 5 色内饰", "9 paints · 5 interiors"), body: l("卡布里蓝、赤霞红、靛石绿三款新一代专属色，卡布里蓝特别版内饰。", "Three new exclusive paints and a Capri Blue special-edition interior.") },
+    { icon: "sparkles", title: l("8 色外观 · 5 款内饰", "8 paints · 5 interiors"), body: l("卡布里蓝、赤霞红、靛石绿三款新一代专属色，卡布里蓝特别版内饰。", "Three new exclusive paints and a Capri Blue special-edition interior.") },
     { icon: "shield", title: l("安全，重新定义", "Safety, redefined"), body: l("门锁备用电源、半隐藏机械门把手、9 气囊、C-NCAP 最高分。", "Door-lock backup power, mechanical semi-hidden handles, 9 airbags and top C-NCAP score.") },
     { icon: "wind", title: l("双层隔音静音玻璃", "Acoustic double glazing"), body: l("前后双层夹胶玻璃，高速风噪与胎噪显著降低。", "Laminated double glazing front and rear for a quieter cabin at speed.") },
   ],
@@ -240,11 +240,11 @@ export const xiaomiSU7: Vehicle = {
 };
 
 const ultraPaints: PaintOption[] = [
-  { id: "lightning-yellow", name: l("闪电黄", "Lightning Yellow"), hex: "#f1cf2c", hex2: "#c9a300", finish: "solid", price: 0, family: l("Ultra 专属", "Ultra exclusive") },
-  { id: "parrot-green", name: l("鹦鹉绿", "Parrot Green"), hex: "#3f9163", hex2: "#1e5c3a", finish: "metallic", price: 0, family: l("Ultra 专属", "Ultra exclusive") },
-  { id: "space-silver", name: l("太空银", "Space Silver"), hex: "#bcbfc4", hex2: "#82868c", finish: "metallic", price: 0, family: l("Ultra 专属", "Ultra exclusive") },
-  { id: "obsidian-black", name: l("曜石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0 },
-  { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0 },
+  { id: "lightning-yellow", name: l("闪电黄", "Lightning Yellow"), hex: "#f1cf2c", hex2: "#c9a300", finish: "solid", price: 0, family: l("Ultra 专属", "Ultra exclusive"), image: "/images/vehicles/xiaomi-su7-ultra/paints/lightning-yellow.jpg" },
+  { id: "parrot-green", name: l("鹦鹉绿", "Parrot Green"), hex: "#3f9163", hex2: "#1e5c3a", finish: "metallic", price: 0, family: l("Ultra 专属", "Ultra exclusive"), image: "/images/vehicles/xiaomi-su7-ultra/paints/parrot-green.jpg" },
+  { id: "space-silver", name: l("太空银", "Space Silver"), hex: "#bcbfc4", hex2: "#82868c", finish: "metallic", price: 0, family: l("Ultra 专属", "Ultra exclusive"), image: "/images/vehicles/xiaomi-su7-ultra/paints/space-silver.jpg" },
+  { id: "obsidian-black", name: l("曜石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0, image: "/images/vehicles/xiaomi-su7-ultra/paints/obsidian-black.jpg" },
+  { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0, image: "/images/vehicles/xiaomi-su7-ultra/paints/pearl-white.jpg" },
   { id: "cambrian-grey", name: l("寒武岩灰", "Cambrian Grey"), hex: "#6b6e73", hex2: "#3f4246", finish: "matte", price: 15000 },
   { id: "bay-blue", name: l("海湾蓝", "Bay Blue"), hex: "#4e86c7", hex2: "#2c5a92", finish: "metallic", price: 0 },
   { id: "lava-orange", name: l("熔岩橙", "Lava Orange"), hex: "#e2571e", hex2: "#a3350c", finish: "metallic", price: 0 },
@@ -271,9 +271,12 @@ export const xiaomiSU7Ultra: Vehicle = {
   hero: { src: "/images/vehicles/xiaomi-su7-ultra/hero.jpg", alt: l("闪电黄 小米 SU7 Ultra", "Xiaomi SU7 Ultra in Lightning Yellow") },
   heroPaintId: "lightning-yellow",
   images: [
-    { src: "/images/vehicles/xiaomi-su7-ultra/hero.jpg", alt: l("小米 SU7 Ultra 外观", "Xiaomi SU7 Ultra exterior") },
-    { src: "/images/vehicles/xiaomi-su7-ultra/track.jpg", alt: l("小米 SU7 Ultra 赛道", "Xiaomi SU7 Ultra on track") },
-    { src: "/images/vehicles/xiaomi-su7-ultra/interior.jpg", alt: l("小米 SU7 Ultra 座舱", "Xiaomi SU7 Ultra cockpit") },
+    { src: "/images/vehicles/xiaomi-su7-ultra/hero.jpg", alt: l("小米 SU7 Ultra 闪电黄 官方图", "Xiaomi SU7 Ultra in Lightning Yellow, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7-ultra/track.jpg", alt: l("小米 SU7 Ultra 纽北赛道 官方图", "Xiaomi SU7 Ultra at the Nürburgring, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7-ultra/interior.jpg", alt: l("小米 SU7 Ultra 座舱 官方图", "Xiaomi SU7 Ultra cockpit, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7-ultra/studio.jpg", alt: l("SU7 Ultra 闪电黄 棚拍 官方图", "SU7 Ultra in Lightning Yellow, studio, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7-ultra/track-package.jpg", alt: l("SU7 Ultra 赛道专业套装 官方图", "SU7 Ultra Track Professional Package, official imagery") },
+    { src: "/images/vehicles/xiaomi-su7-ultra/nurburgring-edition.jpg", alt: l("SU7 Ultra 纽北限量版 官方图", "SU7 Ultra Nürburgring Limited Edition, official imagery") },
   ],
   theme: "dark",
   highlights: [
@@ -372,13 +375,13 @@ export const xiaomiSU7Ultra: Vehicle = {
   ],
   paints: ultraPaints,
   wheels: [
-    { id: "21-forged", name: l("21 英寸锻造轮毂 · Pirelli P Zero 5", '21" Forged wheels · Pirelli P Zero 5'), size: 21, price: 0, style: "forged" },
+    { id: "21-forged", name: l("21 英寸锻造轮毂 · Pirelli P Zero 5", '21" Forged wheels · Pirelli P Zero 5'), size: 21, price: 0, style: "forged", image: "/images/vehicles/xiaomi-su7-ultra/wheels/21-forged.jpg" },
     { id: "21-track", name: l("21 英寸赛道锻造轮毂 · Trofeo RS", '21" Track forged wheels · Trofeo RS'), size: 21, price: 0, style: "forged", trims: ["track", "nurburgring"] },
     { id: "21-gold", name: l("21 英寸锻造轮毂 · 金色版", '21" Forged wheels · Gold'), size: 21, price: 12000, style: "forged" },
   ],
   interiors: [
     { id: "black-alcantara", name: l("曜石黑 Alcantara", "Obsidian Alcantara"), price: 0, primary: "#141416", secondary: "#2b2b2e", material: l("Alcantara + 碳纤维", "Alcantara + carbon fibre") },
-    { id: "yellow-black", name: l("闪电黄 / 黑 拼色", "Lightning Yellow / Black"), price: 0, primary: "#141416", secondary: "#f1cf2c", material: l("Alcantara + 碳纤维 + 黄色缝线", "Alcantara + carbon + yellow stitching") },
+    { id: "yellow-black", name: l("闪电黄 / 黑 拼色", "Lightning Yellow / Black"), price: 0, primary: "#141416", secondary: "#f1cf2c", material: l("Alcantara + 碳纤维 + 黄色缝线", "Alcantara + carbon + yellow stitching"), image: "/images/vehicles/xiaomi-su7-ultra/interiors/black-alcantara.jpg" },
     { id: "red-black", name: l("赤焰红 / 黑 拼色", "Flame Red / Black"), price: 0, primary: "#141416", secondary: "#b3202c", material: l("Alcantara + 碳纤维 + 红色缝线", "Alcantara + carbon + red stitching") },
   ],
   extras: [
@@ -449,30 +452,30 @@ export const xiaomiSU7Ultra: Vehicle = {
   order: 3,
 };
 
+const YU7 = "/images/vehicles/xiaomi-yu7";
 const yu7Paints: PaintOption[] = [
-  { id: "emerald-green", name: l("宝石绿", "Emerald Green"), hex: "#1f6d4f", hex2: "#0d3f2c", finish: "metallic", price: 7000, family: l("跑车色系", "Sports") },
-  { id: "lava-orange", name: l("熔岩橙", "Lava Orange"), hex: "#e4571b", hex2: "#a4340a", finish: "metallic", price: 7000, family: l("跑车色系", "Sports") },
-  { id: "titanium", name: l("钛金属色", "Titanium Silver"), hex: "#a8aaad", hex2: "#6e7175", finish: "metallic", price: 7000, family: l("时尚色系", "Fashion") },
-  { id: "celadon", name: l("影青色", "Celadon"), hex: "#b9cac1", hex2: "#82958b", finish: "pearl", price: 7000, family: l("时尚色系", "Fashion") },
-  { id: "gold-pink", name: l("流金粉", "Rose Gold Pink"), hex: "#e9bfb6", hex2: "#c48d86", finish: "pearl", price: 7000, family: l("时尚色系", "Fashion") },
-  { id: "danxia-purple", name: l("丹霞紫", "Danxia Purple"), hex: "#6a4c93", hex2: "#3c2a5a", finish: "metallic", price: 7000, family: l("豪华色系", "Luxury") },
-  { id: "deep-sea-blue", name: l("深海蓝", "Deep Sea Blue"), hex: "#1f3a6e", hex2: "#0f1f3f", finish: "metallic", price: 7000, family: l("豪华色系", "Luxury") },
-  { id: "cambrian-grey", name: l("寒武岩灰", "Cambrian Grey"), hex: "#5f6368", hex2: "#35383c", finish: "metallic", price: 0, family: l("豪华色系", "Luxury") },
-  { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0, family: l("经典色系", "Classic") },
+  { id: "emerald-green", name: l("宝石绿", "Emerald Green"), hex: "#1f6d4f", hex2: "#0d3f2c", finish: "metallic", price: 7000, family: l("三套色罐双层色漆", "Double-layer paint"), image: `${YU7}/paints/emerald-green.jpg` },
+  { id: "titanium", name: l("钛金属色", "Titanium Silver"), hex: "#a8aaad", hex2: "#6e7175", finish: "metallic", price: 7000, image: `${YU7}/paints/titanium.jpg` },
+  { id: "gold-pink", name: l("流金粉", "Rose Gold Pink"), hex: "#e9bfb6", hex2: "#c48d86", finish: "pearl", price: 7000, image: `${YU7}/paints/gold-pink.jpg` },
+  { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0, image: `${YU7}/paints/pearl-white.jpg` },
+  { id: "cherry-red", name: l("车厘子红", "Cherry Red"), hex: "#8c1a2b", hex2: "#4d0c17", finish: "metallic", price: 7000, isNew: true, image: `${YU7}/paints/cherry-red.jpg` },
+  { id: "volcanic-grey", name: l("火山灰", "Volcanic Grey"), hex: "#5f6368", hex2: "#35383c", finish: "metallic", price: 0, isNew: true, image: `${YU7}/paints/volcanic-grey.jpg` },
+  { id: "aurora-purple", name: l("霞光紫", "Aurora Purple"), hex: "#8f7fb8", hex2: "#5a4a85", finish: "metallic", price: 7000, image: `${YU7}/paints/aurora-purple.jpg` },
 ];
 
 const yu7Interiors: InteriorOption[] = [
-  { id: "pine-grey", name: l("松石灰 · 松针绿", "Turquoise Grey · Pine Green"), price: 0, primary: "#7c8b87", secondary: "#3f5b4e", material: l("Nappa 真皮", "Nappa leather") },
-  { id: "coral-orange", name: l("珊瑚橙", "Coral Orange"), price: 0, primary: "#d9743f", secondary: "#2b2b2b", material: l("Nappa 真皮", "Nappa leather") },
-  { id: "dusk-blue", name: l("暮影蓝", "Dusk Blue"), price: 0, primary: "#2e3a59", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather") },
-  { id: "iris-purple", name: l("鸢尾紫", "Iris Purple"), price: 0, primary: "#5b4b8a", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather") },
+  { id: "iris-purple", name: l("鸢尾紫（紫灰双色）", "Iris Purple (two-tone)"), price: 0, primary: "#8a8393", secondary: "#5b4b8a", material: l("Nappa 真皮", "Nappa leather"), image: `${YU7}/interiors/iris-purple.jpg` },
+  { id: "dusk-blue", name: l("暮影蓝", "Dusk Blue"), price: 0, primary: "#2e3a59", secondary: "#1b1b1f", material: l("Nappa 真皮", "Nappa leather"), image: `${YU7}/interiors/dusk-blue.jpg` },
+  { id: "coral-orange", name: l("珊瑚橙", "Coral Orange"), price: 0, primary: "#d9743f", secondary: "#2b2b2b", material: l("Nappa 真皮", "Nappa leather"), image: `${YU7}/interiors/coral-orange.jpg` },
 ];
 
 const yu7Wheels: WheelOption[] = [
-  { id: "19-aero", name: l("19 英寸低风阻轮毂", '19" Aero wheels'), size: 19, price: 0, style: "aero", rangeDeltaKm: 0, description: l("245/55 R19，续航最优", "245/55 R19, best for range") },
-  { id: "20-petal", name: l("20 英寸五辐花瓣轮毂", '20" Five-spoke Petal wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -20 },
-  { id: "20-sport", name: l("20 英寸六辐运动轮毂", '20" Six-spoke Sport wheels'), size: 20, price: 8000, style: "sport", rangeDeltaKm: -20 },
-  { id: "21-performance", name: l("21 英寸高性能轮毂 · 275/40 R21", '21" Performance wheels · 275/40 R21'), size: 21, price: 12000, style: "sport", rangeDeltaKm: -40, trims: ["pro", "max"] },
+  { id: "19-diamond", name: l("19 英寸钻石轮毂", '19" Diamond wheels'), size: 19, price: 0, style: "aero", rangeDeltaKm: 0, description: l("低风阻设计，续航最优", "Low-drag design, best for range"), image: `${YU7}/wheels/19-diamond.jpg` },
+  { id: "20-mi", name: l("20 英寸米型轮毂", '20" Mi wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -20, image: `${YU7}/wheels/20-mi.jpg` },
+  { id: "20-plum", name: l("20 英寸梅花轮毂", '20" Plum wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -20, image: `${YU7}/wheels/20-plum.jpg` },
+  { id: "21-blade", name: l("21 英寸幻刃轮毂", '21" Phantom Blade wheels'), size: 21, price: 12000, style: "sport", rangeDeltaKm: -40, trims: ["pro", "max"], image: `${YU7}/wheels/21-blade.jpg` },
+  { id: "21-forged-plum", name: l("21 英寸锻造梅花轮毂", '21" Forged Plum wheels'), size: 21, price: 18000, style: "forged", rangeDeltaKm: -40, trims: ["max"], image: `${YU7}/wheels/21-forged-plum.jpg` },
+  { id: "21-forged-petal", name: l("21 英寸花瓣锻造轮毂", '21" Forged Petal wheels'), size: 21, price: 18000, style: "forged", rangeDeltaKm: -40, trims: ["max"], image: `${YU7}/wheels/21-forged-petal.jpg` },
 ];
 
 const yu7Extras: ExtraOption[] = [
@@ -504,9 +507,9 @@ export const xiaomiYU7: Vehicle = {
   hero: { src: "/images/vehicles/xiaomi-yu7/hero.jpg", alt: l("宝石绿 小米 YU7", "Xiaomi YU7 in Emerald Green") },
   heroPaintId: "emerald-green",
   images: [
-    { src: "/images/vehicles/xiaomi-yu7/hero.jpg", alt: l("小米 YU7 外观", "Xiaomi YU7 exterior") },
-    { src: "/images/vehicles/xiaomi-yu7/interior.jpg", alt: l("小米 YU7 天际屏座舱", "Xiaomi YU7 HyperVision cabin") },
-    { src: "/images/vehicles/xiaomi-yu7/scene.jpg", alt: l("小米 YU7 户外场景", "Xiaomi YU7 outdoors") },
+    { src: "/images/vehicles/xiaomi-yu7/hero.jpg", alt: l("小米 YU7 宝石绿 官方图", "Xiaomi YU7 in Emerald Green, official imagery") },
+    { src: "/images/vehicles/xiaomi-yu7/interior.jpg", alt: l("小米 YU7 天际屏座舱 官方图", "Xiaomi YU7 HyperVision cabin, official imagery") },
+    { src: "/images/vehicles/xiaomi-yu7/scene.jpg", alt: l("小米 YU7 极光夜景 官方图", "Xiaomi YU7 under the aurora, official imagery") },
   ],
   theme: "dark",
   highlights: [
@@ -690,7 +693,7 @@ export const xiaomiYU7: Vehicle = {
     { icon: "shield", title: l("铠甲笼式车身", "Armour-cage body"), body: l("2200 MPa 自研钢材，A/B 柱强度提升 25% / 70%。", "2,200 MPa proprietary steel; A/B pillars 25% / 70% stronger.") },
     { icon: "armchair", title: l("零重力座椅", "Zero-gravity seats"), body: l("前排 123° 一键躺倒，后排 135° 电动调节。", "123° front recline and 135° power-adjust rear seats.") },
     { icon: "wind", title: l("40 项风阻优化", "40 aero optimisations"), body: l("0.245 Cd，主动格栅与轮毂导流为续航加成 59 km。", "0.245 Cd; active shutters and wheel aero add 59 km.") },
-    { icon: "palette", title: l("9 色车漆 · 20 色轮毂", "9 paints · 20 wheel colours"), body: l("宝石绿双层色漆工艺，个性组合数百种。", "Emerald Green double-layer paint and hundreds of combinations.") },
+    { icon: "palette", title: l("7 款车漆 · 6 款轮毂", "7 paints · 6 wheels"), body: l("宝石绿三套色罐双层色漆，2026 新增车厘子红与火山灰。", "Emerald Green double-layer paint, plus new Cherry Red and Volcanic Grey for 2026.") },
   ],
   tags: [l("全系激光雷达", "LiDAR standard"), l("835 km", "835 km"), l("天际屏", "HyperVision")],
   order: 2,
@@ -712,12 +715,12 @@ export const xiaomiYU7GT: Vehicle = {
   availability: "available",
   launchDate: "2026-05-21",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/xiaomi-yu7-gt/hero.jpg", alt: l("熔岩橙 小米 YU7 GT", "Xiaomi YU7 GT in Lava Orange") },
-  heroPaintId: "lava-orange",
+  hero: { src: "/images/vehicles/xiaomi-yu7-gt/hero.jpg", alt: l("车厘子红 小米 YU7 GT", "Xiaomi YU7 GT in Cherry Red") },
+  heroPaintId: "cherry-red",
   images: [
-    { src: "/images/vehicles/xiaomi-yu7-gt/hero.jpg", alt: l("小米 YU7 GT 外观", "Xiaomi YU7 GT exterior") },
-    { src: "/images/vehicles/xiaomi-yu7-gt/scene.jpg", alt: l("小米 YU7 GT 山路", "Xiaomi YU7 GT on a mountain road") },
-    { src: "/images/vehicles/xiaomi-yu7/interior.jpg", alt: l("YU7 GT 座舱", "YU7 GT cabin") },
+    { src: "/images/vehicles/xiaomi-yu7-gt/hero.jpg", alt: l("小米 YU7 GT 车厘子红 官方图", "Xiaomi YU7 GT in Cherry Red, official imagery") },
+    { src: "/images/vehicles/xiaomi-yu7-gt/scene.jpg", alt: l("小米 YU7 GT 前脸细节 官方图", "Xiaomi YU7 GT front detail, official imagery") },
+    { src: "/images/vehicles/xiaomi-yu7-gt/interior.jpg", alt: l("YU7 GT 座舱 官方图", "YU7 GT cabin, official imagery") },
   ],
   theme: "dark",
   highlights: [
@@ -785,15 +788,21 @@ export const xiaomiYU7GT: Vehicle = {
       badge: l("大满配", "Full spec"),
     },
   ],
-  paints: yu7Paints.map((p) => ({ ...p, price: p.id === "lava-orange" || p.id === "emerald-green" ? 0 : p.price })),
+  paints: [
+    { id: "cherry-red", name: l("车厘子红", "Cherry Red"), hex: "#8c1a2b", hex2: "#4d0c17", finish: "metallic", price: 0, family: l("GT 专属", "GT exclusive"), image: "/images/vehicles/xiaomi-yu7-gt/paints/cherry-red.jpg" },
+    { id: "titanium", name: l("钛金属色", "Titanium Silver"), hex: "#a8aaad", hex2: "#6e7175", finish: "metallic", price: 0, image: "/images/vehicles/xiaomi-yu7-gt/paints/titanium.jpg" },
+    { id: "volcanic-grey", name: l("火山灰", "Volcanic Grey"), hex: "#5f6368", hex2: "#35383c", finish: "metallic", price: 0, image: "/images/vehicles/xiaomi-yu7-gt/paints/volcanic-grey.jpg" },
+    { id: "obsidian-black", name: l("曜石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0, image: "/images/vehicles/xiaomi-yu7-gt/paints/obsidian-black.jpg" },
+    { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0, image: "/images/vehicles/xiaomi-yu7-gt/paints/pearl-white.jpg" },
+  ],
   wheels: [
-    { id: "21-forged", name: l("21 英寸锻造轮毂", '21" Forged wheels'), size: 21, price: 0, style: "forged", rangeDeltaKm: 0 },
+    { id: "21-forged", name: l("21 英寸锻造轮毂", '21" Forged wheels'), size: 21, price: 0, style: "forged", rangeDeltaKm: 0, image: "/images/vehicles/xiaomi-yu7-gt/wheels/21-forged.jpg" },
     { id: "21-track", name: l("21 英寸赛道锻造轮毂 · Trofeo RS", '21" Track forged · Trofeo RS'), size: 21, price: 12000, style: "forged", rangeDeltaKm: -20 },
   ],
   interiors: [
+    { id: "gt-red", name: l("GT 红 Alcantara", "GT Red Alcantara"), price: 0, primary: "#8c1a2b", secondary: "#141416", material: l("Alcantara + 碳纤维 + GT 刺绣", "Alcantara + carbon fibre + GT embroidery"), image: "/images/vehicles/xiaomi-yu7-gt/interiors/gt-red.jpg" },
     { id: "gt-black", name: l("曜石黑 Alcantara", "Obsidian Alcantara"), price: 0, primary: "#141416", secondary: "#2b2b2e", material: l("Alcantara + 碳纤维", "Alcantara + carbon fibre") },
-    { id: "gt-orange", name: l("熔岩橙拼色", "Lava Orange accent"), price: 0, primary: "#141416", secondary: "#e4571b", material: l("Alcantara + 橙色缝线", "Alcantara + orange stitching") },
-    { id: "gt-green", name: l("宝石绿拼色", "Emerald accent"), price: 0, primary: "#141416", secondary: "#1f6d4f", material: l("Alcantara + 绿色缝线", "Alcantara + green stitching") },
+    { id: "gt-grey", name: l("石墨灰 Alcantara", "Graphite Alcantara"), price: 0, primary: "#5f6368", secondary: "#141416", material: l("Alcantara + 碳纤维", "Alcantara + carbon fibre") },
   ],
   extras: [
     { id: "carbon-ceramic", name: l("碳陶制动系统", "Carbon-ceramic brakes"), description: l("持续高负载制动不衰减", "Fade-free under sustained track use"), price: 48000, category: "performance", trims: ["gt"], includedIn: ["gt-full"] },
@@ -867,12 +876,13 @@ export const xiaomiN90: Vehicle = {
   availability: "available",
   launchDate: "2026-09-07",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/xiaomi-n90/hero.jpg", alt: l("小米澎程 N90 Max", "Xiaomi SkyNomad N90 Max") },
-  heroPaintId: "canyon-green",
+  hero: { src: "/images/vehicles/xiaomi-n90/hero.jpg", alt: l("远山青 小米澎程 N90 Max 官方图", "Xiaomi SkyNomad N90 Max in Mountain Teal, official imagery") },
+  heroPaintId: "mountain-teal",
   images: [
-    { src: "/images/vehicles/xiaomi-n90/hero.jpg", alt: l("小米澎程 N90 外观", "Xiaomi SkyNomad N90 exterior") },
-    { src: "/images/vehicles/xiaomi-n90/scene.jpg", alt: l("小米澎程 N90 露营场景", "Xiaomi SkyNomad N90 camping") },
-    { src: "/images/vehicles/xiaomi-n90/interior.jpg", alt: l("小米澎程 N90 座舱", "Xiaomi SkyNomad N90 cabin") },
+    { src: "/images/vehicles/xiaomi-n90/hero.jpg", alt: l("小米澎程 N90 外观 官方图", "Xiaomi SkyNomad N90 exterior, official imagery") },
+    { src: "/images/vehicles/xiaomi-n90/scene.jpg", alt: l("小米澎程 N90 生活场景 官方图", "Xiaomi SkyNomad N90 lifestyle, official imagery") },
+    { src: "/images/vehicles/xiaomi-n90/interior.jpg", alt: l("小米澎程 N90 座舱 官方图", "Xiaomi SkyNomad N90 cabin, official imagery") },
+    { src: "/images/vehicles/xiaomi-n90/cabin-layout.jpg", alt: l("小米澎程 N90 对坐模式 官方图", "Xiaomi SkyNomad N90 face-to-face layout, official imagery") },
   ],
   theme: "light",
   highlights: [
@@ -897,7 +907,7 @@ export const xiaomiN90: Vehicle = {
       rangeStandard: "CLTC",
       evRangeKm: 505,
       accel: 5.9,
-      topSpeed: 200,
+      topSpeed: 190,
       peakChargeKw: 250,
       charge10to80Min: 20,
       platformVoltage: "800 V",
@@ -927,7 +937,7 @@ export const xiaomiN90: Vehicle = {
       rangeStandard: "CLTC",
       evRangeKm: 480,
       accel: 6.1,
-      topSpeed: 200,
+      topSpeed: 190,
       peakChargeKw: 250,
       charge10to80Min: 20,
       platformVoltage: "800 V",
@@ -944,22 +954,23 @@ export const xiaomiN90: Vehicle = {
     },
   ],
   paints: [
-    { id: "canyon-green", name: l("青山绿", "Canyon Green"), hex: "#4c5f4a", hex2: "#2a3628", finish: "matte", price: 10000 },
-    { id: "cloud-grey", name: l("云岩灰", "Cloud Grey"), hex: "#9a9da1", hex2: "#61656a", finish: "metallic", price: 0 },
-    { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0 },
-    { id: "obsidian-black", name: l("曜石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0 },
-    { id: "dune-gold", name: l("沙丘金", "Dune Gold"), hex: "#c2a878", hex2: "#8b7248", finish: "metallic", price: 7000 },
-    { id: "deep-sea-blue", name: l("深海蓝", "Deep Sea Blue"), hex: "#1f3a6e", hex2: "#0f1f3f", finish: "metallic", price: 7000 },
+    { id: "wine-red", name: l("酒红", "Wine Red"), hex: "#6a1f2a", hex2: "#3a0f16", finish: "metallic", price: 7000, image: "/images/vehicles/xiaomi-n90/paints/wine-red.jpg" },
+    { id: "mountain-teal", name: l("远山青", "Mountain Teal"), hex: "#3f6b6a", hex2: "#213d3c", finish: "metallic", price: 7000, image: "/images/vehicles/xiaomi-n90/paints/mountain-teal.jpg" },
+    { id: "butterfly-blue", name: l("蝴蝶谷蓝", "Butterfly Valley Blue"), hex: "#4f86b5", hex2: "#2a5578", finish: "metallic", price: 7000, image: "/images/vehicles/xiaomi-n90/paints/butterfly-blue.jpg" },
+    { id: "volcanic-grey", name: l("火山灰", "Volcanic Grey"), hex: "#5f6368", hex2: "#35383c", finish: "metallic", price: 0, image: "/images/vehicles/xiaomi-n90/paints/volcanic-grey.jpg" },
+    { id: "cool-khaki", name: l("冷卡其", "Cool Khaki"), hex: "#9a9784", hex2: "#63604f", finish: "matte", price: 7000, image: "/images/vehicles/xiaomi-n90/paints/cool-khaki.jpg" },
+    { id: "pearl-white", name: l("珍珠白", "Pearl White"), hex: "#f1f0eb", hex2: "#c9c8c1", finish: "pearl", price: 0, image: "/images/vehicles/xiaomi-n90/paints/pearl-white.jpg" },
+    { id: "obsidian-black", name: l("耀石黑", "Obsidian Black"), hex: "#111216", hex2: "#000000", finish: "metallic", price: 0, image: "/images/vehicles/xiaomi-n90/paints/obsidian-black.jpg" },
   ],
   wheels: [
     { id: "20-aero", name: l("20 英寸低风阻轮毂", '20" Aero wheels'), size: 20, price: 0, style: "aero" },
-    { id: "21-multi", name: l("21 英寸多辐轮毂", '21" Multi-spoke wheels'), size: 21, price: 8000, style: "multi", rangeDeltaKm: -15 },
-    { id: "20-at", name: l("20 英寸越野轮毂 + AT 胎", '20" Off-road wheels + AT tyres'), size: 20, price: 9000, style: "sport", rangeDeltaKm: -30, trims: ["explorer"] },
+    { id: "20-black", name: l("20 英寸熏黑轮毂（武士黑套装）", '20" Smoked Black wheels (Samurai Black pack)'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -10, image: "/images/vehicles/xiaomi-n90/wheels/20-black.jpg" },
+    { id: "21-multi", name: l("21 英寸多辐轮毂", '21" Multi-spoke wheels'), size: 21, price: 12000, style: "multi", rangeDeltaKm: -15 },
   ],
   interiors: [
-    { id: "oak-beige", name: l("橡木米", "Oak Beige"), price: 0, primary: "#cbb99a", secondary: "#4a3f34", material: l("Nappa 真皮 + 实木饰板", "Nappa leather + wood trim") },
-    { id: "forest-green", name: l("森林绿", "Forest Green"), price: 0, primary: "#3e5b4f", secondary: "#1f2a26", material: l("Nappa 真皮", "Nappa leather") },
-    { id: "night-black", name: l("暗夜黑", "Night Black"), price: 0, primary: "#1b1b1f", secondary: "#2c2d33", material: l("Nappa 真皮", "Nappa leather") },
+    { id: "mocha-brown", name: l("摩卡棕", "Mocha Brown"), price: 0, primary: "#7a5a44", secondary: "#3d2b21", material: l("Nappa 真皮 + 实木饰板", "Nappa leather + wood trim"), image: "/images/vehicles/xiaomi-n90/interiors/mocha-brown.jpg" },
+    { id: "sand-beige", name: l("砂陶米", "Sand Beige"), price: 0, primary: "#cbb99a", secondary: "#4a3f34", material: l("Nappa 真皮", "Nappa leather"), image: "/images/vehicles/xiaomi-n90/interiors/sand-beige.jpg" },
+    { id: "night-black", name: l("暗夜黑", "Night Black"), price: 0, primary: "#1b1b1f", secondary: "#2c2d33", material: l("Nappa 真皮", "Nappa leather"), image: "/images/vehicles/xiaomi-n90/interiors/night-black.jpg" },
   ],
   extras: [
     { id: "kitchen", name: l("车尾厨房模块", "Tail kitchen module"), description: l("电磁炉 + 水箱 + 折叠台面", "Induction hob, water tank and folding worktop"), price: 9800, category: "comfort", trims: ["explorer"] },
@@ -976,6 +987,8 @@ export const xiaomiN90: Vehicle = {
         { label: l("长 × 宽 × 高", "L × W × H"), value: l("5,285 × 1,998 × 1,825 mm（探索版车高 +100 mm）", "5,285 × 1,998 × 1,825 mm (Explorer +100 mm)") },
         { label: l("轴距", "Wheelbase"), value: "3,080 mm" },
         { label: l("座椅布局", "Seating"), value: l("2+2+3 七座 / 五座；11 种空间布局", "2+2+3 seven-seat / five-seat; 11 layouts") },
+        { label: l("后备厢", "Trunk"), value: "577 L" },
+        { label: l("安全气囊", "Airbags"), value: l("全车 12 个（含 4 点式固定双腔远端气囊）", "12 airbags incl. 4-point dual-chamber far-side") },
       ],
     },
     {
@@ -983,7 +996,8 @@ export const xiaomiN90: Vehicle = {
       rows: [
         { label: l("增程器", "Range extender"), value: l("1.5T 增程器 + 固定齿比", "1.5T range extender, fixed-ratio") },
         { label: l("电机", "Motors"), value: l("前 100 kW + 后 210 kW", "100 kW front + 210 kW rear") },
-        { label: l("电池 / 油箱", "Battery / tank"), value: "76 kWh NMC / 60 L" },
+        { label: l("电池 / 油箱", "Battery / tank"), value: l("76 kWh 小米龙甲电池 / 60 L", "76 kWh Xiaomi Dragon Armour battery / 60 L") },
+        { label: l("亏电油耗", "Charge-sustaining consumption"), value: "6.26 L/100 km (WLTC)" },
         { label: l("续航", "Range"), value: l("CLTC 纯电 505 km · 综合 1,705 km（WLTC 纯电 370 km）", "505 km EV · 1,705 km combined (370 km WLTC EV)") },
       ],
     },
@@ -997,7 +1011,7 @@ export const xiaomiN90: Vehicle = {
   ],
   dimensions: { length: 5285, width: 1998, height: 1825, wheelbase: 3080, clearance: 200 },
   seats: [7, 5],
-  cargoL: 520,
+  cargoL: 577,
   warranty: XIAOMI_WARRANTY,
   deposit: 5000,
   features: [

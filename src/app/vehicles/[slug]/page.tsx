@@ -297,12 +297,13 @@ export default async function VehiclePage({ params }: Params) {
       <section id="gallery" className="py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.vehicles.gallery} title={pick(vehicle.name, locale)} />
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
+          <div className="mt-12 grid gap-4 md:grid-cols-2">
             {vehicle.images.map((img, i) => (
-              <Reveal key={img.src + i} delay={i * 60} className={i === 0 ? "md:col-span-2" : ""}>
-                <div className={`relative overflow-hidden rounded-3xl bg-mist ${i === 0 ? "aspect-[16/9]" : "aspect-[16/9] md:aspect-[4/5]"}`}>
-                  <Image src={img.src} alt={pick(img.alt, locale)} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-                </div>
+              <Reveal key={img.src + i} delay={(i % 2) * 60} className={i === 0 ? "md:col-span-2" : ""}>
+                <figure className={`relative overflow-hidden rounded-3xl bg-mist ${i === 0 ? "aspect-[16/9] md:aspect-[21/9]" : "aspect-[16/10]"}`}>
+                  <Image src={img.src} alt={pick(img.alt, locale)} fill sizes={i === 0 ? "100vw" : "(min-width: 768px) 50vw, 100vw"} className="object-cover" />
+                  <figcaption className="absolute bottom-3 left-4 rounded-pill bg-black/45 px-3 py-1 text-[11px] text-white backdrop-blur">{pick(img.alt, locale)}</figcaption>
+                </figure>
               </Reveal>
             ))}
           </div>

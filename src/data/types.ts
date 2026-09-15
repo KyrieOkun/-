@@ -45,6 +45,8 @@ export interface PaintOption {
   family?: L10n;
   isNew?: boolean;
   trims?: string[];
+  /** Official photograph of the vehicle in this paint. */
+  image?: string;
 }
 
 export interface WheelOption {
@@ -56,6 +58,8 @@ export interface WheelOption {
   description?: L10n;
   rangeDeltaKm?: number;
   trims?: string[];
+  /** Official product photograph of the wheel. */
+  image?: string;
 }
 
 export interface InteriorOption {
@@ -66,6 +70,8 @@ export interface InteriorOption {
   secondary: string;
   material: L10n;
   trims?: string[];
+  /** Official photograph of the interior colourway. */
+  image?: string;
 }
 
 export type ExtraCategory = "adas" | "comfort" | "performance" | "exterior" | "charging" | "service";

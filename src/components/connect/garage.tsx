@@ -103,7 +103,7 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
             return (
               <article key={e.id} className="overflow-hidden rounded-3xl bg-white hairline">
                 <div className="relative aspect-[16/8] bg-carbon">
-                  <Image src={v.hero.src} alt={pick(v.hero.alt)} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
+                  <Image src={paint.image ?? v.hero.src} alt={`${pick(v.name)} · ${pick(paint.name)}`} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover" />
                   <div className="scrim-b absolute inset-x-0 bottom-0 h-2/3" />
                   <div className="absolute inset-x-5 bottom-4 flex items-end justify-between text-white">
                     <div>

@@ -102,31 +102,57 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
       {/* Visual */}
       <div className="lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-hidden">
         <div className="relative aspect-[16/10] bg-carbon lg:h-[62%] lg:aspect-auto">
-          <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt)} fill priority sizes="(min-width: 1024px) 58vw, 100vw" className="object-cover" />
+          <Image
+            key={quote.paint.image ?? vehicle.hero.src}
+            src={quote.paint.image ?? vehicle.hero.src}
+            alt={`${pick(vehicle.name)} · ${pick(quote.paint.name)}`}
+            fill
+            priority
+            sizes="(min-width: 1024px) 58vw, 100vw"
+            className="animate-fade-in object-cover"
+          />
           <div className="scrim-b absolute inset-x-0 bottom-0 h-1/2" />
           <div className="absolute bottom-4 left-4 flex items-center gap-3 rounded-2xl bg-white/85 px-3 py-2 backdrop-blur sm:bottom-6 sm:left-6">
             <PaintSwatch paint={quote.paint} size={28} />
             <div>
               <p className="text-xs font-semibold text-ink">{pick(quote.paint.name)}</p>
-              <p className="text-[11px] text-slate">{t.configurator.paintFinish[quote.paint.finish]}</p>
+              <p className="text-[11px] text-slate">{t.configurator.paintFinish[quote.paint.finish]}{quote.paint.image ? "" : ` · ${locale === "zh" ? "示意色板" : "colour sample"}`}</p>
             </div>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3 bg-cloud p-4 sm:p-6 lg:h-[38%]">
           <div className="flex flex-col gap-2 overflow-hidden">
-            <PaintPanel paint={quote.paint} className="min-h-24 flex-1" />
+            {quote.paint.image ? (
+              <div className="relative min-h-24 flex-1 overflow-hidden rounded-3xl bg-mist hairline">
+                <Image src={quote.paint.image} alt={pick(quote.paint.name)} fill sizes="20vw" className="object-cover" />
+              </div>
+            ) : (
+              <PaintPanel paint={quote.paint} className="min-h-24 flex-1" />
+            )}
             <p className="truncate text-xs text-slate">{t.configurator.color} · <span className="font-medium text-ink">{pick(quote.paint.name)}</span></p>
           </div>
           <div className="flex flex-col gap-2 overflow-hidden">
-            <div className="flex min-h-24 flex-1 items-center justify-center rounded-3xl bg-white hairline">
-              <WheelGlyph wheel={quote.wheel} size={88} />
-            </div>
+            {quote.wheel.image ? (
+              <div className="relative min-h-24 flex-1 overflow-hidden rounded-3xl bg-white hairline">
+                <Image src={quote.wheel.image} alt={pick(quote.wheel.name)} fill sizes="20vw" className="object-cover" />
+              </div>
+            ) : (
+              <div className="flex min-h-24 flex-1 items-center justify-center rounded-3xl bg-white hairline">
+                <WheelGlyph wheel={quote.wheel} size={88} />
+              </div>
+            )}
             <p className="truncate text-xs text-slate">{t.configurator.wheel} · <span className="font-medium text-ink">{quote.wheel.size}&quot;</span></p>
           </div>
           <div className="flex flex-col gap-2 overflow-hidden">
-            <div className="relative min-h-24 flex-1 overflow-hidden rounded-3xl hairline" style={{ background: `linear-gradient(160deg, ${quote.interior.primary} 0 62%, ${quote.interior.secondary} 62% 100%)` }}>
-              <div className="metallic absolute inset-0 opacity-60" />
-            </div>
+            {quote.interior.image ? (
+              <div className="relative min-h-24 flex-1 overflow-hidden rounded-3xl bg-mist hairline">
+                <Image src={quote.interior.image} alt={pick(quote.interior.name)} fill sizes="20vw" className="object-cover" />
+              </div>
+            ) : (
+              <div className="relative min-h-24 flex-1 overflow-hidden rounded-3xl hairline" style={{ background: `linear-gradient(160deg, ${quote.interior.primary} 0 62%, ${quote.interior.secondary} 62% 100%)` }}>
+                <div className="metallic absolute inset-0 opacity-60" />
+              </div>
+            )}
             <p className="truncate text-xs text-slate">{t.configurator.interior} · <span className="font-medium text-ink">{pick(quote.interior.name)}</span></p>
           </div>
         </div>
@@ -200,7 +226,13 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
               const active = w.id === selection.wheelId;
               return (
                 <button key={w.id} type="button" onClick={() => update({ wheelId: w.id })} aria-pressed={active} className={cn("flex items-center gap-3 rounded-2xl border p-3 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}>
-                  <WheelGlyph wheel={w} size={56} />
+                  {w.image ? (
+                    <span className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-mist">
+                      <Image src={w.image} alt="" fill sizes="56px" className="object-cover" />
+                    </span>
+                  ) : (
+                    <WheelGlyph wheel={w} size={56} />
+                  )}
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{pick(w.name)}</p>
                     <p className="text-xs text-slate">{w.price === 0 ? t.common.included : `+${formatCNY(w.price)}`}{w.rangeDeltaKm ? ` · ${w.rangeDeltaKm} km` : ""}</p>
@@ -218,7 +250,13 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
               const active = i.id === selection.interiorId;
               return (
                 <button key={i.id} type="button" onClick={() => update({ interiorId: i.id })} aria-pressed={active} className={cn("flex items-center gap-3 rounded-2xl border p-3 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}>
-                  <InteriorSwatch interior={i} size={44} />
+                  {i.image ? (
+                    <span className="relative size-11 shrink-0 overflow-hidden rounded-xl bg-mist">
+                      <Image src={i.image} alt="" fill sizes="44px" className="object-cover" />
+                    </span>
+                  ) : (
+                    <InteriorSwatch interior={i} size={44} />
+                  )}
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{pick(i.name)}</p>
                     <p className="truncate text-xs text-slate">{pick(i.material)} · {i.price === 0 ? t.common.included : `+${formatCNY(i.price)}`}</p>

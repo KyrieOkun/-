@@ -35,6 +35,14 @@
 
 价格与参数以品牌官方最新公布为准，站内已在相关页面标注。
 
+### 图片素材
+
+- 车型主视觉、图集、车漆 / 轮毂 / 内饰图片均为品牌官网公开素材：小米汽车 `s1.xiaomiev.com`（新一代 SU7、SU7 Ultra、YU7、YU7 GT、澎程 N90 官网页面），特斯拉 `digitalassets.tesla.com`（tesla.cn Model 3 / Model Y / Cybertruck 页面及 Model S / X 官方主视觉）。
+- `scripts/fetch-official-assets.mjs` 是唯一来源清单：`node scripts/fetch-official-assets.mjs` 增量下载，`--force` 全量刷新；脚本会统一缩放到 1920px 宽并压缩为 JPEG。
+- 选配器中小米全系每一种车漆、轮毂与内饰都对应官方实拍图；特斯拉官网未公开分色渲染图，故仅主视觉对应的颜色有实拍，其余颜色以官方色值色板呈现。
+- 定制工坊（手工缝线、色板、碳纤维）与数字钥匙配图为自制概念图，不含具体车型。
+- 官方素材版权归小米集团与 Tesla, Inc. 所有，正式上线前请确认联名授权范围。
+
 ---
 
 ## 技术栈
@@ -68,6 +76,7 @@ npm run dev                  # http://localhost:3000
 | `npm test` | Vitest 单元 / 组件测试 |
 | `npm run build` / `npm start` | 生产构建与启动 |
 | `npm run check` | lint + typecheck + test + build 一键检查 |
+| `npm run assets` | 从品牌官网增量拉取车型官方图片 |
 
 ---
 
@@ -113,7 +122,7 @@ src/
   data/                车型、充电站、城市与走廊、资讯、门店、FAQ、法律文本（中英双语）
   lib/                 计价、行程规划、置换估价、鉴权、存储、i18n、工具
 public/
-  images/              车型与场景视觉（自制，非官方素材）
+  images/              车型与场景视觉（品牌官网公开素材，由 scripts/fetch-official-assets.mjs 维护）
   fonts/               Inter 子集（中文回退系统字体 / MiSans / PingFang）
 ```
 

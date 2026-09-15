@@ -112,7 +112,7 @@ export default async function OrderDetailPage({ params, searchParams }: { params
         <aside className="h-fit space-y-4 lg:sticky lg:top-24">
           <div className="overflow-hidden rounded-3xl bg-white hairline">
             <div className="relative aspect-[16/9] bg-mist">
-              <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt, locale)} fill sizes="400px" className="object-cover" />
+              <Image src={quote.paint.image ?? vehicle.hero.src} alt={`${pick(vehicle.name, locale)} · ${pick(quote.paint.name, locale)}`} fill sizes="400px" className="object-cover" />
             </div>
             <div className="p-6">
               <p className="text-sm text-slate">{t.common.deposit}</p>

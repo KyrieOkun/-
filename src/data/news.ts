@@ -24,7 +24,7 @@ export const articles: Article[] = [
     excerpt: l("两大品牌在售全系车型在线选配、跨品牌充电互通、行程规划、数字钥匙与生态互联同步开放。", "Configure every model from both brands online, with cross-brand charging, trip planning, digital keys and ecosystem integration available from day one."),
     date: "2026-09-15",
     readMinutes: 4,
-    image: "/images/home/hero.jpg",
+    image: "/images/home/xiaomi.jpg",
     body: [
       l("今天，小米汽车 × 特斯拉高级定制中心正式上线。这是首个把两大电动先锋的在售车型、选配与拥车服务放到同一个体验里的平台：新一代小米 SU7、YU7 系列、SU7 Ultra、澎程 N90，以及特斯拉 Model 3、Model Y（含六座 Model Y L）、Model S 与 Model X 现车，均可在线完成选配并支付定金。", "Today the Xiaomi EV × Tesla Atelier goes live — the first platform to bring both pioneers' current line-ups, configurators and ownership services into one experience. The new-generation SU7, YU7 series, SU7 Ultra and SkyNomad N90, together with Tesla Model 3, Model Y (including the six-seat Model Y L), Model S and Model X inventory, can all be configured and reserved online."),
       l("联动中心同步开放：统一账户 One ID、跨品牌车库、充电互通、跨品牌行程规划、数字钥匙互通、生态互联、软件更新中心、服务预约与置换升级九大能力全部上线，无灰度、无等待。", "The Connect hub launches with all nine capabilities live: One ID, cross-brand Garage, charging interoperability, cross-brand trip planning, digital key sharing, ecosystem automation, the software update centre, service booking and trade-in."),

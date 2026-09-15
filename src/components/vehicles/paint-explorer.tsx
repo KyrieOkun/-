@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import type { InteriorOption, PaintOption, WheelOption } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
-import { formatCNY } from "@/lib/utils";
+import { cn, formatCNY } from "@/lib/utils";
 import { InteriorSwatch, PaintPanel, PaintSwatch, WheelGlyph } from "./swatches";
 
 export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { paints: PaintOption[]; wheels: WheelOption[]; interiors: InteriorOption[]; initialPaintId?: string }) {
@@ -15,10 +16,28 @@ export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { p
   return (
     <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
       <div className="relative">
-        <PaintPanel paint={paint} className="aspect-[16/10] w-full shadow-lift" />
+        {paint.image ? (
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-3xl bg-mist shadow-lift">
+            <Image key={paint.image} src={paint.image} alt={pick(paint.name)} fill sizes="(min-width: 1024px) 55vw, 100vw" className="animate-fade-in object-cover" />
+          </div>
+        ) : (
+          <PaintPanel paint={paint} className="aspect-[16/10] w-full shadow-lift" />
+        )}
         <div className="absolute bottom-5 left-5 flex items-center gap-3 rounded-2xl bg-white/85 px-4 py-3 backdrop-blur">
-          <WheelGlyph wheel={wheel} size={44} />
-          <InteriorSwatch interior={interior} size={28} />
+          {wheel.image ? (
+            <span className="relative size-11 overflow-hidden rounded-full bg-mist">
+              <Image src={wheel.image} alt="" fill sizes="44px" className="object-cover" />
+            </span>
+          ) : (
+            <WheelGlyph wheel={wheel} size={44} />
+          )}
+          {interior.image ? (
+            <span className="relative size-7 overflow-hidden rounded-full bg-mist">
+              <Image src={interior.image} alt="" fill sizes="28px" className="object-cover" />
+            </span>
+          ) : (
+            <InteriorSwatch interior={interior} size={28} />
+          )}
           <div>
             <p className="text-sm font-semibold">{pick(paint.name)}</p>
             <p className="text-xs text-slate">
@@ -52,7 +71,13 @@ export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { p
           <div className="mt-4 flex flex-wrap gap-3">
             {wheels.map((w) => (
               <button key={w.id} type="button" onClick={() => setWheel(w)} className="focus-ring rounded-full" aria-label={pick(w.name)} aria-pressed={wheel.id === w.id}>
-                <WheelGlyph wheel={w} size={52} selected={wheel.id === w.id} />
+                {w.image ? (
+                  <span className={cn("relative block size-[52px] overflow-hidden rounded-full bg-mist ring-1 ring-inset ring-black/10 transition-transform", wheel.id === w.id && "scale-105 ring-2 ring-ink")}>
+                    <Image src={w.image} alt="" fill sizes="52px" className="object-cover" />
+                  </span>
+                ) : (
+                  <WheelGlyph wheel={w} size={52} selected={wheel.id === w.id} />
+                )}
               </button>
             ))}
           </div>
@@ -65,7 +90,13 @@ export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { p
           <div className="mt-4 flex flex-wrap gap-3">
             {interiors.map((i) => (
               <button key={i.id} type="button" onClick={() => setInterior(i)} className="focus-ring rounded-full" aria-label={pick(i.name)} aria-pressed={interior.id === i.id}>
-                <InteriorSwatch interior={i} size={40} selected={interior.id === i.id} />
+                {i.image ? (
+                  <span className={cn("relative block size-10 overflow-hidden rounded-full bg-mist ring-1 ring-inset ring-black/10 transition-transform", interior.id === i.id && "scale-110 ring-2 ring-ink")}>
+                    <Image src={i.image} alt="" fill sizes="40px" className="object-cover" />
+                  </span>
+                ) : (
+                  <InteriorSwatch interior={i} size={40} selected={interior.id === i.id} />
+                )}
               </button>
             ))}
           </div>

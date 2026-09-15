@@ -31,7 +31,15 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section className="snap-section relative flex min-h-[100svh] flex-col overflow-hidden bg-carbon text-white">
-        <Image src="/images/home/hero.jpg" alt={t.home.heroSubtitle} fill priority sizes="100vw" className="object-cover" />
+        <div className="absolute inset-0 grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
+          <div className="relative overflow-hidden">
+            <Image src="/images/home/xiaomi.jpg" alt={locale === "zh" ? "新一代小米 SU7 官方图" : "New-generation Xiaomi SU7, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[70%_center]" />
+          </div>
+          <div className="relative overflow-hidden">
+            <Image src="/images/home/tesla.jpg" alt={locale === "zh" ? "特斯拉 Model Y 官方图" : "Tesla Model Y, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[35%_center]" />
+          </div>
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-white/30 md:block" />
+        </div>
         <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-1/2" />
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
         <div className="relative flex flex-1 flex-col items-center justify-between px-5 pb-16 pt-24 text-center sm:pb-20 sm:pt-28">
@@ -194,7 +202,7 @@ export default async function HomePage() {
 
       {/* CTA */}
       <section className="relative overflow-hidden bg-ink py-24 text-white lg:py-32">
-        <Image src="/images/vehicles/xiaomi-su7/scene.jpg" alt="" fill sizes="100vw" className="object-cover opacity-40" />
+        <Image src="/images/vehicles/xiaomi-yu7/scene.jpg" alt="" fill sizes="100vw" className="object-cover opacity-50" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/30" />
         <Container className="relative text-center">
           <Reveal className="mx-auto flex max-w-3xl flex-col items-center">

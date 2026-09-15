@@ -149,7 +149,7 @@ export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle:
       <aside className="h-fit space-y-4 lg:sticky lg:top-24">
         <div className="overflow-hidden rounded-3xl bg-white hairline">
           <div className="relative aspect-[16/9] bg-mist">
-            <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt)} fill sizes="420px" className="object-cover" />
+            <Image src={quote.paint.image ?? vehicle.hero.src} alt={`${pick(vehicle.name)} · ${pick(quote.paint.name)}`} fill sizes="420px" className="object-cover" />
           </div>
           <div className="p-6">
             <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-ash"><span className={cn("size-1.5 rounded-full", vehicle.brand === "xiaomi" ? "bg-mi" : "bg-tesla")} />{vehicle.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla}</p>

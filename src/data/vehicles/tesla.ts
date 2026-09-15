@@ -13,23 +13,26 @@ const TESLA_WARRANTY_SX = [
   l("免费基础道路救援", "Complimentary roadside assistance"),
 ];
 
-const teslaPaints = (opts: { quicksilver?: boolean; frostBlue?: boolean } = {}): PaintOption[] => [
-  { id: "solid-black", name: l("纯黑色", "Solid Black"), hex: "#0b0b0d", hex2: "#000000", finish: "solid", price: 0 },
-  { id: "pearl-white", name: l("珍珠白多涂层", "Pearl White Multi-Coat"), hex: "#eeeee9", hex2: "#c8c8c2", finish: "pearl", price: 8000 },
-  { id: "deep-blue", name: l("深海蓝金属漆", "Deep Blue Metallic"), hex: "#1c3a73", hex2: "#0d1f42", finish: "metallic", price: 8000 },
-  { id: "stealth-grey", name: l("星空灰", "Stealth Grey"), hex: "#5b5f66", hex2: "#33363b", finish: "metallic", price: 12000 },
-  ...(opts.quicksilver === false
-    ? []
-    : [{ id: "quicksilver", name: l("快银", "Quicksilver"), hex: "#b8bbc0", hex2: "#7e8288", finish: "metallic" as const, price: 12000 }]),
-  { id: "ultra-red", name: l("烈焰红", "Ultra Red"), hex: "#b3131b", hex2: "#6b0a10", finish: "pearl", price: 12000 },
-  ...(opts.frostBlue
-    ? [{ id: "frost-blue", name: l("霜蓝", "Frost Blue"), hex: "#a9c4d8", hex2: "#6f93ad", finish: "metallic" as const, price: 12000, isNew: true }]
-    : []),
-];
+const teslaPaints = (opts: { quicksilver?: boolean; frostBlue?: boolean; images?: Record<string, string> } = {}): PaintOption[] => {
+  const img = (id: string) => (opts.images?.[id] ? { image: opts.images[id] } : {});
+  return [
+    { id: "solid-black", name: l("纯黑色", "Solid Black"), hex: "#0b0b0d", hex2: "#000000", finish: "solid", price: 0, ...img("solid-black") },
+    { id: "pearl-white", name: l("珍珠白多涂层", "Pearl White Multi-Coat"), hex: "#eeeee9", hex2: "#c8c8c2", finish: "pearl", price: 8000, ...img("pearl-white") },
+    { id: "deep-blue", name: l("深海蓝金属漆", "Deep Blue Metallic"), hex: "#1c3a73", hex2: "#0d1f42", finish: "metallic", price: 8000, ...img("deep-blue") },
+    { id: "stealth-grey", name: l("星空灰", "Stealth Grey"), hex: "#5b5f66", hex2: "#33363b", finish: "metallic", price: 12000, ...img("stealth-grey") },
+    ...(opts.quicksilver === false
+      ? []
+      : [{ id: "quicksilver", name: l("快银", "Quicksilver"), hex: "#b8bbc0", hex2: "#7e8288", finish: "metallic" as const, price: 12000, ...img("quicksilver") }]),
+    { id: "ultra-red", name: l("烈焰红", "Ultra Red"), hex: "#b3131b", hex2: "#6b0a10", finish: "pearl", price: 12000, ...img("ultra-red") },
+    ...(opts.frostBlue
+      ? [{ id: "frost-blue", name: l("霜蓝", "Frost Blue"), hex: "#a9c4d8", hex2: "#6f93ad", finish: "metallic" as const, price: 12000, isNew: true, ...img("frost-blue") }]
+      : []),
+  ];
+};
 
-const teslaInteriors = (opts: { cream?: boolean } = {}): InteriorOption[] => [
-  { id: "all-black", name: l("全黑", "All Black"), price: 0, primary: "#141416", secondary: "#2a2b2f", material: l("环保合成皮 · 织物饰板", "Vegan leather · textile trim") },
-  { id: "black-white", name: l("黑白", "Black and White"), price: 8000, primary: "#e9e8e3", secondary: "#141416", material: l("环保合成皮 · 白色座椅", "Vegan leather · white seats") },
+const teslaInteriors = (opts: { cream?: boolean; images?: Record<string, string> } = {}): InteriorOption[] => [
+  { id: "all-black", name: l("全黑", "All Black"), price: 0, primary: "#141416", secondary: "#2a2b2f", material: l("环保合成皮 · 织物饰板", "Vegan leather · textile trim"), ...(opts.images?.["all-black"] ? { image: opts.images["all-black"] } : {}) },
+  { id: "black-white", name: l("黑白", "Black and White"), price: 8000, primary: "#e9e8e3", secondary: "#141416", material: l("环保合成皮 · 白色座椅", "Vegan leather · white seats"), ...(opts.images?.["black-white"] ? { image: opts.images["black-white"] } : {}) },
   ...(opts.cream
     ? [{ id: "cream", name: l("奶油色", "Cream"), price: 16000, primary: "#e6dccb", secondary: "#3b3a37", material: l("环保合成皮 · 胡桃木饰板", "Vegan leather · walnut décor") }]
     : []),
@@ -67,14 +70,15 @@ export const teslaModel3: Vehicle = {
   availability: "available",
   launchDate: "2026-01-06",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/tesla-model-3/hero.jpg", alt: l("烈焰红 Model 3", "Model 3 in Ultra Red") },
-  heroPaintId: "ultra-red",
+  hero: { src: "/images/vehicles/tesla-model-3/hero.jpg", alt: l("快银 Model 3 官方图", "Model 3 in Quicksilver, official imagery") },
+  heroPaintId: "quicksilver",
   images: [
-    { src: "/images/vehicles/tesla-model-3/hero.jpg", alt: l("Model 3 外观", "Model 3 exterior") },
-    { src: "/images/vehicles/tesla-model-3/interior.jpg", alt: l("Model 3 座舱", "Model 3 interior") },
-    { src: "/images/vehicles/tesla-model-3/scene.jpg", alt: l("Model 3 城市夜景", "Model 3 in the city at night") },
+    { src: "/images/vehicles/tesla-model-3/hero.jpg", alt: l("Model 3 外观 官方图", "Model 3 exterior, official imagery") },
+    { src: "/images/vehicles/tesla-model-3/interior.jpg", alt: l("Model 3 座舱 官方图", "Model 3 interior, official imagery") },
+    { src: "/images/vehicles/tesla-model-3/scene.jpg", alt: l("烈焰红 Model 3 官方图", "Model 3 in Ultra Red, official imagery") },
+    { src: "/images/vehicles/tesla-model-3/performance.jpg", alt: l("Model 3 高性能版 官方图", "Model 3 Performance, official imagery") },
   ],
-  theme: "dark",
+  theme: "light",
   highlights: [
     { value: "830", unit: "km", label: l("CLTC 续航（长续航后驱）", "CLTC range (Long Range RWD)") },
     { value: "3.1", unit: "s", label: l("零百加速（高性能版）", "0–100 km/h (Performance)") },
@@ -197,13 +201,13 @@ export const teslaModel3: Vehicle = {
       badge: l("高性能", "Performance"),
     },
   ],
-  paints: teslaPaints(),
+  paints: teslaPaints({ images: { quicksilver: "/images/vehicles/tesla-model-3/paints/quicksilver.jpg", "ultra-red": "/images/vehicles/tesla-model-3/paints/ultra-red.jpg" } }),
   wheels: [
     { id: "18-photon", name: l("18 英寸光子轮毂", '18" Photon wheels'), size: 18, price: 0, style: "aero", rangeDeltaKm: 0, trims: ["rwd", "lr-rwd", "lr-awd"] },
     { id: "19-nova", name: l("19 英寸新星轮毂", '19" Nova wheels'), size: 19, price: 8000, style: "multi", rangeDeltaKm: -22, trims: ["rwd", "lr-rwd", "lr-awd"] },
-    { id: "20-warp", name: l("20 英寸战斧轮毂", '20" Warp wheels'), size: 20, price: 0, style: "sport", rangeDeltaKm: 0, trims: ["performance"] },
+    { id: "20-warp", name: l("20 英寸战斧轮毂", '20" Warp wheels'), size: 20, price: 0, style: "sport", rangeDeltaKm: 0, trims: ["performance"], image: "/images/vehicles/tesla-model-3/wheels/20-warp.jpg" },
   ],
-  interiors: teslaInteriors(),
+  interiors: teslaInteriors({ images: { "black-white": "/images/vehicles/tesla-model-3/interiors/black-white.jpg" } }),
   extras: teslaExtras(),
   specs: [
     {
@@ -276,12 +280,14 @@ export const teslaModelY: Vehicle = {
   availability: "available",
   launchDate: "2026-01-06",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/tesla-model-y/hero.jpg", alt: l("快银 Model Y", "Model Y in Quicksilver") },
-  heroPaintId: "quicksilver",
+  hero: { src: "/images/vehicles/tesla-model-y/hero.jpg", alt: l("珍珠白 Model Y 官方图", "Model Y in Pearl White, official imagery") },
+  heroPaintId: "pearl-white",
   images: [
-    { src: "/images/vehicles/tesla-model-y/hero.jpg", alt: l("Model Y 外观", "Model Y exterior") },
-    { src: "/images/vehicles/tesla-model-y/interior.jpg", alt: l("Model Y 座舱", "Model Y interior") },
-    { src: "/images/vehicles/tesla-model-y/scene.jpg", alt: l("Model Y L 六座家庭出行", "Model Y L six-seat family trip") },
+    { src: "/images/vehicles/tesla-model-y/hero.jpg", alt: l("Model Y 外观 官方图", "Model Y exterior, official imagery") },
+    { src: "/images/vehicles/tesla-model-y/interior.jpg", alt: l("Model Y L 六座座舱 官方图", "Model Y L six-seat cabin, official imagery") },
+    { src: "/images/vehicles/tesla-model-y/scene.jpg", alt: l("Model Y L 官方图", "Model Y L, official imagery") },
+    { src: "/images/vehicles/tesla-model-y/performance.jpg", alt: l("Model Y 高性能版 官方图", "Model Y Performance, official imagery") },
+    { src: "/images/vehicles/tesla-model-y/l.jpg", alt: l("Model Y L 六座 官方图", "Model Y L six-seater, official imagery") },
   ],
   theme: "light",
   highlights: [
@@ -435,13 +441,13 @@ export const teslaModelY: Vehicle = {
       badge: l("高性能", "Performance"),
     },
   ],
-  paints: teslaPaints(),
+  paints: teslaPaints({ images: { "pearl-white": "/images/vehicles/tesla-model-y/paints/pearl-white.jpg", "stealth-grey": "/images/vehicles/tesla-model-y/paints/stealth-grey.jpg", "ultra-red": "/images/vehicles/tesla-model-y/paints/ultra-red.jpg" } }),
   wheels: [
     { id: "19-crossflow", name: l("19 英寸十字弧轮毂", '19" Crossflow wheels'), size: 19, price: 0, style: "aero", rangeDeltaKm: 0, trims: ["rwd", "lr-rwd", "lr-awd", "l"] },
-    { id: "20-helix", name: l("20 英寸螺旋轮毂", '20" Helix 2.0 wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -60, trims: ["rwd", "lr-rwd", "lr-awd", "l"] },
+    { id: "20-helix", name: l("20 英寸螺旋轮毂", '20" Helix 2.0 wheels'), size: 20, price: 8000, style: "multi", rangeDeltaKm: -60, trims: ["rwd", "lr-rwd", "lr-awd", "l"], image: "/images/vehicles/tesla-model-y/wheels/20-helix.jpg" },
     { id: "21-arachnid", name: l("21 英寸弧刃轮毂", '21" Arachnid 2.0 wheels'), size: 21, price: 0, style: "sport", rangeDeltaKm: 0, trims: ["performance"] },
   ],
-  interiors: teslaInteriors(),
+  interiors: teslaInteriors({ images: { "black-white": "/images/vehicles/tesla-model-y/interiors/black-white.jpg" } }),
   extras: teslaExtras(),
   specs: [
     {
@@ -512,12 +518,12 @@ export const teslaModelS: Vehicle = {
   availability: "inventory",
   launchDate: "2026-02-06",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/tesla-model-s/hero.jpg", alt: l("珍珠白 Model S", "Model S in Pearl White") },
-  heroPaintId: "pearl-white",
+  hero: { src: "/images/vehicles/tesla-model-s/hero.jpg", alt: l("烈焰红 Model S 官方图", "Model S in Ultra Red, official imagery") },
+  heroPaintId: "ultra-red",
   images: [
-    { src: "/images/vehicles/tesla-model-s/hero.jpg", alt: l("Model S 外观", "Model S exterior") },
-    { src: "/images/vehicles/tesla-model-s/interior.jpg", alt: l("Model S 三屏座舱", "Model S three-screen cabin") },
-    { src: "/images/vehicles/tesla-model-s/scene.jpg", alt: l("Model S 公路场景", "Model S on the open road") },
+    { src: "/images/vehicles/tesla-model-s/hero.jpg", alt: l("Model S 外观 官方图", "Model S exterior, official imagery") },
+    { src: "/images/vehicles/tesla-model-s/interior.jpg", alt: l("Model S 座舱 官方图", "Model S cabin, official imagery") },
+    { src: "/images/vehicles/tesla-model-s/scene.jpg", alt: l("Model S 公路 官方图", "Model S on the open road, official imagery") },
   ],
   theme: "light",
   highlights: [
@@ -557,7 +563,7 @@ export const teslaModelS: Vehicle = {
       badge: l("现车", "In stock"),
     },
   ],
-  paints: teslaPaints({ frostBlue: true }).map((p) => ({ ...p, price: p.id === "solid-black" ? 0 : p.price + 8000 })),
+  paints: teslaPaints({ frostBlue: true, images: { "ultra-red": "/images/vehicles/tesla-model-s/paints/ultra-red.jpg" } }).map((p) => ({ ...p, price: p.id === "solid-black" ? 0 : p.price + 8000 })),
   wheels: [
     { id: "19-magnetite", name: l("19 英寸磁石轮毂", '19" Magnetite wheels'), size: 19, price: 0, style: "aero", rangeDeltaKm: 0 },
     { id: "21-velarium", name: l("21 英寸 Velarium 轮毂", '21" Velarium wheels'), size: 21, price: 36000, style: "multi", rangeDeltaKm: -50 },
@@ -626,14 +632,14 @@ export const teslaModelX: Vehicle = {
   availability: "inventory",
   launchDate: "2026-02-06",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/tesla-model-x/hero.jpg", alt: l("深海蓝 Model X 鹰翼门", "Model X in Deep Blue with Falcon Wing doors") },
-  heroPaintId: "deep-blue",
+  hero: { src: "/images/vehicles/tesla-model-x/hero.jpg", alt: l("珍珠白 Model X 官方图", "Model X in Pearl White, official imagery") },
+  heroPaintId: "pearl-white",
   images: [
-    { src: "/images/vehicles/tesla-model-x/hero.jpg", alt: l("Model X 外观", "Model X exterior") },
-    { src: "/images/vehicles/tesla-model-x/interior.jpg", alt: l("Model X 座舱", "Model X cabin") },
-    { src: "/images/vehicles/tesla-model-x/scene.jpg", alt: l("Model X 家庭出行", "Model X family trip") },
+    { src: "/images/vehicles/tesla-model-x/hero.jpg", alt: l("Model X 外观 官方图", "Model X exterior, official imagery") },
+    { src: "/images/vehicles/tesla-model-x/interior.jpg", alt: l("Model X 座舱 官方图", "Model X cabin, official imagery") },
+    { src: "/images/vehicles/tesla-model-x/scene.jpg", alt: l("Model X 官方图", "Model X, official imagery") },
   ],
-  theme: "dark",
+  theme: "light",
   highlights: [
     { value: "700", unit: "km", label: l("CLTC 续航", "CLTC range") },
     { value: "3.9", unit: "s", label: l("零百加速", "0–100 km/h") },
@@ -671,7 +677,7 @@ export const teslaModelX: Vehicle = {
       badge: l("现车", "In stock"),
     },
   ],
-  paints: teslaPaints({ frostBlue: true }).map((p) => ({ ...p, price: p.id === "solid-black" ? 0 : p.price + 8000 })),
+  paints: teslaPaints({ frostBlue: true, images: { "pearl-white": "/images/vehicles/tesla-model-x/paints/pearl-white.jpg" } }).map((p) => ({ ...p, price: p.id === "solid-black" ? 0 : p.price + 8000 })),
   wheels: [
     { id: "20-cyberstream", name: l("20 英寸 Cyberstream 轮毂", '20" Cyberstream wheels'), size: 20, price: 0, style: "aero", rangeDeltaKm: 0 },
     { id: "22-turbine", name: l("22 英寸涡轮轮毂", '22" Turbine wheels'), size: 22, price: 46000, style: "multi", rangeDeltaKm: -60 },
@@ -742,12 +748,13 @@ export const teslaCybertruck: Vehicle = {
   availability: "overseas",
   launchDate: "2023-11-30",
   modelYear: 2026,
-  hero: { src: "/images/vehicles/tesla-cybertruck/hero.jpg", alt: l("Cybertruck 峡谷", "Cybertruck in a canyon") },
+  hero: { src: "/images/vehicles/tesla-cybertruck/hero.jpg", alt: l("Cybertruck 官方图", "Cybertruck, official imagery") },
   heroPaintId: "stainless",
   images: [
-    { src: "/images/vehicles/tesla-cybertruck/hero.jpg", alt: l("Cybertruck 外观", "Cybertruck exterior") },
-    { src: "/images/vehicles/tesla-cybertruck/interior.jpg", alt: l("Cybertruck 座舱", "Cybertruck interior") },
-    { src: "/images/vehicles/tesla-cybertruck/scene.jpg", alt: l("Cybertruck 户外", "Cybertruck outdoors") },
+    { src: "/images/vehicles/tesla-cybertruck/hero.jpg", alt: l("Cybertruck 外观 官方图", "Cybertruck exterior, official imagery") },
+    { src: "/images/vehicles/tesla-cybertruck/interior.jpg", alt: l("Cybertruck 座舱 官方图", "Cybertruck interior, official imagery") },
+    { src: "/images/vehicles/tesla-cybertruck/scene.jpg", alt: l("Cybertruck 越野 官方图", "Cybertruck off-road, official imagery") },
+    { src: "/images/vehicles/tesla-cybertruck/wild.jpg", alt: l("Cybertruck 荒野 官方图", "Cybertruck in the wild, official imagery") },
   ],
   theme: "dark",
   highlights: [
@@ -818,7 +825,7 @@ export const teslaCybertruck: Vehicle = {
     },
   ],
   paints: [
-    { id: "stainless", name: l("不锈钢原色", "Stainless Steel"), hex: "#c3c6c9", hex2: "#8a8e93", finish: "solid", price: 0 },
+    { id: "stainless", name: l("不锈钢原色", "Stainless Steel"), hex: "#c3c6c9", hex2: "#8a8e93", finish: "solid", price: 0, image: "/images/vehicles/tesla-cybertruck/paints/stainless.jpg" },
     { id: "satin-black-wrap", name: l("哑光黑车衣", "Satin Black wrap"), hex: "#1a1b1e", hex2: "#0a0a0b", finish: "matte", price: 47000 },
     { id: "satin-white-wrap", name: l("哑光白车衣", "Satin White wrap"), hex: "#e8e8e4", hex2: "#bdbdb8", finish: "matte", price: 47000 },
     { id: "satin-slate-wrap", name: l("哑光石板灰车衣", "Satin Slate Grey wrap"), hex: "#6c7075", hex2: "#42454a", finish: "matte", price: 47000 },
