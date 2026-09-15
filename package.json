@@ -1,12 +1,17 @@
 {
   "name": "mitesla-atelier",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "docker:build": "DOCKER_BUILD=1 docker build -t mitesla-atelier ."
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -36,5 +41,9 @@
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.0.1"
-  }
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "description": "小米汽车 × 特斯拉 官方联名高级定制中心 — Xiaomi EV × Tesla Atelier"
 }

@@ -1,5 +1,6 @@
 import { l, type L10n } from "@/lib/i18n/types";
 import { cityById } from "./cities";
+import { corridorWaypoints } from "./corridors";
 
 export type Network = "tesla" | "xiaomi" | "partner";
 
@@ -86,6 +87,56 @@ export const stations: Station[] = [
   { id: "sa-baoding-x", name: l("京港澳高速保定服务区小米超充站", "G4 Baoding Service Area Xiaomi Supercharger"), network: "xiaomi", kind: XIAOMI_600, cityId: "baoding", address: l("G4 京港澳高速保定服务区", "G4, Baoding SA"), stalls: 8, maxKw: 600, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("baoding"), corridor: "G4", hours: "24h", pricePerKwh: 1.72 },
   { id: "sa-huangshan-t", name: l("京台高速黄山服务区超充站", "G3 Huangshan Service Area Supercharger"), network: "tesla", kind: TESLA_V3, cityId: "huangshan", address: l("G3 京台高速黄山服务区", "G3, Huangshan SA"), stalls: 8, maxKw: 250, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("huangshan"), corridor: "G3", hours: "24h", pricePerKwh: 1.75 },
 ];
+
+const KIND_BY_NETWORK: Record<Network, L10n> = { tesla: TESLA_V3, xiaomi: XIAOMI_600, partner: PARTNER_480 };
+
+for (const [cityId, zh, en, , , lat, lng, corridor, network, maxKw, stalls] of corridorWaypoints) {
+  const id = `sa-${cityId}-${network[0]}`;
+  if (stations.some((s) => s.id === id)) continue;
+  const label = network === "tesla" ? l("超级充电站", "Supercharger") : network === "xiaomi" ? l("小米超充站", "Xiaomi Supercharger") : l("超充站", "Fast Charger");
+  stations.push({
+    id,
+    name: l(`${corridor} ${zh}服务区${label.zh}`, `${corridor} ${en} Service Area ${label.en}`),
+    network,
+    kind: KIND_BY_NETWORK[network],
+    cityId,
+    address: l(`${corridor} 高速${zh}服务区（双向）`, `${corridor} Expressway, ${en} SA (both directions)`),
+    stalls,
+    maxKw,
+    openToAll: true,
+    amenities: ["restroom", "food", "24h"],
+    lat,
+    lng,
+    corridor,
+    hours: "24h",
+    pricePerKwh: network === "xiaomi" ? 1.72 : network === "tesla" ? 1.75 : 1.7,
+  });
+}
+
+// Every major city gets at least one urban supercharger so that trip planning
+// can rely on city nodes as well as highway service areas.
+const CITY_FALLBACK_NETWORKS: Network[] = ["xiaomi", "tesla", "partner"];
+Object.values(cityById).forEach((city, i) => {
+  if (stations.some((s) => s.cityId === city.id && !s.corridor)) return;
+  const network = CITY_FALLBACK_NETWORKS[i % CITY_FALLBACK_NETWORKS.length];
+  const label = network === "tesla" ? l("超级充电站", "Supercharger") : network === "xiaomi" ? l("小米超充站", "Xiaomi Supercharger") : l("合作超充站", "Partner Fast Charger");
+  stations.push({
+    id: `city-${city.id}-${network[0]}`,
+    name: l(`${city.name.zh}市区${label.zh}`, `${city.name.en} City ${label.en}`),
+    network,
+    kind: KIND_BY_NETWORK[network],
+    cityId: city.id,
+    address: l(`${city.name.zh}市中心商业区停车场`, `${city.name.en} central business district car park`),
+    stalls: network === "tesla" ? 8 : network === "xiaomi" ? 8 : 12,
+    maxKw: network === "tesla" ? 250 : network === "xiaomi" ? 600 : 480,
+    openToAll: true,
+    amenities: ["restroom", "shopping"],
+    lat: +(city.lat + 0.01).toFixed(4),
+    lng: +(city.lng + 0.01).toFixed(4),
+    hours: "24h",
+    pricePerKwh: network === "xiaomi" ? 1.6 : network === "tesla" ? 1.66 : 1.58,
+  });
+});
 
 export const networkStats = [
   { id: "tesla-stations", value: "2,100+", label: l("特斯拉超级充电站（中国大陆）", "Tesla Supercharger stations (mainland China)") },

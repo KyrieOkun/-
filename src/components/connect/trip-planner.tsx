@@ -145,6 +145,7 @@ export function TripPlanner({ cities, vehicles, initialVehicle }: { cities: City
               <h3 className="mt-2 flex flex-wrap items-center gap-3 text-2xl font-semibold sm:text-3xl">
                 {pick(plan.origin.name)} <ArrowRight className="size-6 text-white/50" /> {pick(plan.destination.name)}
               </h3>
+              {plan.via.length ? <p className="mt-2 text-sm text-white/60">{locale === "zh" ? "途经" : "Via"} {plan.via.map((c) => pick(c.name)).join(" · ")}</p> : null}
               <dl className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
                 <div><dt className="text-xs text-white/60">{t.connect.distance}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.distanceKm} <span className="text-sm text-white/60">km</span></dd></div>
                 <div><dt className="text-xs text-white/60">{t.connect.duration}</dt><dd className="text-2xl font-semibold tabular-nums">{fmtMin(plan.totalMinutes)}</dd></div>
@@ -201,6 +202,7 @@ export function TripPlanner({ cities, vehicles, initialVehicle }: { cities: City
               <Button href="/connect/garage" variant="secondary">{locale === "zh" ? "发送至车机" : "Send to car"}</Button>
               <Link href="/charging" className="inline-flex h-10 items-center rounded-pill bg-ink px-5 text-sm font-medium text-white">{t.charging.stationsTitle}</Link>
             </div>
+            {plan.notes.includes("LOW_ARRIVAL") ? <p className="rounded-2xl bg-warning/10 p-4 text-sm text-warning">{locale === "zh" ? `到达电量约 ${plan.arrivalSoc}%，低于您设定的下限，但高于 8% 安全余量。如需更高余量，请在最后一站多充几分钟。` : `Arrival charge is about ${plan.arrivalSoc}%, below your target but above the 8% safety reserve. Add a few minutes at the last stop for more buffer.`}</p> : null}
             {plan.notes.includes("WINTER") ? <p className="text-xs text-ash">{locale === "zh" ? "冬季模式已按 -5℃ 与座舱加热修正能耗（约 +25%）。" : "Winter mode applies a -5 °C and cabin-heating correction (about +25% consumption)."}</p> : null}
           </div>
         )}

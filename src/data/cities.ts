@@ -1,4 +1,5 @@
 import { l, type L10n } from "@/lib/i18n/types";
+import { corridorWaypoints } from "./corridors";
 
 export interface City {
   id: string;
@@ -72,6 +73,10 @@ export const cities: City[] = [
   { id: "luoyang", name: l("洛阳", "Luoyang"), province: l("河南省", "Henan"), lat: 34.6197, lng: 112.4540 },
   { id: "sanmenxia", name: l("三门峡", "Sanmenxia"), province: l("河南省", "Henan"), lat: 34.7732, lng: 111.2003 },
 ];
+
+for (const [id, zh, en, provZh, provEn, lat, lng] of corridorWaypoints) {
+  if (!cities.some((c) => c.id === id)) cities.push({ id, name: l(zh, en), province: l(provZh, provEn), lat, lng });
+}
 
 export const cityById: Record<string, City> = Object.fromEntries(cities.map((c) => [c.id, c]));
 
