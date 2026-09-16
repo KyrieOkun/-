@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { ArrowLeftRight, CheckCircle2 } from "lucide-react";
 import type { Vehicle } from "@/data/types";
 import type { TradeInEstimate } from "@/lib/trade-in";
@@ -20,6 +20,7 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
   const [year, setYear] = useState(2022);
   const [mileageKm, setMileageKm] = useState(45000);
   const [condition, setCondition] = useState<"excellent" | "good" | "fair">("good");
+  const [fuel, setFuel] = useState<"ev" | "ice">("ev");
   const [originalPrice, setOriginalPrice] = useState(279900);
   const [targetBrand, setTargetBrand] = useState<"xiaomi" | "tesla">("xiaomi");
   const [targetVehicle, setTargetVehicle] = useState("xiaomi-su7");
@@ -30,7 +31,12 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
   const [loading, setLoading] = useState<"estimate" | "apply" | null>(null);
   const [applied, setApplied] = useState<{ id: string } | null>(null);
 
-  const payload = { brand, model, year, mileageKm, condition, originalPrice, targetBrand, isEv: true };
+  const payload = { brand, model, year, mileageKm, condition, originalPrice, targetBrand, isEv: fuel === "ev" };
+
+  // Any change to the car details invalidates the quote shown on the right.
+  useEffect(() => {
+    setEstimate(null);
+  }, [brand, model, year, mileageKm, condition, originalPrice, targetBrand, fuel]);
 
   async function onEstimate(e: FormEvent) {
     e.preventDefault();
@@ -88,10 +94,20 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
           </div>
           <div className="sm:col-span-2">
             <Label htmlFor="ti-km" hint={`${mileageKm.toLocaleString()} km`}>{t.forms.mileage}</Label>
-            <input id="ti-km" type="range" min={0} max={300000} step={1000} value={mileageKm} onChange={(e) => setMileageKm(Number(e.target.value))} className="w-full" />
+            <input id="ti-km" type="range" min={0} max={300000} step={1000} value={mileageKm} onChange={(e) => setMileageKm(Number(e.target.value))} aria-valuetext={`${mileageKm.toLocaleString()} km`} className="w-full accent-ink" />
           </div>
-          <div className="sm:col-span-2">
-            <Label>{t.forms.condition}</Label>
+          <fieldset>
+            <legend className="mb-1.5 text-[13px] font-medium text-graphite">{zh ? "能源类型" : "Powertrain"}</legend>
+            <div className="grid grid-cols-2 gap-2">
+              {(["ev", "ice"] as const).map((f) => (
+                <button key={f} type="button" onClick={() => setFuel(f)} aria-pressed={fuel === f} className={cn("h-11 rounded-xl border text-sm font-medium transition-colors focus-ring", fuel === f ? "border-ink bg-ink text-white" : "border-line hover:border-ash")}>
+                  {f === "ev" ? (zh ? "新能源（纯电 / 插混）" : "EV / PHEV") : (zh ? "燃油车" : "Petrol / diesel")}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend className="mb-1.5 text-[13px] font-medium text-graphite">{t.forms.condition}</legend>
             <div className="grid grid-cols-3 gap-2">
               {(["excellent", "good", "fair"] as const).map((c) => (
                 <button key={c} type="button" onClick={() => setCondition(c)} aria-pressed={condition === c} className={cn("h-11 rounded-xl border text-sm font-medium transition-colors focus-ring", condition === c ? "border-ink bg-ink text-white" : "border-line hover:border-ash")}>
@@ -99,13 +115,13 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
         </div>
 
         <h2 className="text-lg font-semibold">{zh ? "置换目标" : "Trading up to"}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <Label>{zh ? "目标品牌" : "Target brand"}</Label>
+          <fieldset>
+            <legend className="mb-1.5 text-[13px] font-medium text-graphite">{zh ? "目标品牌" : "Target brand"}</legend>
             <div className="grid grid-cols-2 gap-2">
               {(["xiaomi", "tesla"] as const).map((b) => (
                 <button
@@ -123,7 +139,7 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
           <div>
             <Label htmlFor="ti-target">{zh ? "目标车型" : "Target vehicle"}</Label>
             <Select id="ti-target" value={targetVehicle} onChange={(e) => setTargetVehicle(e.target.value)}>
