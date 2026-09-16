@@ -75,6 +75,7 @@ export function SiteHeader({ vehicles, user }: Props) {
 
   const transparent = mode !== "solid" && !scrolled && !mega && !open;
   const overlay = mode === "overlay" && transparent;
+  const overlayDark = mode === "overlay-dark" && transparent;
   const textColor = overlay ? "text-white" : "text-ink";
 
   const openMega = (key: typeof mega) => {
@@ -119,6 +120,7 @@ export function SiteHeader({ vehicles, user }: Props) {
           transparent ? "bg-transparent" : "glass border-b border-ink/5",
           textColor,
           overlay && "[text-shadow:0_1px_2px_rgba(0,0,0,0.35)]",
+          overlayDark && "[text-shadow:0_1px_16px_rgba(255,255,255,0.9)]",
         )}
         onMouseLeave={scheduleClose}
         onBlur={(e) => {
@@ -128,9 +130,9 @@ export function SiteHeader({ vehicles, user }: Props) {
         <div className="container-x flex h-14 items-center justify-between">
           <Link href="/" className="flex items-baseline gap-2 focus-ring rounded-md" aria-label={t.brand.name}>
             <span className="text-[15px] font-bold tracking-[0.28em]">MI</span>
-            <span className={cn("text-[11px] font-light", overlay ? "text-white/70" : "text-slate")}>×</span>
+            <span className={cn("text-xs font-light", overlay ? "text-fog" : "text-graphite")}>×</span>
             <span className="text-[15px] font-bold tracking-[0.28em]">TESLA</span>
-            <span className={cn("ml-1 hidden text-[10px] font-semibold tracking-[0.3em] sm:inline", overlay ? "text-white/60" : "text-ash")}>ATELIER</span>
+            <span className={cn("ml-1 hidden text-xs font-semibold tracking-[0.18em] sm:inline", overlay ? "text-dusk" : "text-slate")}>ATELIER</span>
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
@@ -187,7 +189,7 @@ export function SiteHeader({ vehicles, user }: Props) {
                 <BrandColumn title={t.nav.xiaomi} tone="mi" items={xiaomi} pick={pick} locale={locale} />
                 <BrandColumn title={t.nav.tesla} tone="tesla" items={tesla} pick={pick} locale={locale} />
                 <div className="border-l border-line pl-8">
-                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-ash">{t.nav.discover}</p>
+                  <p className="eyebrow mb-3 text-slate">{t.nav.discover}</p>
                   <ul className="space-y-2.5 text-sm">
                     <li><Link className="hover:underline" href="/vehicles">{t.nav.allVehicles}</Link></li>
                     <li><Link className="hover:underline" href="/compare">{t.nav.compare}</Link></li>
@@ -288,7 +290,7 @@ function NavItem({ label, href, active, current, onEnter }: { label: string; hre
 function BrandColumn({ title, tone, items, pick, locale }: { title: string; tone: "mi" | "tesla"; items: HeaderVehicle[]; pick: (t: L10n) => string; locale: "zh" | "en" }) {
   return (
     <div>
-      <p className={cn("mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em]", tone === "mi" ? "text-mi-deep" : "text-tesla-deep")}>
+      <p className={cn("eyebrow mb-4 flex items-center gap-2", tone === "mi" ? "text-mi-deep" : "text-tesla-deep")}>
         <span className={cn("size-1.5 rounded-full", tone === "mi" ? "bg-mi" : "bg-tesla")} />
         {title}
       </p>
@@ -301,7 +303,7 @@ function BrandColumn({ title, tone, items, pick, locale }: { title: string; tone
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{pick(v.name)}</span>
-                <span className="block text-xs text-slate">{formatPriceHeadline(v.price, locale)} {locale === "zh" ? "起" : ""}</span>
+                <span className="block text-xs text-graphite">{formatPriceHeadline(v.price, locale)} {locale === "zh" ? "起" : ""}</span>
               </span>
             </Link>
           </li>
@@ -316,7 +318,7 @@ function MobileGroup({ title, tone, children }: { title: string; tone?: "mi" | "
   return (
     <div className="border-b border-line py-4">
       <button type="button" onClick={() => setExpanded((v) => !v)} className="flex w-full items-center justify-between py-1 text-left" aria-expanded={expanded}>
-        <span className={cn("text-[11px] font-semibold uppercase tracking-[0.2em]", tone === "mi" ? "text-mi-deep" : tone === "tesla" ? "text-tesla-deep" : "text-ash")}>{title}</span>
+        <span className={cn("eyebrow", tone === "mi" ? "text-mi-deep" : tone === "tesla" ? "text-tesla-deep" : "text-slate")}>{title}</span>
         <ChevronDown className={cn("size-4 text-ash transition-transform", expanded && "rotate-180")} />
       </button>
       {expanded ? <div className="mt-2">{children}</div> : null}
@@ -328,7 +330,7 @@ function MobileVehicle({ v, pick, locale }: { v: HeaderVehicle; pick: (t: L10n) 
   return (
     <Link href={`/vehicles/${v.slug}`} className="flex items-center justify-between py-2.5">
       <span className="text-base font-medium">{pick(v.name)}</span>
-      <span className="text-xs text-slate">{formatPriceHeadline(v.price, locale)}</span>
+      <span className="text-xs text-graphite">{formatPriceHeadline(v.price, locale)}</span>
     </Link>
   );
 }

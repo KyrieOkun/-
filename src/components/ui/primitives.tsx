@@ -8,12 +8,12 @@ export function Container({ className, ...props }: HTMLAttributes<HTMLDivElement
 export function Eyebrow({ className, children, tone = "dark" }: { className?: string; children: ReactNode; tone?: "dark" | "light" | "mi" | "tesla" }) {
   const tones = {
     dark: "text-slate",
-    light: "text-white/70",
+    light: "text-dusk",
     mi: "text-mi-deep",
     tesla: "text-tesla-deep",
   } as const;
   return (
-    <p className={cn("text-[11px] font-semibold uppercase tracking-[0.22em]", tones[tone], className)}>{children}</p>
+    <p className={cn("eyebrow", tones[tone], className)}>{children}</p>
   );
 }
 
@@ -39,7 +39,7 @@ export function SectionHeading({
       <div className={cn("max-w-2xl", align === "center" && "mx-auto")}>
         {eyebrow ? <Eyebrow tone={tone === "light" ? "light" : "dark"} className="mb-3">{eyebrow}</Eyebrow> : null}
         <h2 className={cn("text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[44px] lg:leading-[1.08]", tone === "light" ? "text-white" : "text-ink")}>{title}</h2>
-        {subtitle ? <p className={cn("mt-4 text-pretty text-base leading-7 sm:text-lg", tone === "light" ? "text-white/70" : "text-slate")}>{subtitle}</p> : null}
+        {subtitle ? <p className={cn("mt-4 text-pretty text-base leading-7 sm:text-lg", tone === "light" ? "text-fog" : "text-graphite")}>{subtitle}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
@@ -57,7 +57,7 @@ export function Badge({ className, children, tone = "neutral" }: { className?: s
     gold: "bg-atelier/15 text-atelier-deep",
   } as const;
   return (
-    <span className={cn("inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-semibold tracking-wide", tones[tone], className)}>{children}</span>
+    <span className={cn("inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-xs font-semibold tracking-wide", tones[tone], className)}>{children}</span>
   );
 }
 
@@ -83,13 +83,13 @@ export const Label = forwardRef<HTMLLabelElement, LabelHTMLAttributes<HTMLLabelE
         {children}
         {required ? <span className="ml-0.5 text-tesla">*</span> : null}
       </span>
-      {hint ? <span className="text-xs font-normal text-ash">{hint}</span> : null}
+      {hint ? <span className="text-xs font-normal text-slate">{hint}</span> : null}
     </label>
   );
 });
 
 const fieldBase =
-  "w-full rounded-xl border border-line bg-white px-4 text-[15px] text-ink placeholder:text-ash transition-colors focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 disabled:bg-mist disabled:text-ash aria-[invalid=true]:border-danger";
+  "w-full rounded-xl border border-line bg-white px-4 text-[15px] text-ink placeholder:text-slate transition-colors focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10 disabled:bg-mist disabled:text-slate aria-[invalid=true]:border-danger";
 
 export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(function Input({ className, ...props }, ref) {
   return <input ref={ref} className={cn(fieldBase, "h-12", className)} {...props} />;
@@ -122,9 +122,9 @@ export function Stat({ value, unit, label, tone = "dark", size = "md" }: { value
     <div className="flex flex-col">
       <div className={cn("flex items-baseline gap-1 font-semibold tracking-tight tabular-nums", valueSize, tone === "light" ? "text-white" : "text-ink")}>
         <span>{value}</span>
-        {unit ? <span className={cn("text-sm font-medium sm:text-base", tone === "light" ? "text-white/70" : "text-slate")}>{unit}</span> : null}
+        {unit ? <span className={cn("text-sm font-medium sm:text-base", tone === "light" ? "text-dusk" : "text-graphite")}>{unit}</span> : null}
       </div>
-      <div className={cn("mt-1 text-xs sm:text-[13px]", tone === "light" ? "text-white/60" : "text-slate")}>{label}</div>
+      <div className={cn("mt-1 text-xs sm:text-[13px]", tone === "light" ? "text-dusk" : "text-graphite")}>{label}</div>
     </div>
   );
 }

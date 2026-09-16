@@ -184,18 +184,18 @@ export function TripPlanner({ cities, majorCityIds, vehicles, initialVehicle, st
         ) : (
           <div className="space-y-6">
             <div className="rounded-3xl bg-ink p-6 text-white sm:p-8">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">{pick(plan.vehicle.name)} · {pick(plan.vehicle.trim)}</p>
+              <p className="eyebrow text-dusk">{pick(plan.vehicle.name)} · {pick(plan.vehicle.trim)}</p>
               <h2 className="mt-2 flex flex-wrap items-center gap-3 text-2xl font-semibold sm:text-3xl">
-                {pick(plan.origin.name)} <ArrowRight className="size-6 text-white/50" /> {pick(plan.destination.name)}
+                {pick(plan.origin.name)} <ArrowRight className="size-6 text-dusk" /> {pick(plan.destination.name)}
               </h2>
-              {plan.via.length ? <p className="mt-2 text-sm text-white/60">{locale === "zh" ? "途经" : "Via"} {plan.via.map((c) => pick(c.name)).join(" · ")}</p> : null}
+              {plan.via.length ? <p className="mt-2 text-sm text-fog">{locale === "zh" ? "途经" : "Via"} {plan.via.map((c) => pick(c.name)).join(" · ")}</p> : null}
               <dl className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
-                <div><dt className="text-xs text-white/60">{t.connect.distance}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.distanceKm} <span className="text-sm text-white/60">km</span></dd></div>
-                <div><dt className="text-xs text-white/60">{t.connect.duration}</dt><dd className="text-2xl font-semibold tabular-nums">{fmtMin(plan.totalMinutes)}</dd></div>
-                <div><dt className="text-xs text-white/60">{t.connect.stops}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.stops.length}</dd></div>
-                <div><dt className="text-xs text-white/60">{t.connect.arriveWith}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.arrivalSoc}%</dd></div>
+                <div><dt className="text-xs text-dusk">{t.connect.distance}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.distanceKm} <span className="text-sm text-dusk">km</span></dd></div>
+                <div><dt className="text-xs text-dusk">{t.connect.duration}</dt><dd className="text-2xl font-semibold tabular-nums">{fmtMin(plan.totalMinutes)}</dd></div>
+                <div><dt className="text-xs text-dusk">{t.connect.stops}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.stops.length}</dd></div>
+                <div><dt className="text-xs text-dusk">{t.connect.arriveWith}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.arrivalSoc}%</dd></div>
               </dl>
-              <div className="mt-6 flex flex-wrap gap-4 text-xs text-white/70">
+              <div className="mt-6 flex flex-wrap gap-4 text-xs text-fog">
                 <span className="flex items-center gap-1"><Clock className="size-3.5" />{t.connect.driveTime} {fmtMin(plan.driveMinutes)}</span>
                 <span className="flex items-center gap-1"><PlugZap className="size-3.5" />{t.connect.chargeTime} {fmtMin(plan.chargeMinutes)}</span>
                 <span className="flex items-center gap-1"><Zap className="size-3.5" />{t.connect.energy} {plan.energyKwh} kWh · {plan.consumptionKwhPer100} kWh/100km</span>

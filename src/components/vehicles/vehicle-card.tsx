@@ -39,29 +39,29 @@ export function VehicleCard({ vehicle, locale, className, compact }: { vehicle: 
                 {pick(vehicle.name, locale)}
               </Link>
             </h3>
-            <p className="mt-1 text-sm text-slate">{pick(vehicle.tagline, locale)}</p>
+            <p className="mt-1 text-sm text-graphite">{pick(vehicle.tagline, locale)}</p>
           </div>
           <div className="shrink-0 text-right">
-            <p className="text-[11px] uppercase tracking-wider text-ash">{t.common.from}</p>
+            <p className="text-xs font-medium text-slate">{t.common.from}</p>
             <p className="whitespace-nowrap text-base font-semibold tabular-nums">{formatPriceHeadline(price, locale)}</p>
           </div>
         </div>
         {!compact ? (
           <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4">
             <div>
-              <dt className="text-[11px] text-ash">{isErev ? (locale === "zh" ? "综合续航" : "Combined") : t.common.rangeCLTC}</dt>
+              <dt className="text-xs text-slate">{isErev ? (locale === "zh" ? "综合续航" : "Combined") : t.common.rangeCLTC}</dt>
               <dd className="text-sm font-semibold tabular-nums">
                 {isErev ? Math.max(...vehicle.trims.map((tr) => tr.rangeKm)) : range} <span className="text-xs font-normal text-slate">km</span>
               </dd>
             </div>
             <div>
-              <dt className="text-[11px] text-ash">{t.common.accel}</dt>
+              <dt className="text-xs text-slate">{t.common.accel}</dt>
               <dd className="text-sm font-semibold tabular-nums">
                 {accel} <span className="text-xs font-normal text-slate">s</span>
               </dd>
             </div>
             <div>
-              <dt className="text-[11px] text-ash">{t.common.power}</dt>
+              <dt className="text-xs text-slate">{t.common.power}</dt>
               <dd className="text-sm font-semibold tabular-nums">
                 {Math.max(...vehicle.trims.map((tr) => tr.powerKw))} <span className="text-xs font-normal text-slate">kW</span>
               </dd>

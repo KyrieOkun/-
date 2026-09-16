@@ -41,13 +41,13 @@ export default async function ConnectPage() {
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-2/3" />
         <Container className="relative flex flex-1 flex-col justify-end pb-16 pt-32">
           <div className="animate-fade-up max-w-3xl">
-            <p className="mb-4 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
+            <p className="eyebrow mb-4 flex items-center gap-3 text-dusk">
               <span className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-mi" />{t.nav.xiaomi}</span>
-              <span className="text-white/40">×</span>
+              <span className="text-fog">×</span>
               <span className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-tesla" />{t.nav.tesla}</span>
             </p>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">{t.home.connectTitle}</h1>
-            <p className="mt-5 max-w-2xl text-pretty text-lg text-white/80">{t.connect.subtitle}</p>
+            <p className="mt-5 max-w-2xl text-pretty text-lg text-fog">{t.connect.subtitle}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button href="/connect/garage" variant="light" size="lg" className="sm:w-56">{t.connect.garage}</Button>
               <Button href="/connect/trip-planner" variant="glass" size="lg" className="sm:w-56">{t.connect.trip}</Button>
@@ -61,7 +61,7 @@ export default async function ConnectPage() {
             {connectStats.map((s) => (
               <div key={s.label.zh}>
                 <dt className="text-3xl font-semibold tabular-nums">{locale === "en" && s.labelEn ? s.labelEn : s.value}</dt>
-                <dd className="mt-1 text-sm text-white/60">{pick(s.label, locale)}</dd>
+                <dd className="mt-1 text-sm text-dusk">{pick(s.label, locale)}</dd>
               </div>
             ))}
           </dl>
@@ -83,7 +83,7 @@ export default async function ConnectPage() {
                     </div>
                   </div>
                   <h2 className="mt-5 text-xl font-semibold">{pick(f.title, locale)}</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate">{pick(f.summary, locale)}</p>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{pick(f.summary, locale)}</p>
                   <ul className="mt-4 flex-1 space-y-2 text-sm text-graphite">
                     {f.bullets.map((b) => (
                       <li key={b.zh} className="flex gap-2">
@@ -112,7 +112,7 @@ export default async function ConnectPage() {
                 <div className="h-full rounded-3xl bg-white p-6 hairline">
                   <span className="text-xs font-semibold tabular-nums text-ash">{s.n}</span>
                   <h3 className="mt-3 text-lg font-semibold">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate">{s.body}</p>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{s.body}</p>
                 </div>
               </Reveal>
             ))}

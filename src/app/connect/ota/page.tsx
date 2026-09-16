@@ -25,7 +25,7 @@ export default async function OtaPage() {
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.connect.title}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.connect.otaTitle}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-slate sm:text-lg">{t.connect.otaSubtitle}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-graphite sm:text-lg">{t.connect.otaSubtitle}</p>
           <div className="mt-6 flex gap-3">
             <Button href="/connect/garage" variant="outline">{t.connect.garage}</Button>
             <Button href="/news?category=software" variant="secondary">{t.nav.news}</Button>

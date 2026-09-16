@@ -178,13 +178,13 @@ export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle:
         </div>
         <div className="rounded-3xl bg-ink p-6 text-white">
           <div className="flex items-baseline justify-between">
-            <p className="text-sm text-white/70">{t.order.payDeposit}</p>
+            <p className="text-sm text-fog">{t.order.payDeposit}</p>
             <p className="text-3xl font-semibold tabular-nums">{formatCNY(quote.deposit)}</p>
           </div>
           <Button type="submit" variant="light" size="lg" fullWidth className="mt-5" loading={loading} icon={<Lock className="size-4" />}>
             {loading ? t.order.paying : `${t.order.payDeposit} · ${t.order[payment]}`}
           </Button>
-          <p className="mt-3 flex items-start gap-1.5 text-[11px] leading-4 text-white/60"><ShieldCheck className="mt-0.5 size-3.5 shrink-0" />{t.order.refundNote}</p>
+          <p className="mt-3 flex items-start gap-1.5 text-xs leading-4 text-dusk"><ShieldCheck className="mt-0.5 size-3.5 shrink-0" />{t.order.refundNote}</p>
         </div>
       </aside>
     </form>

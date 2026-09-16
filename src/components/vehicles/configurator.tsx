@@ -159,9 +159,9 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
       {/* Options */}
       <div className="px-5 pb-40 pt-8 sm:px-8 lg:h-[calc(100vh-56px)] lg:overflow-y-auto lg:px-10 lg:pb-12">
         <div className="mb-8">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ash">{t.configurator.title}</p>
+          <p className="eyebrow text-slate">{t.configurator.title}</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">{pick(vehicle.name)}</h1>
-          <p className="mt-1 text-sm text-slate">{pick(vehicle.tagline)}</p>
+          <p className="mt-1 text-sm text-graphite">{pick(vehicle.tagline)}</p>
         </div>
 
         {/* Trim */}
@@ -292,7 +292,7 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
                             <span className="text-sm font-medium">{pick(e.name)}</span>
                             <span className="shrink-0 text-sm tabular-nums text-graphite">{included ? t.configurator.included : e.price === 0 ? t.common.included : `+${formatCNY(e.price)}`}</span>
                           </span>
-                          <span className="mt-0.5 block text-xs text-slate">{pick(e.description)}</span>
+                          <span className="mt-0.5 block text-xs text-graphite">{pick(e.description)}</span>
                         </span>
                       </button>
                     );

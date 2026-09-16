@@ -29,9 +29,9 @@ export default async function AtelierPage() {
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-2/3" />
         <Container className="relative flex flex-1 flex-col justify-end pb-16 pt-32">
           <div className="animate-fade-up max-w-3xl">
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-atelier-soft">{t.brand.short}</p>
+            <p className="eyebrow mb-4 text-atelier-soft">{t.brand.short}</p>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">{t.atelier.title}</h1>
-            <p className="mt-5 max-w-2xl text-pretty text-lg text-white/80">{t.atelier.subtitle}</p>
+            <p className="mt-5 max-w-2xl text-pretty text-lg text-fog">{t.atelier.subtitle}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button href="#consult" variant="light" size="lg" className="sm:w-56">{t.atelier.bookConsult}</Button>
               <Button href="#programs" variant="glass" size="lg" className="sm:w-56">{t.atelier.programs}</Button>
@@ -57,7 +57,7 @@ export default async function AtelierPage() {
                       ))}
                     </div>
                     <h3 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">{pick(p.title, locale)}</h3>
-                    <p className="mt-3 text-pretty text-base leading-7 text-slate">{pick(p.summary, locale)}</p>
+                    <p className="mt-3 text-pretty text-base leading-7 text-graphite">{pick(p.summary, locale)}</p>
                     <ul className="mt-5 space-y-2 text-sm text-graphite">
                       {p.includes.map((s) => (
                         <li key={s.zh} className="flex gap-2"><Check className="mt-0.5 size-4 shrink-0 text-success" />{pick(s, locale)}</li>
@@ -91,7 +91,7 @@ export default async function AtelierPage() {
                 <div className="h-full rounded-3xl bg-white p-6 hairline">
                   <span className="text-xs font-semibold tabular-nums text-atelier-deep">{s.step}</span>
                   <h3 className="mt-3 text-base font-semibold">{pick(s.title, locale)}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate">{pick(s.body, locale)}</p>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{pick(s.body, locale)}</p>
                 </div>
               </Reveal>
             ))}

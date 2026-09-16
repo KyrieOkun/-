@@ -28,7 +28,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.nav.discover}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.news.title}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-slate sm:text-lg">{t.news.subtitle}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-graphite sm:text-lg">{t.news.subtitle}</p>
           <div className="mt-6 flex flex-wrap gap-2">
             {CATEGORIES.map((c) => (
               <Link key={c} href={c === "all" ? "/news" : `/news?category=${c}`} className={cn("h-9 rounded-pill px-4 text-sm font-medium leading-9 transition-colors", active === c ? "bg-ink text-white" : "bg-white text-graphite hairline hover:bg-mist")}>
@@ -51,7 +51,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
                 <span>· {lead.readMinutes} {t.news.readTime}</span>
               </div>
               <h2 className="mt-4 text-balance text-2xl font-semibold leading-snug sm:text-3xl group-hover:underline underline-offset-4">{pick(lead.title, locale)}</h2>
-              <p className="mt-4 text-pretty text-base leading-7 text-slate">{pick(lead.excerpt, locale)}</p>
+              <p className="mt-4 text-pretty text-base leading-7 text-graphite">{pick(lead.excerpt, locale)}</p>
             </div>
           </Link>
         ) : null}
@@ -67,7 +67,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
                   <time dateTime={a.date}>{formatDate(a.date, locale)}</time>
                 </div>
                 <h3 className="mt-2 text-lg font-semibold leading-snug group-hover:underline underline-offset-4">{pick(a.title, locale)}</h3>
-                <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate">{pick(a.excerpt, locale)}</p>
+                <p className="mt-2 line-clamp-3 text-sm leading-6 text-graphite">{pick(a.excerpt, locale)}</p>
               </Link>
             </Reveal>
           ))}

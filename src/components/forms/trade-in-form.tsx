@@ -165,14 +165,14 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
         ) : estimate ? (
           <div className="space-y-4">
             <div className="rounded-3xl bg-ink p-6 text-white">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">{t.tradeIn.result}</p>
+              <p className="eyebrow text-dusk">{t.tradeIn.result}</p>
               <p className="mt-2 text-4xl font-semibold tabular-nums">{formatCNY(estimate.mid)}</p>
-              <p className="mt-1 text-sm text-white/70">{formatCNY(estimate.low)} – {formatCNY(estimate.high)}</p>
+              <p className="mt-1 text-sm text-fog">{formatCNY(estimate.low)} – {formatCNY(estimate.high)}</p>
               <dl className="mt-6 space-y-2 border-t border-white/10 pt-4 text-sm">
-                <div className="flex justify-between"><dt className="text-white/70">{t.tradeIn.subsidy}{estimate.crossBrand ? (zh ? "（跨品牌）" : " (cross-brand)") : ""}</dt><dd className="font-semibold tabular-nums">+{formatCNY(estimate.subsidy)}</dd></div>
+                <div className="flex justify-between"><dt className="text-fog">{t.tradeIn.subsidy}{estimate.crossBrand ? (zh ? "（跨品牌）" : " (cross-brand)") : ""}</dt><dd className="font-semibold tabular-nums">+{formatCNY(estimate.subsidy)}</dd></div>
                 <div className="flex justify-between text-base"><dt className="font-semibold">{t.tradeIn.totalCredit}</dt><dd className="font-semibold tabular-nums">{formatCNY(estimate.totalCredit)}</dd></div>
               </dl>
-              <p className="mt-4 text-[11px] leading-4 text-white/60">{t.tradeIn.note} · {zh ? "有效期至" : "Valid until"} {formatDate(estimate.validUntil, locale)}</p>
+              <p className="mt-4 text-xs leading-4 text-dusk">{t.tradeIn.note} · {zh ? "有效期至" : "Valid until"} {formatDate(estimate.validUntil, locale)}</p>
             </div>
             <div className="rounded-3xl bg-white p-6 hairline">
               <h3 className="font-semibold">{t.tradeIn.apply}</h3>

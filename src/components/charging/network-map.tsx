@@ -123,7 +123,7 @@ export function NetworkMap({ stations, route, stops, activeNetwork = "all", clas
       </svg>
 
       {/* Legend */}
-      <div className="pointer-events-none absolute bottom-4 left-4 flex flex-wrap gap-3 text-[11px] text-white/80">
+      <div className="pointer-events-none absolute bottom-4 left-4 flex flex-wrap gap-3 text-xs text-fog">
         <span className="flex items-center gap-1.5 rounded-pill bg-white/10 px-2.5 py-1 backdrop-blur"><span className="size-2 rounded-full bg-tesla" />{t.charging.filterTesla} · {counts.tesla}</span>
         <span className="flex items-center gap-1.5 rounded-pill bg-white/10 px-2.5 py-1 backdrop-blur"><span className="size-2 rounded-full bg-mi" />{t.charging.filterXiaomi} · {counts.xiaomi}</span>
         <span className="flex items-center gap-1.5 rounded-pill bg-white/10 px-2.5 py-1 backdrop-blur"><span className="size-2 rounded-full bg-ash" />{t.charging.filterPartner} · {counts.partner}</span>
@@ -134,7 +134,7 @@ export function NetworkMap({ stations, route, stops, activeNetwork = "all", clas
           <p className="text-slate">{hover.maxKw} kW · {hover.network === "tesla" ? t.charging.filterTesla : hover.network === "xiaomi" ? t.charging.filterXiaomi : t.charging.filterPartner}</p>
         </div>
       ) : (
-        <p className="pointer-events-none absolute right-4 top-4 text-[11px] text-white/50">{locale === "zh" ? "示意图 · 不含行政边界" : "Schematic · no administrative boundaries"}</p>
+        <p className="pointer-events-none absolute right-4 top-4 text-xs text-dusk">{locale === "zh" ? "示意图 · 不含行政边界" : "Schematic · no administrative boundaries"}</p>
       )}
     </div>
   );

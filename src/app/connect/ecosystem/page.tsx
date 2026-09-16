@@ -44,7 +44,7 @@ export default async function EcosystemPage() {
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.connect.title}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.connect.ecosystemTitle}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-slate sm:text-lg">{t.connect.ecosystemSubtitle}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-graphite sm:text-lg">{t.connect.ecosystemSubtitle}</p>
         </Container>
       </section>
 
@@ -58,7 +58,7 @@ export default async function EcosystemPage() {
               <div key={p.title} className="rounded-3xl bg-white p-5 hairline">
                 <span className="flex size-10 items-center justify-center rounded-2xl bg-mist"><Icon name={p.icon} className="size-5" /></span>
                 <h2 className="mt-4 text-base font-semibold">{p.title}</h2>
-                <p className="mt-2 text-sm leading-6 text-slate">{p.body}</p>
+                <p className="mt-2 text-sm leading-6 text-graphite">{p.body}</p>
               </div>
             ))}
           </div>

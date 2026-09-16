@@ -35,18 +35,21 @@
   --font-display: "Inter", "PingFang SC", "MiSans", "HarmonyOS Sans SC",
     "Noto Sans SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
 
+  /* Type roles: ink = headings; graphite = body; slate = UI/secondary;
+     ash = meta only; fog/dusk = solid on-photo lede/meta (never white/60). */
   --color-ink: #171a20;
-  --color-graphite: #393c41;
-  --color-slate: #5c5e62;
-  /* 4.5:1+ on white / cloud / mist so small labels pass WCAG AA */
-  --color-ash: #6e6e73;
-  --color-mi-deep: #b34500;
+  --color-graphite: #2c2f35;
+  --color-slate: #4a4d53;
+  --color-ash: #63666b;
+  --color-fog: #e8eaed;
+  --color-dusk: #c8cbd0;
+  --color-mi-deep: #a63f00;
   --color-tesla-deep: #b91c1c;
   --color-success-deep: #137038;
   --color-warning-deep: #b45309;
-  --color-atelier-deep: #8a6a2f;
-  --color-mist: #f4f4f4;
-  --color-cloud: #fafafa;
+  --color-atelier-deep: #7a5a22;
+  --color-mist: #ededf0;
+  --color-cloud: #f5f5f7;
   --color-line: #e5e7ea;
   --color-carbon: #0b0c0e;
   --color-obsidian: #121316;
@@ -67,15 +70,15 @@
 
   --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
 
-  --animate-fade-up: fade-up 0.8s var(--ease-brand) both;
-  --animate-fade-in: fade-in 0.6s ease both;
+  --animate-fade-up: fade-up 0.5s var(--ease-brand) both;
+  --animate-fade-in: fade-in 0.4s ease both;
   --animate-marquee: marquee 40s linear infinite;
   --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
 
   @keyframes fade-up {
     from {
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
@@ -159,7 +162,7 @@ body {
     box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
   }
   .glass {
-    background: rgb(255 255 255 / 0.72);
+    background: rgb(255 255 255 / 0.88);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
   }
@@ -168,31 +171,40 @@ body {
     backdrop-filter: saturate(160%) blur(20px);
     -webkit-backdrop-filter: saturate(160%) blur(20px);
   }
+  /* Local, type-zone scrims — keep paint visible; pair with solid fog/dusk type. */
   .scrim-b {
     background: linear-gradient(
       to top,
-      rgb(0 0 0 / 0.72) 0%,
-      rgb(0 0 0 / 0.35) 35%,
-      rgb(0 0 0 / 0) 70%
+      rgb(0 0 0 / 0.52) 0%,
+      rgb(0 0 0 / 0.22) 38%,
+      rgb(0 0 0 / 0) 72%
     );
   }
   .scrim-t {
     background: linear-gradient(
       to bottom,
-      rgb(0 0 0 / 0.55) 0%,
-      rgb(0 0 0 / 0.15) 40%,
+      rgb(0 0 0 / 0.4) 0%,
+      rgb(0 0 0 / 0.12) 42%,
       rgb(0 0 0 / 0) 75%
     );
   }
-  /* Heavier top scrim for heroes whose photography is bright at the top (sky, glass). */
   .scrim-t-strong {
     background: linear-gradient(
       to bottom,
-      rgb(0 0 0 / 0.78) 0%,
-      rgb(0 0 0 / 0.5) 30%,
-      rgb(0 0 0 / 0.2) 60%,
+      rgb(0 0 0 / 0.56) 0%,
+      rgb(0 0 0 / 0.28) 32%,
+      rgb(0 0 0 / 0.1) 58%,
       rgb(0 0 0 / 0) 100%
     );
+  }
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  html[lang^="zh"] .eyebrow {
+    letter-spacing: 0.04em;
   }
   .no-scrollbar {
     scrollbar-width: none;
@@ -244,7 +256,7 @@ input[type="range"] {
   accent-color: #171a20;
 }
 select {
-  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23393c41' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%232c2f35' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   appearance: none;

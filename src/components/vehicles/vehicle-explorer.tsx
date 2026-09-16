@@ -90,19 +90,19 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
     <div>
       <div className="sticky top-14 z-30 -mx-5 border-b border-line bg-white/85 px-5 py-3 backdrop-blur sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="mr-1 hidden text-xs font-semibold uppercase tracking-wider text-ash sm:inline">{t.vehicles.brandFilter}</span>
+          <span className="mr-1 hidden text-xs font-semibold text-slate sm:inline">{t.vehicles.brandFilter}</span>
           <button type="button" aria-pressed={brand === "all"} className={chip(brand === "all")} onClick={() => setBrand("all")}>{t.common.all}</button>
           <button type="button" aria-pressed={brand === "xiaomi"} className={chip(brand === "xiaomi")} onClick={() => setBrand("xiaomi")}>{t.nav.xiaomi}</button>
           <button type="button" aria-pressed={brand === "tesla"} className={chip(brand === "tesla")} onClick={() => setBrand("tesla")}>{t.nav.tesla}</button>
           <span className="mx-2 hidden h-5 w-px bg-line sm:block" />
-          <span className="mr-1 hidden text-xs font-semibold uppercase tracking-wider text-ash sm:inline">{t.vehicles.bodyFilter}</span>
+          <span className="mr-1 hidden text-xs font-semibold text-slate sm:inline">{t.vehicles.bodyFilter}</span>
           <button type="button" aria-pressed={body === "all"} className={chip(body === "all")} onClick={() => setBody("all")}>{t.common.all}</button>
           <button type="button" aria-pressed={body === "sedan"} className={chip(body === "sedan")} onClick={() => setBody("sedan")}>{t.vehicles.sedan}</button>
           <button type="button" aria-pressed={body === "suv"} className={chip(body === "suv")} onClick={() => setBody("suv")}>{t.vehicles.suv}</button>
           <button type="button" aria-pressed={body === "truck"} className={chip(body === "truck")} onClick={() => setBody("truck")}>{t.vehicles.truck}</button>
           <button type="button" aria-pressed={body === "performance"} className={chip(body === "performance")} onClick={() => setBody("performance")}>{t.vehicles.performance}</button>
           <div className="ml-auto flex items-center gap-2">
-            <label htmlFor="sort" className="text-xs font-semibold uppercase tracking-wider text-ash">{t.vehicles.sortBy}</label>
+            <label htmlFor="sort" className="text-xs font-semibold text-slate">{t.vehicles.sortBy}</label>
             <select id="sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)} className="h-9 rounded-pill border border-line bg-white pl-3 pr-9 text-sm focus:border-ink focus:outline-none">
               <option value="default">{t.vehicles.sortDefault}</option>
               <option value="priceAsc">{t.vehicles.sortPriceAsc}</option>
@@ -138,24 +138,24 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
                       <h2 className="text-xl font-semibold tracking-tight">{pick(v.name)}</h2>
-                      <p className="mt-1 text-sm text-slate">{pick(v.tagline)}</p>
+                      <p className="mt-1 text-sm text-graphite">{pick(v.tagline)}</p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <p className="text-[11px] uppercase tracking-wider text-ash">{t.common.from}</p>
+                      <p className="text-xs font-medium text-slate">{t.common.from}</p>
                       <p className="whitespace-nowrap text-base font-semibold tabular-nums">{formatPriceHeadline(v.price, locale)}</p>
                     </div>
                   </div>
                   <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4">
                     <div>
-                      <dt className="text-[11px] text-ash">{v.powertrain === "erev" ? (locale === "zh" ? "综合续航" : "Combined range") : t.common.rangeCLTC}</dt>
+                      <dt className="text-xs text-slate">{v.powertrain === "erev" ? (locale === "zh" ? "综合续航" : "Combined range") : t.common.rangeCLTC}</dt>
                       <dd className="text-sm font-semibold tabular-nums">{v.rangeKm} <span className="text-xs font-normal text-slate">km</span></dd>
                     </div>
                     <div>
-                      <dt className="text-[11px] text-ash">{t.common.accel}</dt>
+                      <dt className="text-xs text-slate">{t.common.accel}</dt>
                       <dd className="text-sm font-semibold tabular-nums">{v.accel} <span className="text-xs font-normal text-slate">s</span></dd>
                     </div>
                     <div>
-                      <dt className="text-[11px] text-ash">{t.common.power}</dt>
+                      <dt className="text-xs text-slate">{t.common.power}</dt>
                       <dd className="text-sm font-semibold tabular-nums">{v.powerKw} <span className="text-xs font-normal text-slate">kW</span></dd>
                     </div>
                   </dl>

@@ -24,7 +24,7 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
     if (!node) return;
     if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = node.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.92) return;
+    if (rect.top < window.innerHeight * 1.15) return;
     setHidden(true);
     const observer = new IntersectionObserver(
       (entries) => {
@@ -33,7 +33,7 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
           observer.disconnect();
         }
       },
-      { rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+      { rootMargin: "0px 0px 20% 0px", threshold: 0 },
     );
     observer.observe(node);
     return () => observer.disconnect();
@@ -43,10 +43,10 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
   return (
     <Tag
       ref={ref as React.RefObject<HTMLDivElement>}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ transitionDelay: `${Math.min(delay, 90)}ms` }}
       className={cn(
-        "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        hidden ? "translate-y-6 opacity-0" : "translate-y-0 opacity-100",
+        "transition-all duration-[450ms] ease-[cubic-bezier(0.22,1,0.36,1)]",
+        hidden ? "translate-y-3 opacity-0" : "translate-y-0 opacity-100",
         className,
       )}
     >

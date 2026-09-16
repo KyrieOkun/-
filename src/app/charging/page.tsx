@@ -32,9 +32,9 @@ export default async function ChargingPage() {
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-2/3" />
         <Container className="relative flex flex-1 flex-col justify-end pb-16 pt-32">
           <div className="animate-fade-up max-w-3xl">
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">{t.charging.title}</p>
+            <p className="eyebrow mb-4 text-dusk">{t.charging.title}</p>
             <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">{t.home.chargingTitle}</h1>
-            <p className="mt-5 max-w-2xl text-pretty text-lg text-white/80">{t.charging.subtitle}</p>
+            <p className="mt-5 max-w-2xl text-pretty text-lg text-fog">{t.charging.subtitle}</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button href="#stations" variant="light" size="lg" className="sm:w-56">{t.charging.stationsTitle}</Button>
               <Button href="/connect/trip-planner" variant="glass" size="lg" className="sm:w-56">{t.connect.trip}</Button>
@@ -49,7 +49,7 @@ export default async function ChargingPage() {
             {networkStats.map((s) => (
               <div key={s.id}>
                 <dt className="text-2xl font-semibold tabular-nums sm:text-3xl">{locale === "en" && s.valueEn ? s.valueEn : s.value}</dt>
-                <dd className="mt-1 text-xs text-white/60">{pick(s.label, locale)}</dd>
+                <dd className="mt-1 text-xs text-dusk">{pick(s.label, locale)}</dd>
               </div>
             ))}
           </dl>
@@ -65,7 +65,7 @@ export default async function ChargingPage() {
                 <div className="h-full rounded-3xl bg-cloud p-6 hairline">
                   <span className="flex size-11 items-center justify-center rounded-2xl bg-white hairline"><Icon name={b.icon} className="size-5" /></span>
                   <h3 className="mt-5 text-lg font-semibold">{pick(b.title, locale)}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate">{pick(b.body, locale)}</p>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{pick(b.body, locale)}</p>
                 </div>
               </Reveal>
             ))}
@@ -131,7 +131,7 @@ export default async function ChargingPage() {
             ).map((c) => (
               <div key={c.title} className="rounded-3xl bg-white p-6 hairline">
                 <h3 className="text-lg font-semibold">{c.title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate">{c.body}</p>
+                <p className="mt-2 text-sm leading-6 text-graphite">{c.body}</p>
               </div>
             ))}
           </div>

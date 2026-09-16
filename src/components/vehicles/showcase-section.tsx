@@ -25,8 +25,8 @@ export function ShowcaseSection({ vehicle, locale, priority, align = "center", i
   const isInventory = vehicle.availability === "inventory";
   const stats = vehicle.highlights.slice(0, 3);
   const light = vehicle.theme === "light";
-  const muted = light ? "text-graphite" : "text-white/70";
-  const subtle = light ? "text-slate" : "text-white/60";
+  const muted = light ? "text-ink" : "text-fog";
+  const subtle = light ? "text-graphite" : "text-dusk";
 
   return (
     <section className={cn("snap-section relative flex min-h-[100svh] flex-col overflow-hidden", light ? "bg-mist text-ink" : "bg-carbon text-white", className)}>
@@ -40,8 +40,8 @@ export function ShowcaseSection({ vehicle, locale, priority, align = "center", i
       />
       {light ? (
         <>
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-white/70 via-white/25 to-transparent" />
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-white/80 via-white/35 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-[38%] bg-gradient-to-b from-white/90 via-white/45 to-transparent" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[42%] bg-gradient-to-t from-white/92 via-white/50 to-transparent" />
         </>
       ) : (
         <>
@@ -52,14 +52,14 @@ export function ShowcaseSection({ vehicle, locale, priority, align = "center", i
 
       <div className={cn("relative flex flex-1 flex-col justify-between px-5 pb-10 pt-28 sm:px-8 sm:pb-14 lg:px-12", align === "center" ? "items-center text-center" : "items-start")}>
         <Reveal className={cn("max-w-3xl", align === "center" && "flex flex-col items-center")}>
-          <p className={cn("mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em]", muted)}>
+          <p className={cn("eyebrow mb-3 flex items-center gap-2", muted)}>
             <span className={cn("size-1.5 rounded-full", vehicle.brand === "xiaomi" ? "bg-mi" : "bg-tesla")} />
             {vehicle.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla}
             {isInventory ? <span className={cn("ml-2 rounded-pill px-2 py-0.5 text-[10px]", light ? "bg-ink/10" : "bg-white/15")}>{t.common.inventoryOnly}</span> : null}
             {isOverseas ? <span className={cn("ml-2 rounded-pill px-2 py-0.5 text-[10px]", light ? "bg-ink/10" : "bg-white/15")}>{t.common.overseasOnly}</span> : null}
           </p>
           <h2 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">{pick(vehicle.name, locale)}</h2>
-          <p className={cn("mt-3 text-pretty text-base sm:text-lg", light ? "text-graphite" : "text-white/80")}>{pick(vehicle.tagline, locale)}</p>
+          <p className={cn("mt-3 text-pretty text-base sm:text-lg", light ? "text-graphite" : "text-fog")}>{pick(vehicle.tagline, locale)}</p>
         </Reveal>
 
         <Reveal delay={120} className={cn("w-full", align === "center" ? "flex flex-col items-center" : "")}>
