@@ -8,7 +8,7 @@ import { pick } from "@/lib/i18n/types";
 import { articles, articlesBySlug } from "@/data/news";
 import { Badge, Container } from "@/components/ui/primitives";
 import { Button } from "@/components/ui/button";
-import { absoluteUrl, formatDate } from "@/lib/utils";
+import { absoluteUrl, formatDate, jsonLd as toJsonLd } from "@/lib/utils";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -44,13 +44,16 @@ export default async function ArticlePage({ params }: Params) {
     datePublished: article.date,
     image: [absoluteUrl(article.image)],
     description: pick(article.excerpt, locale),
-    publisher: { "@type": "Organization", name: "MI × TESLA ATELIER" },
+    dateModified: article.date,
+    author: { "@type": "Organization", name: "MI × TESLA ATELIER", url: absoluteUrl("/") },
+    publisher: { "@type": "Organization", name: "MI × TESLA ATELIER", logo: { "@type": "ImageObject", url: absoluteUrl("/icons/512") } },
     mainEntityOfPage: absoluteUrl(`/news/${article.slug}`),
+    inLanguage: locale === "zh" ? "zh-CN" : "en",
   };
 
   return (
     <article className="pt-14">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }} />
       <Container className="max-w-4xl py-12 lg:py-16">
         <Link href="/news" className="inline-flex items-center gap-1 text-sm text-graphite hover:underline underline-offset-4"><ArrowLeft className="size-4" />{t.news.title}</Link>
         <div className="mt-6 flex items-center gap-2 text-xs text-slate">
