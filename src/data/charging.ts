@@ -180,3 +180,8 @@ export const chargingBenefits = [
   { icon: "map-pinned", title: l("实时可用率", "Live availability"), body: l("站点空闲桩、排队与功率实时可见，行程中自动推荐。", "See free stalls, queues and live power, with en-route suggestions.") },
   { icon: "badge-percent", title: l("会员权益", "Member benefits"), body: l("分时电价、停车费减免与小米积分抵扣服务费。", "Time-of-use rates, parking waivers and Xiaomi points toward service fees.") },
 ];
+
+/** Slim projection for the schematic map (client component); coordinates rounded to ~100 m. */
+export function toMapStation(s: Station): Pick<Station, "id" | "name" | "network" | "lat" | "lng" | "maxKw" | "cityId"> {
+  return { id: s.id, name: s.name, network: s.network, lat: Math.round(s.lat * 1000) / 1000, lng: Math.round(s.lng * 1000) / 1000, maxKw: s.maxKw, cityId: s.cityId };
+}

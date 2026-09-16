@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, type FormEvent } from "react";
 import { ShieldCheck, Lock } from "lucide-react";
-import type { Vehicle, VehicleSelection } from "@/data/types";
+import type { ClientVehicle, VehicleSelection } from "@/data/types";
 import type { Store } from "@/data/site";
 import type { City } from "@/data/cities";
 import { computeQuote, encodeSelection } from "@/lib/pricing";
@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select } from "@/components/ui/primitives";
 import { PaintSwatch } from "@/components/vehicles/swatches";
 
-export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle: Vehicle; selection: VehicleSelection; stores: Store[]; cities: City[] }) {
+export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle: ClientVehicle; selection: VehicleSelection; stores: Store[]; cities: City[] }) {
   const { t, pick, locale } = useI18n();
   const router = useRouter();
   const quote = useMemo(() => computeQuote(vehicle, selection), [vehicle, selection]);
