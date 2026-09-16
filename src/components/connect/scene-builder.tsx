@@ -139,6 +139,7 @@ export function SceneBuilder() {
                 type="button"
                 role="switch"
                 aria-checked={s.enabled}
+                aria-label={`${zh ? "启用场景" : "Enable scene"} ${s.name}`}
                 onClick={() => persist(scenes.map((x) => (x.id === s.id ? { ...x, enabled: !x.enabled } : x)))}
                 className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors focus-ring", s.enabled ? "bg-success" : "bg-line")}
               >

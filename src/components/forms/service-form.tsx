@@ -170,7 +170,7 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: Vehicle[];
         <Button type="submit" size="lg" loading={loading} icon={<Wrench className="size-4" />}>{t.connect.service}</Button>
       </div>
       <aside className="h-fit rounded-3xl bg-cloud p-6 hairline lg:sticky lg:top-24">
-        <h3 className="font-semibold">{zh ? "服务承诺" : "Service promise"}</h3>
+        <h2 className="font-semibold">{zh ? "服务承诺" : "Service promise"}</h2>
         <ul className="mt-4 space-y-2 text-sm text-graphite">
           {(zh
             ? ["全国 300+ 服务中心与移动服务车", "原厂配件、原厂标准工时", "维保进度实时推送到账户与 App", "24 小时道路救援 400-800-0000"]

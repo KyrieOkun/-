@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import type { Vehicle } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
@@ -29,15 +29,41 @@ export function CompareTable({ vehicles }: { vehicles: Vehicle[] }) {
       { slug: "xiaomi-su7", trimId: "max" },
       { slug: "tesla-model-3", trimId: "lr-awd" },
     ].filter((s) => bySlug[s.slug]);
+    if (initial.length === 1) {
+      // Arriving from a single vehicle: pre-fill its closest cross-brand rival so
+      // the table is immediately meaningful.
+      const base = bySlug[initial[0].slug];
+      const basePrice = Math.min(...base.trims.map((tr) => tr.price));
+      const rival = vehicles
+        .filter((v) => v.brand !== base.brand && v.availability !== "overseas")
+        .map((v) => ({ v, score: (v.bodyType === base.bodyType ? 0 : 1) * 1_000_000 + Math.abs(Math.min(...v.trims.map((tr) => tr.price)) - basePrice) }))
+        .sort((a, b) => a.score - b.score)[0]?.v;
+      if (rival) initial.push({ slug: rival.slug, trimId: rival.trims[0].id });
+    }
     return initial;
   });
   const [diffOnly, setDiffOnly] = useState(false);
   const [picker, setPicker] = useState(false);
+  const pickerCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const qs = slots.length ? `?v=${slots.map((s) => s.slug).join(",")}` : "";
     window.history.replaceState(window.history.state, "", `${window.location.pathname}${qs}`);
   }, [slots]);
+
+  useEffect(() => {
+    if (!picker) return;
+    pickerCloseRef.current?.focus();
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPicker(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [picker]);
 
   const columns = slots.map((s) => {
     const v = bySlug[s.slug];
@@ -152,7 +178,7 @@ export function CompareTable({ vehicles }: { vehicles: Vehicle[] }) {
                 );
               })}
               <tr>
-                <th className="sticky left-0 z-10 bg-white p-4" />
+                <td className="sticky left-0 z-10 bg-white p-4" />
                 {columns.map(({ v }) => (
                   <td key={v.slug} className="bg-white p-4">
                     {v.availability !== "overseas" ? (
@@ -174,7 +200,7 @@ export function CompareTable({ vehicles }: { vehicles: Vehicle[] }) {
           <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl bg-white p-6 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold">{t.compare.add}</h3>
-              <button type="button" onClick={() => setPicker(false)} className="flex size-9 items-center justify-center rounded-full bg-mist focus-ring" aria-label={t.nav.close}><X className="size-4" /></button>
+              <button ref={pickerCloseRef} type="button" onClick={() => setPicker(false)} className="flex size-9 items-center justify-center rounded-full bg-mist focus-ring" aria-label={t.nav.close}><X className="size-4" /></button>
             </div>
             <ul className="grid gap-3 sm:grid-cols-2">
               {vehicles.map((v) => {

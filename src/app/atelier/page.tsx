@@ -89,7 +89,7 @@ export default async function AtelierPage() {
             {atelierSteps.map((s, i) => (
               <Reveal key={s.step} delay={i * 50} as="li">
                 <div className="h-full rounded-3xl bg-white p-6 hairline">
-                  <span className="text-xs font-semibold tabular-nums text-atelier">{s.step}</span>
+                  <span className="text-xs font-semibold tabular-nums text-atelier-deep">{s.step}</span>
                   <h3 className="mt-3 text-base font-semibold">{pick(s.title, locale)}</h3>
                   <p className="mt-2 text-sm leading-6 text-slate">{pick(s.body, locale)}</p>
                 </div>

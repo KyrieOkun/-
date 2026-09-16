@@ -30,7 +30,7 @@ export function InterestForm({ vehicleSlug, vehicleName }: { vehicleSlug: string
 
   if (state === "done") {
     return (
-      <div className="rounded-3xl bg-success/10 p-6 text-success">
+      <div className="rounded-3xl bg-success/10 p-6 text-success-deep">
         <p className="font-semibold">{locale === "zh" ? "登记成功" : "You're on the list"}</p>
         <p className="mt-1 text-sm">{locale === "zh" ? `${vehicleName} 有引进信息时我们会第一时间通知您。` : `We'll notify you as soon as there's news on ${vehicleName}.`}</p>
       </div>

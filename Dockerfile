@@ -8,9 +8,22 @@ COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
 
 FROM base AS build
+# NEXT_PUBLIC_* values are inlined at build time; pass them with --build-arg.
+# Runtime-only equivalents (SITE_URL, ICP_LICENSE, PSB_LICENSE) can instead be
+# supplied with `docker run -e ...` and take precedence on the server.
+ARG NEXT_PUBLIC_SITE_URL=https://mitesla-atelier.com
+ARG NEXT_PUBLIC_ICP=
+ARG NEXT_PUBLIC_PSB=
+ARG NEXT_PUBLIC_APP_VERSION=1.0.0
+ARG ALLOW_INSECURE_HTTP=false
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ENV DOCKER_BUILD=1 NODE_ENV=production
+ENV DOCKER_BUILD=1 NODE_ENV=production \
+    NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL \
+    NEXT_PUBLIC_ICP=$NEXT_PUBLIC_ICP \
+    NEXT_PUBLIC_PSB=$NEXT_PUBLIC_PSB \
+    NEXT_PUBLIC_APP_VERSION=$NEXT_PUBLIC_APP_VERSION \
+    ALLOW_INSECURE_HTTP=$ALLOW_INSECURE_HTTP
 RUN npm run build
 
 FROM node:22-alpine AS runner

@@ -42,7 +42,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
         {lead ? (
           <Link href={`/news/${lead.slug}`} className="group grid gap-6 overflow-hidden rounded-3xl bg-white hairline lg:grid-cols-2">
             <div className="relative aspect-[16/10] bg-mist lg:aspect-auto lg:min-h-[400px]">
-              <Image src={lead.image} alt={pick(lead.title, locale)} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+              <Image src={lead.image} alt="" fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
             </div>
             <div className="flex flex-col justify-center p-8 lg:p-12">
               <div className="flex items-center gap-2 text-xs text-slate">
@@ -60,7 +60,7 @@ export default async function NewsPage({ searchParams }: { searchParams: Promise
             <Reveal key={a.slug} delay={(i % 3) * 60} as="article">
               <Link href={`/news/${a.slug}`} className="group block">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-mist">
-                  <Image src={a.image} alt={pick(a.title, locale)} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <Image src={a.image} alt="" fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
                 <div className="mt-4 flex items-center gap-2 text-xs text-slate">
                   <Badge tone={a.brand === "xiaomi" ? "mi" : a.brand === "tesla" ? "tesla" : "neutral"}>{t.news.category[a.category]}</Badge>

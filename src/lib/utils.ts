@@ -108,7 +108,10 @@ export function generateId(prefix: string): string {
   return `${prefix}-${time}-${rand}`;
 }
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://mitesla-atelier.com").replace(/\/$/, "");
+// Only read on the server (metadata, sitemap, robots, JSON-LD). `SITE_URL` is a
+// runtime variable so Docker images can be pointed at a domain without rebuilding;
+// `NEXT_PUBLIC_SITE_URL` is inlined at build time and kept as a fallback.
+export const SITE_URL = (process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://mitesla-atelier.com").replace(/\/$/, "");
 
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;

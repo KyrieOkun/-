@@ -25,9 +25,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
-      - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      # Typecheck after build so the generated route types (.next/types) are checked too.
+      - run: npm run typecheck
       - name: Smoke test production server
         run: |
           npx next start -p 3100 &

@@ -51,6 +51,7 @@ export default async function OrderPage({ searchParams }: { searchParams: Promis
         </Container>
       </section>
       <Container className="py-12">
+        <h2 className="mb-6 text-xl font-semibold tracking-tight">{locale === "zh" ? "选择车型" : "Choose a vehicle"}</h2>
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {vehicles.filter((v) => v.availability !== "overseas").map((v) => (
             <VehicleCard key={v.slug} vehicle={v} locale={locale} compact />

@@ -91,16 +91,19 @@ npm run dev                  # http://localhost:3000
 ### Docker / 自建服务器（含中国大陆云厂商）
 
 ```bash
-docker build -t mitesla-atelier .
+# NEXT_PUBLIC_* 会在构建期内联，如需固定可用 --build-arg 传入；
+# 也可以在运行期用 SITE_URL / ICP_LICENSE / PSB_LICENSE 覆盖（服务端读取，优先级更高）。
+docker build -t mitesla-atelier \
+  --build-arg NEXT_PUBLIC_SITE_URL=https://your-domain.com .
 docker run -d --name atelier -p 3000:3000 \
   -e AUTH_SECRET=change-me-to-a-long-random-string \
-  -e NEXT_PUBLIC_SITE_URL=https://your-domain.com \
+  -e SITE_URL=https://your-domain.com \
   -e UPSTASH_REDIS_REST_URL=... -e UPSTASH_REDIS_REST_TOKEN=... \
-  -e NEXT_PUBLIC_ICP=京ICP备XXXXXXXX号 \
+  -e ICP_LICENSE=京ICP备XXXXXXXX号 \
   mitesla-atelier
 ```
 
-镜像基于 `node:22-alpine`、Next.js standalone 输出，自带 `/api/health` 健康检查；建议前置 Nginx / 云负载均衡终止 TLS 并开启 HTTP/2 与 Brotli。
+镜像基于 `node:22-alpine`、Next.js standalone 输出，自带 `/api/health` 健康检查；建议前置 Nginx / 云负载均衡终止 TLS 并开启 HTTP/2 与 Brotli。若确实需要以纯 HTTP 对外提供服务（无 TLS），请设置 `ALLOW_INSECURE_HTTP=true`（构建参数 + 运行环境变量），否则 HSTS / `upgrade-insecure-requests` / Secure Cookie 会导致资源加载与登录失败。
 
 ### 生产清单
 

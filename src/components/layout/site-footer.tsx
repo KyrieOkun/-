@@ -11,8 +11,10 @@ interface FooterVehicle {
 export function SiteFooter({ locale, vehicles }: { locale: Locale; vehicles: FooterVehicle[] }) {
   const t = getDictionary(locale);
   const year = new Date().getFullYear();
-  const icp = process.env.NEXT_PUBLIC_ICP;
-  const psb = process.env.NEXT_PUBLIC_PSB;
+  // Server component: prefer runtime variables so Docker deployments can set
+  // them at `docker run` time; the NEXT_PUBLIC_ variants are build-time fallbacks.
+  const icp = process.env.ICP_LICENSE ?? process.env.NEXT_PUBLIC_ICP;
+  const psb = process.env.PSB_LICENSE ?? process.env.NEXT_PUBLIC_PSB;
 
   const columns: { title: string; links: { href: string; label: string }[] }[] = [
     {

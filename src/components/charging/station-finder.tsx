@@ -106,7 +106,7 @@ export function StationFinder({ cities }: { cities: City[] }) {
                   <p className="mt-0.5 flex items-start gap-1 text-xs text-slate"><MapPin className="mt-0.5 size-3 shrink-0" />{pick(st.address)}</p>
                 </div>
                 <div className="text-right">
-                  <p className={cn("text-2xl font-semibold tabular-nums", ratio === 0 ? "text-danger" : ratio < 0.3 ? "text-warning" : "text-success")}>{st.live.available}</p>
+                  <p className={cn("text-2xl font-semibold tabular-nums", ratio === 0 ? "text-danger" : ratio < 0.3 ? "text-warning-deep" : "text-success-deep")}>{st.live.available}</p>
                   <p className="text-[11px] text-ash">/ {st.stalls} {t.charging.available}</p>
                 </div>
               </div>

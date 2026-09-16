@@ -38,7 +38,13 @@
   --color-ink: #171a20;
   --color-graphite: #393c41;
   --color-slate: #5c5e62;
-  --color-ash: #8e8e93;
+  /* 4.5:1+ on white / cloud / mist so small labels pass WCAG AA */
+  --color-ash: #6e6e73;
+  --color-mi-deep: #bf4a00;
+  --color-tesla-deep: #b91c1c;
+  --color-success-deep: #15803d;
+  --color-warning-deep: #b45309;
+  --color-atelier-deep: #8a6a2f;
   --color-mist: #f4f4f4;
   --color-cloud: #fafafa;
   --color-line: #e5e7ea;

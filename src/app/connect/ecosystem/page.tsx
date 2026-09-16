@@ -36,7 +36,7 @@ export default async function EcosystemPage() {
   ];
 
   const Cell = ({ v }: { v: boolean | "partial" }) =>
-    v === true ? <Check className="mx-auto size-4 text-success" /> : v === "partial" ? <span className="mx-auto block text-[11px] font-medium text-warning">{zh ? "部分" : "Partial"}</span> : <Minus className="mx-auto size-4 text-ash" />;
+    v === true ? <Check className="mx-auto size-4 text-success" /> : v === "partial" ? <span className="mx-auto block text-[11px] font-medium text-warning-deep">{zh ? "部分" : "Partial"}</span> : <Minus className="mx-auto size-4 text-ash" />;
 
   return (
     <div className="pt-14">

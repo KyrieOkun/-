@@ -38,6 +38,7 @@ export function SiteHeader({ vehicles, user }: Props) {
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState<null | "vehicles" | "connect" | "discover">(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -57,6 +58,20 @@ export function SiteHeader({ vehicles, user }: Props) {
       document.body.style.overflow = "";
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open && !mega) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setMega(null);
+      if (open) {
+        setOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, mega]);
 
   const transparent = mode !== "solid" && !scrolled && !mega && !open;
   const overlay = mode === "overlay" && transparent;
@@ -104,6 +119,9 @@ export function SiteHeader({ vehicles, user }: Props) {
           textColor,
         )}
         onMouseLeave={scheduleClose}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setMega(null);
+        }}
       >
         <div className="container-x flex h-14 items-center justify-between">
           <Link href="/" className="flex items-baseline gap-2 focus-ring rounded-md" aria-label={t.brand.name}>
@@ -139,10 +157,12 @@ export function SiteHeader({ vehicles, user }: Props) {
               <span className="hidden sm:inline">{user ? user.name : t.nav.login}</span>
             </Link>
             <button
+              ref={menuButtonRef}
               type="button"
               className="inline-flex size-9 items-center justify-center rounded-pill hover:bg-current/5 focus-ring lg:hidden"
               aria-label={open ? t.a11y.closeMenu : t.a11y.openMenu}
               aria-expanded={open}
+              aria-controls="mobile-menu"
               onClick={() => setOpen((v) => !v)}
             >
               {open ? <X className="size-5" /> : <Menu className="size-5" />}
@@ -201,9 +221,10 @@ export function SiteHeader({ vehicles, user }: Props) {
 
       {/* Mobile sheet */}
       <div
+        id="mobile-menu"
         className={cn(
-          "fixed inset-0 z-40 bg-white text-ink transition-opacity duration-200 lg:hidden",
-          open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
+          "fixed inset-0 z-40 bg-white text-ink transition-[opacity,visibility] duration-200 lg:hidden",
+          open ? "visible pointer-events-auto opacity-100" : "invisible pointer-events-none opacity-0",
         )}
         aria-hidden={!open}
       >
@@ -260,7 +281,7 @@ function NavItem({ label, href, active, onEnter }: { label: string; href: string
 function BrandColumn({ title, tone, items, pick, locale }: { title: string; tone: "mi" | "tesla"; items: HeaderVehicle[]; pick: (t: L10n) => string; locale: "zh" | "en" }) {
   return (
     <div>
-      <p className={cn("mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em]", tone === "mi" ? "text-mi" : "text-tesla")}>
+      <p className={cn("mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em]", tone === "mi" ? "text-mi-deep" : "text-tesla-deep")}>
         <span className={cn("size-1.5 rounded-full", tone === "mi" ? "bg-mi" : "bg-tesla")} />
         {title}
       </p>
@@ -288,7 +309,7 @@ function MobileGroup({ title, tone, children }: { title: string; tone?: "mi" | "
   return (
     <div className="border-b border-line py-4">
       <button type="button" onClick={() => setExpanded((v) => !v)} className="flex w-full items-center justify-between py-1 text-left" aria-expanded={expanded}>
-        <span className={cn("text-[11px] font-semibold uppercase tracking-[0.2em]", tone === "mi" ? "text-mi" : tone === "tesla" ? "text-tesla" : "text-ash")}>{title}</span>
+        <span className={cn("text-[11px] font-semibold uppercase tracking-[0.2em]", tone === "mi" ? "text-mi-deep" : tone === "tesla" ? "text-tesla-deep" : "text-ash")}>{title}</span>
         <ChevronDown className={cn("size-4 text-ash transition-transform", expanded && "rotate-180")} />
       </button>
       {expanded ? <div className="mt-2">{children}</div> : null}

@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const isProd = process.env.NODE_ENV === "production";
+// Plain-HTTP deployments (local `next dev`, Docker without a TLS proxy) must not
+// force HTTPS upgrades or HSTS, otherwise every asset request fails.
+const httpsOnly = isProd && process.env.ALLOW_INSECURE_HTTP !== "true";
 
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -8,7 +11,7 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(self), payment=(self)" },
   { key: "X-DNS-Prefetch-Control", value: "on" },
-  ...(isProd ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }] : []),
+  ...(httpsOnly ? [{ key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" }] : []),
   {
     key: "Content-Security-Policy",
     value: [
@@ -22,7 +25,7 @@ const securityHeaders = [
       "base-uri 'self'",
       "form-action 'self'",
       "object-src 'none'",
-      "upgrade-insecure-requests",
+      ...(httpsOnly ? ["upgrade-insecure-requests"] : []),
     ].join("; "),
   },
 ];

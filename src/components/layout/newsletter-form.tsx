@@ -30,7 +30,7 @@ export function NewsletterForm() {
   }
 
   if (state === "done") {
-    return <p className="mt-3 text-sm font-medium text-success">{t.footer.subscribed}</p>;
+    return <p className="mt-3 text-sm font-medium text-success-deep">{t.footer.subscribed}</p>;
   }
 
   return (

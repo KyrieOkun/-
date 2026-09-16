@@ -88,8 +88,8 @@ export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { ve
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[1fr_380px]" noValidate>
-      <div className="space-y-8">
+    <form onSubmit={onSubmit} className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]" noValidate>
+      <div className="min-w-0 space-y-8">
         <section>
           <h2 className="text-lg font-semibold">{t.forms.model}</h2>
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -152,7 +152,8 @@ export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { ve
           <h2 className="flex items-center gap-2 text-lg font-semibold"><CalendarDays className="size-5" />{t.forms.date}</h2>
           <div className="no-scrollbar mt-4 flex gap-2 overflow-x-auto pb-1">
             {days.map((d) => {
-              const dt = new Date(d);
+              const [y, m, day] = d.split("-").map(Number);
+              const dt = new Date(y, m - 1, day);
               const active = d === date;
               return (
                 <button key={d} type="button" onClick={() => setDate(d)} aria-pressed={active} className={cn("flex w-16 shrink-0 flex-col items-center rounded-2xl border py-3 text-sm transition-colors focus-ring", active ? "border-ink bg-ink text-white" : "border-line hover:border-ash")}>

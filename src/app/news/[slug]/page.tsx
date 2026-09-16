@@ -84,7 +84,7 @@ export default async function ArticlePage({ params }: Params) {
             {related.map((r) => (
               <Link key={r.slug} href={`/news/${r.slug}`} className="group block">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-mist">
-                  <Image src={r.image} alt={pick(r.title, locale)} fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                  <Image src={r.image} alt="" fill sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
                 <h3 className="mt-3 text-base font-semibold leading-snug group-hover:underline underline-offset-4">{pick(r.title, locale)}</h3>
               </Link>

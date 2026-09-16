@@ -9,8 +9,8 @@ export function Eyebrow({ className, children, tone = "dark" }: { className?: st
   const tones = {
     dark: "text-slate",
     light: "text-white/70",
-    mi: "text-mi",
-    tesla: "text-tesla",
+    mi: "text-mi-deep",
+    tesla: "text-tesla-deep",
   } as const;
   return (
     <p className={cn("text-[11px] font-semibold uppercase tracking-[0.22em]", tones[tone], className)}>{children}</p>
@@ -49,12 +49,12 @@ export function SectionHeading({
 export function Badge({ className, children, tone = "neutral" }: { className?: string; children: ReactNode; tone?: "neutral" | "mi" | "tesla" | "success" | "dark" | "light" | "gold" }) {
   const tones = {
     neutral: "bg-mist text-graphite",
-    mi: "bg-mi/10 text-mi",
-    tesla: "bg-tesla/10 text-tesla",
-    success: "bg-success/10 text-success",
+    mi: "bg-mi/10 text-mi-deep",
+    tesla: "bg-tesla/10 text-tesla-deep",
+    success: "bg-success/10 text-success-deep",
     dark: "bg-ink text-white",
     light: "bg-white/15 text-white ring-1 ring-inset ring-white/30 backdrop-blur",
-    gold: "bg-atelier/15 text-[#8c6a2a]",
+    gold: "bg-atelier/15 text-atelier-deep",
   } as const;
   return (
     <span className={cn("inline-flex items-center gap-1 rounded-pill px-2.5 py-1 text-[11px] font-semibold tracking-wide", tones[tone], className)}>{children}</span>

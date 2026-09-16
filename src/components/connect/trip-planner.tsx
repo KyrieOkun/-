@@ -175,7 +175,7 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
             <RouteStrip plan={plan} />
 
             {plan.stops.length === 0 ? (
-              <div className="rounded-3xl bg-success/10 p-6 text-success">
+              <div className="rounded-3xl bg-success/10 p-6 text-success-deep">
                 <p className="font-semibold">{plan.vehicle.powertrain === "erev" && plan.fuelLitres ? (locale === "zh" ? "纯电优先，增程器接管剩余里程，无需停靠充电" : "Electric first — the range extender covers the rest, no charging stops") : t.connect.noStopsNeeded}</p>
               </div>
             ) : (
@@ -214,7 +214,7 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
               <Button href="/connect/garage" variant="secondary">{locale === "zh" ? "发送至车机" : "Send to car"}</Button>
               <Link href="/charging" className="inline-flex h-10 items-center rounded-pill bg-ink px-5 text-sm font-medium text-white">{t.charging.stationsTitle}</Link>
             </div>
-            {plan.notes.includes("LOW_ARRIVAL") ? <p className="rounded-2xl bg-warning/10 p-4 text-sm text-warning">{locale === "zh" ? `到达电量约 ${plan.arrivalSoc}%，低于您设定的下限，但高于 8% 安全余量。如需更高余量，请在最后一站多充几分钟。` : `Arrival charge is about ${plan.arrivalSoc}%, below your target but above the 8% safety reserve. Add a few minutes at the last stop for more buffer.`}</p> : null}
+            {plan.notes.includes("LOW_ARRIVAL") ? <p className="rounded-2xl bg-warning/10 p-4 text-sm text-warning-deep">{locale === "zh" ? `到达电量约 ${plan.arrivalSoc}%，低于您设定的下限，但高于 8% 安全余量。如需更高余量，请在最后一站多充几分钟。` : `Arrival charge is about ${plan.arrivalSoc}%, below your target but above the 8% safety reserve. Add a few minutes at the last stop for more buffer.`}</p> : null}
             {plan.notes.includes("WINTER") ? <p className="text-xs text-ash">{locale === "zh" ? "冬季模式已按 -5℃ 与座舱加热修正能耗（约 +25%）。" : "Winter mode applies a -5 °C and cabin-heating correction (about +25% consumption)."}</p> : null}
           </div>
         )}
