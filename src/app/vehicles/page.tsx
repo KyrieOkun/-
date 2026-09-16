@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getI18n } from "@/lib/i18n/server";
-import { vehicles, getBestAccel, getMaxRange, getStartingPrice } from "@/data/vehicles";
+import { vehicles, getBestAccel, getMaxRange, getStartingPrice, isNewVehicle, rangeStandardOf } from "@/data/vehicles";
 import { Container, Eyebrow, Skeleton } from "@/components/ui/primitives";
 import { VehicleExplorer, type ExplorerVehicle } from "@/components/vehicles/vehicle-explorer";
 
@@ -27,6 +27,8 @@ export default async function VehiclesPage() {
     powerKw: Math.max(...v.trims.map((tr) => tr.powerKw)),
     availability: v.availability,
     launchDate: v.launchDate,
+    isNew: isNewVehicle(v),
+    rangeStandard: rangeStandardOf(v),
     isPerformance: v.trims.some((tr) => tr.accel <= 3.5),
     trimCount: v.trims.length,
   }));

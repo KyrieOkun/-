@@ -26,7 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
   return [
     ...staticRoutes.map((r) => ({ url: `${SITE_URL}${r.path}`, lastModified: now, changeFrequency: r.changeFrequency, priority: r.priority })),
-    ...vehicles.map((v) => ({ url: `${SITE_URL}/vehicles/${v.slug}`, lastModified: new Date(v.launchDate > "2026-09-15" ? "2026-09-15" : v.launchDate), changeFrequency: "weekly" as const, priority: 0.9 })),
+    ...vehicles.map((v) => ({ url: `${SITE_URL}/vehicles/${v.slug}`, lastModified: new Date(Math.min(new Date(v.launchDate).getTime(), now.getTime())), changeFrequency: "weekly" as const, priority: 0.9 })),
     ...articles.map((a) => ({ url: `${SITE_URL}/news/${a.slug}`, lastModified: new Date(a.date), changeFrequency: "monthly" as const, priority: 0.6 })),
   ];
 }

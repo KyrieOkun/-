@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type Variant = "primary" | "secondary" | "ghost" | "outline" | "light" | "glass" | "danger";
@@ -54,22 +54,29 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   );
 
   if (href) {
+    // Forward the generic props (onClick, aria-*, data-*, id, title) onto the anchor;
+    // button-only attributes (type, form*, value) are not meaningful on links.
+    const { type: _type, value: _value, form: _form, formAction: _fa, formMethod: _fm, formTarget: _ft, formEncType: _fe, formNoValidate: _fn, ...anchorProps } = props;
+    void _type; void _value; void _form; void _fa; void _fm; void _ft; void _fe; void _fn;
+    const inert = disabled || loading;
+    const shared = { ...(anchorProps as AnchorHTMLAttributes<HTMLAnchorElement>), className: classes, "aria-disabled": inert || undefined, "aria-busy": loading || undefined, tabIndex: inert ? -1 : anchorProps.tabIndex };
     if (external) {
       return (
-        <a href={href} className={classes} target="_blank" rel="noopener noreferrer">
+        <a href={href} target="_blank" rel="noopener noreferrer" {...shared}>
           {content}
+          <span className="sr-only">(opens in a new tab)</span>
         </a>
       );
     }
     return (
-      <Link href={href} className={classes} prefetch={false}>
+      <Link href={href} prefetch={false} {...shared}>
         {content}
       </Link>
     );
   }
 
   return (
-    <button ref={ref} className={classes} disabled={disabled || loading} {...props}>
+    <button ref={ref} className={classes} disabled={disabled || loading} aria-busy={loading || undefined} {...props}>
       {content}
     </button>
   );

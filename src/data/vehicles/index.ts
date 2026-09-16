@@ -38,3 +38,15 @@ export const BRAND_META: Record<Brand, { name: { zh: string; en: string }; color
 };
 
 export { xiaomiVehicles, teslaVehicles };
+
+/** "New" for 180 days after launch (relative to now, not a hard-coded year). */
+export function isNewVehicle(vehicle: Pick<Vehicle, "launchDate" | "availability">, now = Date.now()): boolean {
+  if (vehicle.availability === "overseas") return false;
+  const launched = new Date(vehicle.launchDate).getTime();
+  return Number.isFinite(launched) && now - launched < 180 * 86_400_000 && launched <= now + 86_400_000;
+}
+
+/** Label for the range figure: CLTC / EPA / WLTP as declared per trim. */
+export function rangeStandardOf(vehicle: Pick<Vehicle, "trims">): string {
+  return vehicle.trims[0]?.rangeStandard ?? "CLTC";
+}

@@ -8,20 +8,14 @@ import type { Store } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
-import { cn, isValidCNPhone } from "@/lib/utils";
+import { cn, isValidCNPhone, isoDateInCST } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/primitives";
 
 const SLOTS = ["09:00-11:00", "11:00-13:00", "13:00-15:00", "15:00-17:00", "17:00-19:00", "19:00-21:00"];
 
 function nextDays(n: number): string[] {
-  const out: string[] = [];
-  const d = new Date();
-  for (let i = 1; i <= n; i++) {
-    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
-    out.push(`${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`);
-  }
-  return out;
+  return Array.from({ length: n }, (_, i) => isoDateInCST(i + 1));
 }
 
 export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { vehicles: VehicleSummary[]; stores: Store[]; cities: City[]; initialVehicle?: string }) {

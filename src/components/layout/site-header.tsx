@@ -8,6 +8,7 @@ import { ChevronDown, Globe, Menu, User, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n/provider";
 import { useHeaderTheme } from "./header-theme";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 import type { L10n } from "@/lib/i18n/types";
 import { formatPriceHeadline } from "@/lib/utils";
 
@@ -55,12 +56,7 @@ export function SiteHeader({ vehicles, user, heroRoutes }: Props) {
     setMega(null);
   }, [pathname]);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  useScrollLock(open);
 
   useEffect(() => {
     if (!open && !mega) return;

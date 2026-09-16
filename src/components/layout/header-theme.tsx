@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 type HeaderMode = "overlay" | "overlay-dark" | "solid";
 
@@ -11,7 +11,8 @@ const HeaderThemeContext = createContext<{ mode: HeaderMode; setMode: (m: Header
 
 export function HeaderThemeProvider({ children }: { children: ReactNode }) {
   const [mode, setMode] = useState<HeaderMode>("solid");
-  return <HeaderThemeContext.Provider value={{ mode, setMode }}>{children}</HeaderThemeContext.Provider>;
+  const value = useMemo(() => ({ mode, setMode }), [mode]);
+  return <HeaderThemeContext.Provider value={value}>{children}</HeaderThemeContext.Provider>;
 }
 
 export function useHeaderTheme() {

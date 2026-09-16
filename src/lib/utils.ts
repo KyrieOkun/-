@@ -46,13 +46,19 @@ function parseIso(iso: string): Date {
   return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(iso);
 }
 
+/** All customer-facing timestamps are shown in China Standard Time, on the server and in the browser alike (no hydration drift). */
+export const SITE_TIME_ZONE = "Asia/Shanghai";
+
 export function formatDate(iso: string, locale: Locale = "zh"): string {
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(iso);
   const d = parseIso(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    // Calendar dates were parsed in local time; instants are shown in CST.
+    ...(dateOnly ? {} : { timeZone: SITE_TIME_ZONE }),
   });
 }
 
@@ -65,7 +71,17 @@ export function formatDateTime(iso: string, locale: Locale = "zh"): string {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
+    timeZone: SITE_TIME_ZONE,
   });
+}
+
+/** YYYY-MM-DD for "today + n days" in China Standard Time; identical on server and client. */
+export function isoDateInCST(daysFromNow = 0): string {
+  const d = new Date(Date.now() + daysFromNow * 86_400_000);
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: SITE_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 export function slugify(input: string): string {
