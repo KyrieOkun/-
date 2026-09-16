@@ -83,7 +83,7 @@ export function TradeInForm({ vehicles }: { vehicles: VehicleSummary[] }) {
             <Label htmlFor="ti-year" required>{t.forms.year}</Label>
             <Select id="ti-year" value={year} onChange={(e) => setYear(Number(e.target.value))}>
               {Array.from({ length: 12 }).map((_, i) => {
-                const y = 2026 - i;
+                const y = new Date().getFullYear() - i;
                 return <option key={y} value={y}>{y}</option>;
               })}
             </Select>

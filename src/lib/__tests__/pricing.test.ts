@@ -78,3 +78,19 @@ describe("computeQuote", () => {
     expect(normalizeSelection(su7, decoded)).toEqual(sel);
   });
 });
+
+describe("mutually exclusive extras", () => {
+  it("keeps only one of FSD / Enhanced Autopilot", () => {
+    const v = getVehicle("tesla-model-y")!;
+    const sel = normalizeSelection(v, { trimId: v.trims[0].id, extraIds: ["eap", "fsd"] });
+    expect(sel.extraIds).toEqual(["eap"]);
+    const quote = computeQuote(v, { trimId: v.trims[0].id, extraIds: ["fsd", "eap"] });
+    expect(quote.extras.map((e) => e.id)).toEqual(["fsd"]);
+  });
+  it("keeps only one seating layout on Model X", () => {
+    const v = getVehicle("tesla-model-x");
+    if (!v) return;
+    const sel = normalizeSelection(v, { trimId: v.trims[0].id, extraIds: ["six-seat", "seven-seat"] });
+    expect(sel.extraIds.length).toBeLessThanOrEqual(1);
+  });
+});

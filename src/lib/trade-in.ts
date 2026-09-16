@@ -3,7 +3,7 @@ import { z } from "zod";
 export const tradeInSchema = z.object({
   brand: z.string().trim().min(1).max(30),
   model: z.string().trim().min(1).max(60),
-  year: z.number().int().min(2010).max(2026),
+  year: z.number().int().min(2010).max(new Date().getFullYear() + 1),
   mileageKm: z.number().int().min(0).max(600_000),
   condition: z.enum(["excellent", "good", "fair"]),
   originalPrice: z.number().min(30_000).max(5_000_000),

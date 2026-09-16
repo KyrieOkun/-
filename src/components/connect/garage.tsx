@@ -73,7 +73,7 @@ export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
     <div>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-slate">{t.account.welcome}，{user?.name}</p>
+          <p className="text-sm text-slate">{t.account.welcome}{locale === "zh" ? "，" : ", "}{user?.name}</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight">{t.connect.garage}</h2>
         </div>
         <div className="flex gap-2">
@@ -279,7 +279,7 @@ function AddVehicleForm({ vehicles, onCancel, onAdded }: { vehicles: ClientVehic
         </div>
         <div>
           <Label htmlFor="gv-vin" hint={locale === "zh" ? "留空自动生成演示车辆" : "Leave blank for a demo VIN"}>{t.connect.vin}</Label>
-          <Input id="gv-vin" value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} placeholder="17 位" maxLength={17} className="font-mono uppercase" />
+          <Input id="gv-vin" value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} placeholder={locale === "zh" ? "17 位车架号" : "17-character VIN"} maxLength={17} className="font-mono uppercase" />
         </div>
       </div>
       <FieldError>{error}</FieldError>

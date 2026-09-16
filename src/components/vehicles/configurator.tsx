@@ -56,8 +56,12 @@ export function Configurator({ vehicle }: { vehicle: ClientVehicle }) {
     [vehicle],
   );
 
-  const toggleExtra = (id: string) =>
-    update({ extraIds: selection.extraIds.includes(id) ? selection.extraIds.filter((x) => x !== id) : [...selection.extraIds, id] });
+  const toggleExtra = (id: string) => {
+    if (selection.extraIds.includes(id)) return update({ extraIds: selection.extraIds.filter((x) => x !== id) });
+    const option = extras.find((e) => e.id === id);
+    const rivals = new Set([...(option?.excludes ?? []), ...extras.filter((e) => e.excludes?.includes(id)).map((e) => e.id)]);
+    update({ extraIds: [...selection.extraIds.filter((x) => !rivals.has(x)), id] });
+  };
 
   const orderHref = `/order?vehicle=${vehicle.slug}&${encodeSelection(selection)}`;
 
