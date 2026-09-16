@@ -102,10 +102,18 @@ export function maskPhone(phone: string): string {
   return phone.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2");
 }
 
+const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I to avoid misreads
+
+/** Cryptographically random human-readable code (works in Node and browsers). */
+export function secureCode(length: number): string {
+  const bytes = new Uint8Array(length);
+  globalThis.crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join("");
+}
+
 export function generateId(prefix: string): string {
   const time = Date.now().toString(36).toUpperCase();
-  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
-  return `${prefix}-${time}-${rand}`;
+  return `${prefix}-${time}-${secureCode(6)}`;
 }
 
 // Only read on the server (metadata, sitemap, robots, JSON-LD). `SITE_URL` is a

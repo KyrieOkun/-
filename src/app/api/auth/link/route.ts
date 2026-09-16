@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { store } from "@/lib/store";
-import { fail, ok, parseBody } from "@/lib/api";
+import { fail, ok, parseBody, rateLimit } from "@/lib/api";
 
 const schema = z.object({ provider: z.enum(["xiaomi", "tesla"]), linked: z.boolean() });
 
@@ -10,6 +10,8 @@ const schema = z.object({ provider: z.enum(["xiaomi", "tesla"]), linked: z.boole
  * against Xiaomi Account / Tesla Account and stores the refresh token.
  */
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "auth-link", 20);
+  if (limited) return limited;
   const user = await getCurrentUser();
   if (!user) return fail("UNAUTHORIZED", 401);
   const parsed = await parseBody(request, schema);

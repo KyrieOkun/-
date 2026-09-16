@@ -1,15 +1,20 @@
 import { z } from "zod";
 import { getCurrentUser } from "@/lib/auth";
 import { store } from "@/lib/store";
-import { created, fail, ok, parseBody } from "@/lib/api";
+import { created, fail, ok, parseBody, rateLimit } from "@/lib/api";
 import type { GarageVehicle } from "@/lib/garage";
-import { generateId } from "@/lib/utils";
+import { generateId, isValidCNPhone, isValidEmail, secureCode } from "@/lib/utils";
 import type { SharedKey } from "@/lib/orders";
 
 const schema = z.object({
   garageVehicleId: z.string().min(1),
   holderName: z.string().trim().min(1).max(40),
-  holderContact: z.string().trim().min(5).max(120),
+  holderContact: z
+    .string()
+    .trim()
+    .min(5)
+    .max(120)
+    .refine((v) => isValidCNPhone(v) || isValidEmail(v), { message: "holderContact must be a mobile number or email" }),
   permission: z.enum(["drive", "unlock", "valet"]),
   days: z.number().int().min(1).max(365),
 });
@@ -25,6 +30,8 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "keys", 20);
+  if (limited) return limited;
   const user = await getCurrentUser();
   if (!user) return fail("UNAUTHORIZED", 401);
   const parsed = await parseBody(request, schema);
@@ -40,7 +47,7 @@ export async function POST(request: Request) {
     permission: parsed.data.permission,
     expiresAt: new Date(Date.now() + parsed.data.days * 86_400_000).toISOString(),
     createdAt: new Date().toISOString(),
-    code: Math.random().toString(36).slice(2, 8).toUpperCase(),
+    code: secureCode(6),
     status: "active",
   };
   await store.put("keys", key, { owner: user.id });

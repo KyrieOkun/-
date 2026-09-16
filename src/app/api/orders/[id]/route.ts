@@ -1,10 +1,13 @@
 import { NextRequest } from "next/server";
-import { fail, ok } from "@/lib/api";
+import { fail, ok, rateLimit } from "@/lib/api";
 import { store } from "@/lib/store";
 import { getCurrentUser } from "@/lib/auth";
 import type { OrderRecord } from "@/lib/orders";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  // Guest lookups are keyed by order id + phone; throttle to make enumeration impractical.
+  const limited = rateLimit(request, "order-lookup", 30);
+  if (limited) return limited;
   const { id } = await params;
   const order = await store.get<OrderRecord>("orders", id);
   if (!order) return fail("NOT_FOUND", 404);

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { getCurrentUser } from "@/lib/auth";
 import { store } from "@/lib/store";
-import { created, fail, ok, parseBody } from "@/lib/api";
+import { created, fail, ok, parseBody, rateLimit } from "@/lib/api";
 import { computeStatus, generateDemoVin, isValidVin, type GarageVehicle } from "@/lib/garage";
 import { getTrim, getVehicle } from "@/data/vehicles";
 import { generateId } from "@/lib/utils";
@@ -24,12 +24,15 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "garage", 20);
+  if (limited) return limited;
   const user = await getCurrentUser();
   if (!user) return fail("UNAUTHORIZED", 401);
   const parsed = await parseBody(request, schema);
   if ("error" in parsed) return parsed.error;
   const vehicle = getVehicle(parsed.data.vehicleSlug);
   if (!vehicle) return fail("Unknown vehicle", 404);
+  const paintId = vehicle.paints.some((p) => p.id === parsed.data.paintId) ? parsed.data.paintId : vehicle.heroPaintId ?? vehicle.paints[0]?.id;
   const trim = getTrim(vehicle, parsed.data.trimId);
   const existing = await store.list<GarageVehicle>("garage", user.id);
   if (existing.length >= 6) return fail("GARAGE_FULL", 409);
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
     vin,
     nickname: parsed.data.nickname,
     plate: parsed.data.plate,
-    paintId: parsed.data.paintId,
+    paintId,
     createdAt: new Date().toISOString(),
     state: { locked: true, climateOn: false, targetTemp: 22, charging: false, pluggedIn: false, sentry: true },
   };
