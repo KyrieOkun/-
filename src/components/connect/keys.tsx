@@ -83,7 +83,7 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
         </div>
 
         <form onSubmit={onSubmit} className="rounded-3xl bg-white p-6 hairline" noValidate>
-          <h3 className="text-lg font-semibold">{t.connect.createKey}</h3>
+          <h2 className="text-lg font-semibold">{t.connect.createKey}</h2>
           <div className="mt-4 grid gap-4">
             <div>
               <Label htmlFor="key-vehicle" required>{t.connect.vehicle}</Label>
@@ -104,17 +104,17 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
                 <Input id="key-contact" value={holderContact} onChange={(e) => setHolderContact(e.target.value)} />
               </div>
             </div>
-            <div>
-              <Label>{t.connect.keyPermission}</Label>
+            <fieldset>
+              <legend className="mb-1.5 text-[13px] font-medium text-graphite">{t.connect.keyPermission}</legend>
               <div className="grid grid-cols-3 gap-2">
                 {(["drive", "unlock", "valet"] as const).map((p) => (
                   <button key={p} type="button" onClick={() => setPermission(p)} aria-pressed={permission === p} className={cn("h-11 rounded-xl border text-sm font-medium transition-colors focus-ring", permission === p ? "border-ink bg-ink text-white" : "border-line hover:border-ash")}>{permissionLabel[p]}</button>
                 ))}
               </div>
-            </div>
+            </fieldset>
             <div>
               <Label htmlFor="key-days" hint={`${days} ${locale === "zh" ? "天" : "days"}`}>{t.connect.keyExpiry}</Label>
-              <input id="key-days" type="range" min={1} max={365} value={days} onChange={(e) => setDays(Number(e.target.value))} className="w-full" />
+              <input id="key-days" type="range" min={1} max={365} value={days} onChange={(e) => setDays(Number(e.target.value))} aria-valuetext={`${days} ${locale === "zh" ? "天" : "days"}`} className="w-full accent-ink" />
             </div>
             <FieldError>{error}</FieldError>
             <Button type="submit" loading={submitting} disabled={garage.length === 0}>{t.connect.createKey}</Button>
@@ -126,7 +126,7 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold">{locale === "zh" ? "共享钥匙" : "Shared keys"}</h3>
+        <h2 className="text-lg font-semibold">{locale === "zh" ? "共享钥匙" : "Shared keys"}</h2>
         {loading ? (
           <div className="mt-4 h-40 animate-pulse rounded-3xl bg-mist" />
         ) : keys.length === 0 ? (
@@ -158,10 +158,10 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
                           setTimeout(() => setCopied(null), 1500);
                         }}
                         className="inline-flex h-9 items-center gap-1.5 rounded-pill bg-mist px-3 font-mono text-xs font-semibold tracking-widest focus-ring"
-                        aria-label={t.common.copy}
+                        aria-label={`${t.common.copy} ${k.code}`}
                       >
                         {k.code}
-                        {copied === k.id ? <Check className="size-3.5 text-success" /> : <Copy className="size-3.5 text-ash" />}
+                        {copied === k.id ? <Check className="size-3.5 text-success-deep" /> : <Copy className="size-3.5 text-ash" />}
                       </button>
                       {active ? <Button size="sm" variant="outline" onClick={() => revoke(k.id)}>{t.connect.revoke}</Button> : null}
                     </div>

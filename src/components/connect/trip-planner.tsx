@@ -143,9 +143,9 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
           <div className="space-y-6">
             <div className="rounded-3xl bg-ink p-6 text-white sm:p-8">
               <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">{pick(plan.vehicle.name)} · {pick(plan.vehicle.trim)}</p>
-              <h3 className="mt-2 flex flex-wrap items-center gap-3 text-2xl font-semibold sm:text-3xl">
+              <h2 className="mt-2 flex flex-wrap items-center gap-3 text-2xl font-semibold sm:text-3xl">
                 {pick(plan.origin.name)} <ArrowRight className="size-6 text-white/50" /> {pick(plan.destination.name)}
-              </h3>
+              </h2>
               {plan.via.length ? <p className="mt-2 text-sm text-white/60">{locale === "zh" ? "途经" : "Via"} {plan.via.map((c) => pick(c.name)).join(" · ")}</p> : null}
               <dl className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
                 <div><dt className="text-xs text-white/60">{t.connect.distance}</dt><dd className="text-2xl font-semibold tabular-nums">{plan.distanceKm} <span className="text-sm text-white/60">km</span></dd></div>

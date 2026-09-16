@@ -77,7 +77,7 @@ export function SceneBuilder() {
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{zh ? "我的场景" : "My scenes"}</h3>
+        <h2 className="text-lg font-semibold">{zh ? "我的场景" : "My scenes"}</h2>
         <Button size="sm" onClick={() => setBuilding(true)} icon={<Plus className="size-4" />}>{zh ? "新建场景" : "New scene"}</Button>
       </div>
 

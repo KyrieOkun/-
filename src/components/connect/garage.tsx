@@ -22,6 +22,8 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [pending, setPending] = useState<string | null>(null);
+  const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
   const bySlug = useMemo(() => Object.fromEntries(vehicles.map((v) => [v.slug, v])), [vehicles]);
 
   const load = useCallback(async () => {
@@ -41,7 +43,10 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
   }, [toast]);
 
   const sendCommand = async (id: string, command: GarageCommand, temp?: number) => {
+    if (pending) return;
+    setPending(id);
     const res = await apiFetch<{ status: VehicleStatus }>(`/api/garage/${id}/command`, { method: "POST", json: { command, temp } });
+    setPending(null);
     if (res.ok && res.data) {
       const status = res.data.status;
       setEntries((prev) => prev.map((e) => (e.id === id ? { ...e, status, state: { ...e.state, locked: status.locked, climateOn: status.climateOn, charging: status.charging, pluggedIn: status.pluggedIn, sentry: status.sentry, targetTemp: status.targetTempC } } : e)));
@@ -53,8 +58,16 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
 
   const removeVehicle = async (id: string) => {
     const res = await apiFetch(`/api/garage/${id}`, { method: "DELETE" });
+    setConfirmRemove(null);
     if (res.ok) setEntries((prev) => prev.filter((e) => e.id !== id));
+    else setToast(t.common.error);
   };
+
+  useEffect(() => {
+    if (!confirmRemove) return;
+    const id = setTimeout(() => setConfirmRemove(null), 5000);
+    return () => clearTimeout(id);
+  }, [confirmRemove]);
 
   return (
     <div>
@@ -147,20 +160,28 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
                     <Badge tone="neutral">{locale === "zh" ? "电池健康" : "Battery health"} {s.health.batteryHealthPercent}%</Badge>
                   </div>
 
-                  <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-6">
-                    <Action icon={s.locked ? <LockOpen className="size-4" /> : <Lock className="size-4" />} label={s.locked ? t.connect.unlock : t.connect.lock} onClick={() => sendCommand(e.id, s.locked ? "unlock" : "lock")} />
-                    <Action icon={<Fan className="size-4" />} label={s.climateOn ? t.connect.climateStop : t.connect.climateStart} onClick={() => sendCommand(e.id, s.climateOn ? "climate_off" : "climate_on")} active={s.climateOn} />
-                    <Action icon={<Lightbulb className="size-4" />} label={t.connect.flash} onClick={() => sendCommand(e.id, "flash")} />
-                    <Action icon={s.charging ? <ZapOff className="size-4" /> : <Zap className="size-4" />} label={s.charging ? t.connect.stopCharge : t.connect.startCharge} onClick={() => sendCommand(e.id, s.charging ? "charge_stop" : "charge_start")} active={s.charging} />
-                    <Action icon={<Thermometer className="size-4" />} label={`${s.targetTempC + 1}°C`} onClick={() => sendCommand(e.id, "set_temp", Math.min(30, s.targetTempC + 1))} />
-                    <Action icon={<Sun className="size-4" />} label={`${s.targetTempC - 1}°C`} onClick={() => sendCommand(e.id, "set_temp", Math.max(16, s.targetTempC - 1))} />
+                  <div className={cn("mt-5 grid grid-cols-3 gap-2 sm:grid-cols-6 transition-opacity", pending === e.id && "pointer-events-none opacity-60")} aria-busy={pending === e.id}>
+                    <Action icon={s.locked ? <LockOpen className="size-4" /> : <Lock className="size-4" />} label={s.locked ? t.connect.unlock : t.connect.lock} onClick={() => sendCommand(e.id, s.locked ? "unlock" : "lock")} disabled={pending === e.id} />
+                    <Action icon={<Fan className="size-4" />} label={s.climateOn ? t.connect.climateStop : t.connect.climateStart} onClick={() => sendCommand(e.id, s.climateOn ? "climate_off" : "climate_on")} active={s.climateOn} disabled={pending === e.id} />
+                    <Action icon={<Lightbulb className="size-4" />} label={t.connect.flash} onClick={() => sendCommand(e.id, "flash")} disabled={pending === e.id} />
+                    <Action icon={s.charging ? <ZapOff className="size-4" /> : <Zap className="size-4" />} label={s.charging ? t.connect.stopCharge : t.connect.startCharge} onClick={() => sendCommand(e.id, s.charging ? "charge_stop" : "charge_start")} active={s.charging} disabled={pending === e.id} />
+                    <Action icon={<Thermometer className="size-4" />} label={`+1°C`} ariaLabel={`${locale === "zh" ? "目标温度调高至" : "Raise target temperature to"} ${Math.min(30, s.targetTempC + 1)}°C`} onClick={() => sendCommand(e.id, "set_temp", Math.min(30, s.targetTempC + 1))} disabled={pending === e.id || s.targetTempC >= 30} />
+                    <Action icon={<Sun className="size-4" />} label={`-1°C`} ariaLabel={`${locale === "zh" ? "目标温度调低至" : "Lower target temperature to"} ${Math.max(16, s.targetTempC - 1)}°C`} onClick={() => sendCommand(e.id, "set_temp", Math.max(16, s.targetTempC - 1))} disabled={pending === e.id || s.targetTempC <= 16} />
                   </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-line pt-4 text-xs text-ash">
                     <span className="flex items-center gap-1"><Battery className="size-3.5" />{t.connect.lastSync} {formatDateTime(s.lastSync, locale)}</span>
-                    <button type="button" onClick={() => removeVehicle(e.id)} className="inline-flex items-center gap-1 text-ash hover:text-danger focus-ring rounded">
-                      <Trash2 className="size-3.5" />{t.common.remove}
-                    </button>
+                    {confirmRemove === e.id ? (
+                      <span className="flex items-center gap-2">
+                        <span className="text-graphite">{locale === "zh" ? "确认移除该车辆？" : "Remove this vehicle?"}</span>
+                        <button type="button" onClick={() => removeVehicle(e.id)} className="rounded-pill bg-danger px-2.5 py-1 font-medium text-white focus-ring">{t.common.confirm}</button>
+                        <button type="button" onClick={() => setConfirmRemove(null)} className="rounded-pill bg-mist px-2.5 py-1 font-medium text-graphite focus-ring">{t.common.cancel}</button>
+                      </span>
+                    ) : (
+                      <button type="button" onClick={() => setConfirmRemove(e.id)} className="inline-flex items-center gap-1 text-ash hover:text-danger focus-ring rounded">
+                        <Trash2 className="size-3.5" />{t.common.remove}
+                      </button>
+                    )}
                   </div>
                 </div>
               </article>
@@ -178,9 +199,9 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
   );
 }
 
-function Action({ icon, label, onClick, active }: { icon: React.ReactNode; label: string; onClick: () => void; active?: boolean }) {
+function Action({ icon, label, ariaLabel, onClick, active, disabled }: { icon: React.ReactNode; label: string; ariaLabel?: string; onClick: () => void; active?: boolean; disabled?: boolean }) {
   return (
-    <button type="button" onClick={onClick} className={cn("flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3 text-[11px] font-medium transition-colors focus-ring", active ? "bg-ink text-white" : "bg-mist text-graphite hover:bg-line")}>
+    <button type="button" onClick={onClick} disabled={disabled} aria-label={ariaLabel} aria-pressed={active} className={cn("flex flex-col items-center gap-1.5 rounded-2xl px-2 py-3 text-[11px] font-medium transition-colors focus-ring disabled:cursor-not-allowed disabled:opacity-50", active ? "bg-ink text-white" : "bg-mist text-graphite hover:bg-line")}>
       {icon}
       <span className="truncate">{label}</span>
     </button>
