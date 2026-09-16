@@ -5,7 +5,7 @@ import { getI18n } from "@/lib/i18n/server";
 import { contact, faqs } from "@/data/site";
 import { Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { FaqList } from "@/components/support/faq-list";
-import { absoluteUrl } from "@/lib/utils";
+import { absoluteUrl, jsonLd as toJsonLd } from "@/lib/utils";
 import { pick } from "@/lib/i18n/types";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,7 +30,7 @@ export default async function SupportPage() {
   ];
   return (
     <div className="pt-14">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }} />
       <section className="border-b border-line bg-cloud">
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.nav.xiaomi} × {t.nav.tesla}</Eyebrow>

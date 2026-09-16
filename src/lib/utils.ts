@@ -160,3 +160,8 @@ export const SITE_URL = (process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_UR
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
 }
+
+/** Serialises structured data for an inline <script>; `<` is escaped so no value can close the tag. */
+export function jsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}

@@ -14,7 +14,7 @@ import { Icon } from "@/components/ui/icon";
 import { PaintExplorer } from "@/components/vehicles/paint-explorer";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { InterestForm } from "@/components/forms/interest-form";
-import { formatCNY, formatDate, formatPriceHeadline, formatUSD, absoluteUrl, formatPriceFrom } from "@/lib/utils";
+import { formatCNY, formatDate, formatPriceHeadline, formatUSD, absoluteUrl, formatPriceFrom, jsonLd as toJsonLd } from "@/lib/utils";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title,
     description: pick(vehicle.description, locale),
     alternates: { canonical: `/vehicles/${vehicle.slug}` },
-    openGraph: { title, description: pick(vehicle.description, locale), images: [{ url: vehicle.hero.src, width: 1280, height: 720 }] },
+    openGraph: { title, description: pick(vehicle.description, locale), images: [{ url: vehicle.hero.src }] },
   };
 }
 
@@ -60,19 +60,26 @@ export default async function VehiclePage({ params }: Params) {
     image: absoluteUrl(vehicle.hero.src),
     url: absoluteUrl(`/vehicles/${vehicle.slug}`),
     vehicleConfiguration: vehicle.trims.map((tr) => pick(tr.name, locale)).join(" / "),
-    offers: vehicle.trims.map((tr) => ({
-      "@type": "Offer",
-      name: pick(tr.name, locale),
-      price: tr.price,
-      priceCurrency: "CNY",
-      availability: isOverseas ? "https://schema.org/PreOrder" : "https://schema.org/InStock",
-    })),
+    // Overseas-only models have no CN offer yet; don't advertise a converted price.
+    ...(isOverseas
+      ? {}
+      : {
+          offers: vehicle.trims.map((tr) => ({
+            "@type": "Offer",
+            name: pick(tr.name, locale),
+            price: tr.price,
+            priceCurrency: "CNY",
+            availability: isInventory ? "https://schema.org/LimitedAvailability" : "https://schema.org/InStock",
+            url: absoluteUrl(isInventory ? `/order?vehicle=${vehicle.slug}&trim=${tr.id}` : `/vehicles/${vehicle.slug}/design?trim=${tr.id}`),
+            itemCondition: "https://schema.org/NewCondition",
+          })),
+        }),
   };
 
   return (
     <div>
       <HeroOverlay tone={vehicle.theme} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }} />
 
       {/* Hero */}
       <section className={`relative flex min-h-[100svh] flex-col overflow-hidden ${light ? "bg-mist text-ink" : "bg-carbon text-white"}`}>
