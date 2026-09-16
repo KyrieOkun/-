@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
 import { vehicles } from "@/data/vehicles";
-import { toClientVehicle } from "@/data/types";
+import { toVehicleSummary } from "@/data/types";
 import { stores } from "@/data/site";
 import { cities } from "@/data/cities";
 import { Container, Eyebrow } from "@/components/ui/primitives";
@@ -24,7 +24,7 @@ export default async function ServicePage() {
         </Container>
       </section>
       <Container className="py-12 pb-24">
-        <ServiceForm vehicles={vehicles.map(toClientVehicle)} stores={stores} cities={cities} />
+        <ServiceForm vehicles={vehicles.map(toVehicleSummary)} stores={stores} cities={cities} />
       </Container>
     </div>
   );

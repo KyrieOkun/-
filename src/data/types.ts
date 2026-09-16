@@ -156,6 +156,33 @@ export function toClientVehicle(vehicle: Vehicle): ClientVehicle {
   return rest;
 }
 
+/** Minimal shape for pickers, forms and the trip planner (a few hundred bytes per vehicle). */
+export interface VehicleSummary {
+  slug: string;
+  brand: Brand;
+  name: L10n;
+  tagline: L10n;
+  hero: VehicleImage;
+  availability: Availability;
+  powertrain: Powertrain;
+  bodyType: BodyType;
+  trims: Pick<Trim, "id" | "name" | "price" | "rangeKm" | "evRangeKm">[];
+}
+
+export function toVehicleSummary(vehicle: Vehicle): VehicleSummary {
+  return {
+    slug: vehicle.slug,
+    brand: vehicle.brand,
+    name: vehicle.name,
+    tagline: vehicle.tagline,
+    hero: vehicle.hero,
+    availability: vehicle.availability,
+    powertrain: vehicle.powertrain,
+    bodyType: vehicle.bodyType,
+    trims: vehicle.trims.map((tr) => ({ id: tr.id, name: tr.name, price: tr.price, rangeKm: tr.rangeKm, evRangeKm: tr.evRangeKm })),
+  };
+}
+
 export interface VehicleSelection {
   trimId: string;
   paintId: string;
