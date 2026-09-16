@@ -33,7 +33,7 @@ interface Props {
 }
 
 export function SiteHeader({ vehicles, user, heroRoutes }: Props) {
-  const { t, locale, pick, setLocale } = useI18n();
+  const { t, locale, pick, setLocale, switching } = useI18n();
   const { mode: contextMode } = useHeaderTheme();
   const pathname = usePathname();
   const mode = contextMode !== "solid" ? contextMode : heroRoutes?.[pathname] ?? "solid";
@@ -151,10 +151,12 @@ export function SiteHeader({ vehicles, user, heroRoutes }: Props) {
             <button
               type="button"
               onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
-              className="inline-flex h-9 items-center gap-1.5 rounded-pill px-3 text-sm font-medium hover:bg-current/5 focus-ring"
+              className={cn("inline-flex h-9 items-center gap-1.5 rounded-pill px-3 text-sm font-medium hover:bg-current/5 focus-ring", switching && "opacity-60")}
               aria-label={t.nav.language}
+              aria-busy={switching}
+              disabled={switching}
             >
-              <Globe className="size-4" />
+              <Globe className={cn("size-4", switching && "animate-spin")} />
               <span>{locale === "zh" ? "EN" : "中文"}</span>
             </button>
             <Link href={user ? "/account" : "/account?mode=login"} className="inline-flex h-9 items-center gap-1.5 rounded-pill px-3 text-sm font-medium hover:bg-current/5 focus-ring" aria-label={t.nav.account}>
