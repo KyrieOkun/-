@@ -1,0 +1,251 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-greek.woff2") format("woff2");
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1,
+    U+03A3-03FF;
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+@theme {
+  --font-sans: "Inter", "PingFang SC", "MiSans", "HarmonyOS Sans SC",
+    "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-display: "Inter", "PingFang SC", "MiSans", "HarmonyOS Sans SC",
+    "Noto Sans SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #171a20;
+  --color-graphite: #393c41;
+  --color-slate: #5c5e62;
+  /* 4.5:1+ on white / cloud / mist so small labels pass WCAG AA */
+  --color-ash: #6e6e73;
+  --color-mi-deep: #b34500;
+  --color-tesla-deep: #b91c1c;
+  --color-success-deep: #137038;
+  --color-warning-deep: #b45309;
+  --color-atelier-deep: #8a6a2f;
+  --color-mist: #f4f4f4;
+  --color-cloud: #fafafa;
+  --color-line: #e5e7ea;
+  --color-carbon: #0b0c0e;
+  --color-obsidian: #121316;
+  --color-mi: #ff6900;
+  --color-mi-soft: #ffb27a;
+  --color-tesla: #e82127;
+  --color-tesla-blue: #3e6ae1;
+  --color-atelier: #c9a66b;
+  --color-atelier-soft: #efe2c8;
+  --color-success: #1f9d55;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+
+  --shadow-soft: 0 10px 30px -12px rgb(23 26 32 / 0.18);
+  --shadow-lift: 0 24px 60px -20px rgb(23 26 32 / 0.35);
+
+  --radius-pill: 9999px;
+
+  --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-up: fade-up 0.8s var(--ease-brand) both;
+  --animate-fade-in: fade-in 0.6s ease both;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(2.2);
+      opacity: 0;
+    }
+  }
+}
+
+:root {
+  --header-height: 56px;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-white text-ink font-sans antialiased;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "ss03";
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(23 26 32 / 0.9);
+  color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  .container-x {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .hairline {
+    box-shadow: inset 0 0 0 1px rgb(23 26 32 / 0.08);
+  }
+  .hairline-dark {
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+  }
+  .glass {
+    background: rgb(255 255 255 / 0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+  .glass-dark {
+    background: rgb(11 12 14 / 0.6);
+    backdrop-filter: saturate(160%) blur(20px);
+    -webkit-backdrop-filter: saturate(160%) blur(20px);
+  }
+  .scrim-b {
+    background: linear-gradient(
+      to top,
+      rgb(0 0 0 / 0.72) 0%,
+      rgb(0 0 0 / 0.35) 35%,
+      rgb(0 0 0 / 0) 70%
+    );
+  }
+  .scrim-t {
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.55) 0%,
+      rgb(0 0 0 / 0.15) 40%,
+      rgb(0 0 0 / 0) 75%
+    );
+  }
+  /* Heavier top scrim for heroes whose photography is bright at the top (sky, glass). */
+  .scrim-t-strong {
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.78) 0%,
+      rgb(0 0 0 / 0.5) 30%,
+      rgb(0 0 0 / 0.2) 60%,
+      rgb(0 0 0 / 0) 100%
+    );
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .snap-page {
+    scroll-snap-type: y proximity;
+  }
+  .snap-section {
+    scroll-snap-align: start;
+  }
+  .metallic {
+    background-image: linear-gradient(
+      135deg,
+      rgb(255 255 255 / 0.55) 0%,
+      rgb(255 255 255 / 0) 30%,
+      rgb(0 0 0 / 0.12) 60%,
+      rgb(255 255 255 / 0.25) 100%
+    );
+  }
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-tesla-blue focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+  }
+  .prose-brand h2 {
+    @apply mt-10 mb-3 text-2xl font-semibold tracking-tight;
+  }
+  .prose-brand h3 {
+    @apply mt-8 mb-2 text-lg font-semibold;
+  }
+  .prose-brand p {
+    @apply my-3 leading-7 text-graphite;
+  }
+  .prose-brand ul {
+    @apply my-3 list-disc space-y-1.5 pl-6 text-graphite;
+  }
+  .prose-brand ol {
+    @apply my-3 list-decimal space-y-1.5 pl-6 text-graphite;
+  }
+  .prose-brand a {
+    @apply underline underline-offset-4;
+  }
+}
+
+/* Native form control polish */
+input[type="range"] {
+  accent-color: #171a20;
+}
+select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%23393c41' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  appearance: none;
+}
