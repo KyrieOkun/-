@@ -48,6 +48,8 @@ export default async function VehiclePage({ params }: Params) {
   const related = vehicles.filter((v) => v.slug !== vehicle.slug && (v.bodyType === vehicle.bodyType || v.brand !== vehicle.brand)).slice(0, 3);
   const startingPrice = getStartingPrice(vehicle);
   const light = vehicle.theme === "light";
+  // The hero already fills the first viewport; don't repeat it in the gallery unless it is the only photo.
+  const gallery = vehicle.images.filter((img) => img.src !== vehicle.hero.src).length > 0 ? vehicle.images.filter((img) => img.src !== vehicle.hero.src) : vehicle.images;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -302,7 +304,7 @@ export default async function VehiclePage({ params }: Params) {
         <Container>
           <SectionHeading eyebrow={t.vehicles.gallery} title={pick(vehicle.name, locale)} />
           <div className="mt-12 grid gap-4 md:grid-cols-2">
-            {vehicle.images.map((img, i) => (
+            {gallery.map((img, i) => (
               <Reveal key={img.src + i} delay={(i % 2) * 60} className={i === 0 ? "md:col-span-2" : ""}>
                 <figure className={`relative overflow-hidden rounded-3xl bg-mist ${i === 0 ? "aspect-[16/9] md:aspect-[21/9]" : "aspect-[16/10]"}`}>
                   <Image src={img.src} alt={pick(img.alt, locale)} fill sizes={i === 0 ? "100vw" : "(min-width: 768px) 50vw, 100vw"} className="object-cover" />
