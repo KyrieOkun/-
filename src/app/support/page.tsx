@@ -54,6 +54,15 @@ export default async function SupportPage() {
           <FaqList faqs={faqs} />
         </div>
       </Container>
+      <section id="accessibility" className="scroll-mt-20 py-12">
+        <Container>
+          <SectionHeading eyebrow={t.footer.accessibility} title={zh ? "无障碍声明" : "Accessibility statement"} />
+          <div className="mt-6 max-w-3xl space-y-3 text-sm leading-7 text-graphite">
+            <p>{zh ? "本站按 WCAG 2.1 AA 标准设计与验证：全站键盘可达、可见焦点、屏幕阅读器可读的表单与状态提示、文本对比度不低于 4.5:1，并尊重系统的“减少动态效果”设置。" : "This site is designed and tested against WCAG 2.1 AA: fully keyboard operable, visible focus, screen-reader readable forms and status messages, text contrast of at least 4.5:1, and respect for the system reduced-motion preference."}</p>
+            <p>{zh ? "如遇任何无障碍问题，请发送邮件至 care@mitesla-atelier.com 或拨打 400-800-0000，我们会在 3 个工作日内回复并修复。" : "If you encounter an accessibility barrier, email care@mitesla-atelier.com or call 400-800-0000; we respond and fix within three business days."}</p>
+          </div>
+        </Container>
+      </section>
       <section id="contact" className="scroll-mt-20 bg-cloud py-16 lg:py-24">
         <Container>
           <SectionHeading eyebrow={t.support.contact} title={t.support.contact} subtitle={t.support.hours} />

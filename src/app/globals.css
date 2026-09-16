@@ -140,6 +140,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .snap-page {
+    scroll-snap-type: none;
+  }
   *,
   *::before,
   *::after {

@@ -74,7 +74,16 @@ export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { ve
           <div className="flex justify-between"><dt className="text-slate">{mode === "store" ? t.forms.store : t.testDrive.door}</dt><dd className="max-w-[60%] text-right font-medium">{mode === "store" ? pick(st?.name ?? { zh: "", en: "" }) : address}</dd></div>
         </dl>
         <div className="mt-6 flex justify-center gap-3">
-          <Button onClick={() => setBooking(null)} variant="secondary">{t.testDrive.another}</Button>
+          <Button
+            onClick={() => {
+              setNote("");
+              setAgree(false);
+              setBooking(null);
+            }}
+            variant="secondary"
+          >
+            {t.testDrive.another}
+          </Button>
           <Button href={`/vehicles/${vehicle.slug}/design`}>{t.nav.design}</Button>
         </div>
       </div>

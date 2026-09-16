@@ -29,6 +29,12 @@ export function formatPriceHeadline(amount: number, locale: Locale): string {
   return `¥${Math.round(amount).toLocaleString("en-US")}`;
 }
 
+/** "21.99 万元起" / "From ¥219,900" — one place for the "from" wording. */
+export function formatPriceFrom(amount: number, locale: Locale): string {
+  const price = formatPriceHeadline(amount, locale);
+  return locale === "zh" ? `${price}起` : `From ${price}`;
+}
+
 export function formatUSD(amount: number): string {
   return `$${Math.round(amount).toLocaleString("en-US")}`;
 }

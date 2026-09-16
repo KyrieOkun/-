@@ -16,7 +16,7 @@ export function VehicleCard({ vehicle, locale, className, compact }: { vehicle: 
 
   return (
     <article className={cn("group relative flex flex-col overflow-hidden rounded-3xl bg-white hairline transition-shadow duration-300 hover:shadow-lift", className)}>
-      <Link href={`/vehicles/${vehicle.slug}`} className="relative aspect-[16/10] overflow-hidden bg-mist" aria-label={pick(vehicle.name, locale)}>
+      <Link href={`/vehicles/${vehicle.slug}`} className="relative aspect-[16/10] overflow-hidden bg-mist" tabIndex={-1} aria-hidden>
         <Image
           src={vehicle.hero.src}
           alt={pick(vehicle.hero.alt, locale)}
