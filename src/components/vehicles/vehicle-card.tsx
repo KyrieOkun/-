@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Vehicle } from "@/data/types";
 import { getDictionary, pick, type Locale } from "@/lib/i18n";
-import { getBestAccel, getMaxRange, getStartingPrice } from "@/data/vehicles";
+import { getBestAccel, getMaxRange, getStartingPrice, isNewVehicle, rangeStandardOf } from "@/data/vehicles";
 import { formatPriceHeadline, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/primitives";
 
@@ -28,7 +28,7 @@ export function VehicleCard({ vehicle, locale, className, compact }: { vehicle: 
           <Badge tone={vehicle.brand === "xiaomi" ? "mi" : "tesla"}>{vehicle.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla}</Badge>
           {vehicle.availability === "inventory" ? <Badge tone="neutral">{t.common.inventoryOnly}</Badge> : null}
           {isOverseas ? <Badge tone="neutral">{t.common.overseasOnly}</Badge> : null}
-          {vehicle.launchDate >= "2026-01-01" && !isOverseas ? <Badge tone="dark">{t.common.new}</Badge> : null}
+          {isNewVehicle(vehicle) ? <Badge tone="dark">{t.common.new}</Badge> : null}
         </div>
       </Link>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
@@ -49,7 +49,7 @@ export function VehicleCard({ vehicle, locale, className, compact }: { vehicle: 
         {!compact ? (
           <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4">
             <div>
-              <dt className="text-[11px] text-ash">{isErev ? (locale === "zh" ? "综合续航" : "Combined") : t.common.rangeCLTC}</dt>
+              <dt className="text-[11px] text-ash">{isErev ? (locale === "zh" ? "综合续航" : "Combined") : t.common.rangeCLTC.replace("CLTC", rangeStandardOf(vehicle))}</dt>
               <dd className="text-sm font-semibold tabular-nums">
                 {isErev ? Math.max(...vehicle.trims.map((tr) => tr.rangeKm)) : range} <span className="text-xs font-normal text-slate">km</span>
               </dd>

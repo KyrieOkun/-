@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { getI18n } from "@/lib/i18n/server";
 import { pick } from "@/lib/i18n/types";
 import { getVehicle, vehicles } from "@/data/vehicles";
+import { toClientVehicle } from "@/data/types";
 import { Configurator } from "@/components/vehicles/configurator";
 import { Skeleton } from "@/components/ui/primitives";
 
@@ -34,9 +35,11 @@ export default async function DesignPage({ params }: Params) {
   if (vehicle.availability === "overseas") redirect(`/vehicles/${vehicle.slug}#interest`);
 
   return (
-    <div className="pt-14">
+    // Bottom padding reserves room for the fixed mobile price bar so the last
+    // step, the saved builds and the footer are never hidden behind it.
+    <div className="pt-14 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0">
       <Suspense fallback={<div className="p-8"><Skeleton className="aspect-[16/10] w-full" /></div>}>
-        <Configurator vehicle={vehicle} />
+        <Configurator vehicle={toClientVehicle(vehicle)} />
       </Suspense>
     </div>
   );

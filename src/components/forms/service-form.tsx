@@ -7,7 +7,7 @@ import type { Store } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
-import { cn, isValidCNPhone } from "@/lib/utils";
+import { cn, isValidCNPhone, isoDateInCST } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/primitives";
 
@@ -35,7 +35,7 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: VehicleSum
   const [storeId, setStoreId] = useState("");
   const effectiveStore = cityStores.some((s) => s.id === storeId) ? storeId : cityStores[0]?.id ?? "";
   const [valet, setValet] = useState(false);
-  const days = useMemo(() => Array.from({ length: 10 }).map((_, i) => { const d = new Date(); d.setDate(d.getDate() + i + 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }), []);
+  const days = useMemo(() => Array.from({ length: 10 }, (_, i) => isoDateInCST(i + 1)), []);
   const [date, setDate] = useState(days[0]);
   const [slot, setSlot] = useState(SLOTS[0]);
   const [name, setName] = useState("");

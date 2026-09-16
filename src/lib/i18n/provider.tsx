@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useTransition, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { getDictionary, type Dictionary } from "./index";
+import type { Dictionary } from "./dictionaries/zh";
 import { pick as pickL10n, type L10n, type Locale } from "./types";
 
 interface I18nContextValue {
@@ -16,7 +16,8 @@ interface I18nContextValue {
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
-export function LocaleProvider({ locale, children }: { locale: Locale; children: ReactNode }) {
+/** `dictionary` is resolved on the server so only the active language ships to the browser. */
+export function LocaleProvider({ locale, dictionary, children }: { locale: Locale; dictionary: Dictionary; children: ReactNode }) {
   const router = useRouter();
   const [switching, startTransition] = useTransition();
   const setLocale = useCallback(
@@ -35,12 +36,12 @@ export function LocaleProvider({ locale, children }: { locale: Locale; children:
   const value = useMemo<I18nContextValue>(
     () => ({
       locale,
-      t: getDictionary(locale),
+      t: dictionary,
       pick: (text) => pickL10n(text, locale),
       setLocale,
       switching,
     }),
-    [locale, setLocale, switching],
+    [locale, dictionary, setLocale, switching],
   );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;

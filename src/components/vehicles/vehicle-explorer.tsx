@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +25,8 @@ export interface ExplorerVehicle {
   powerKw: number;
   availability: string;
   launchDate: string;
+  isNew: boolean;
+  rangeStandard: string;
   isPerformance: boolean;
   trimCount: number;
 }
@@ -49,7 +51,12 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
   const [sort, setSort] = useState<Sort>(() => pickParam(params.get("sort"), SORTS, "default"));
 
   // Keep filters shareable and stable across back/forward without triggering navigation.
+  const firstRun = useRef(true);
   useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
     const qs = new URLSearchParams();
     if (brand !== "all") qs.set("brand", brand);
     if (body !== "all") qs.set("body", body);
@@ -131,7 +138,7 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
                     <Badge tone={v.brand === "xiaomi" ? "mi" : "tesla"}>{v.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla}</Badge>
                     {v.availability === "inventory" ? <Badge tone="neutral">{t.common.inventoryOnly}</Badge> : null}
                     {v.availability === "overseas" ? <Badge tone="neutral">{t.common.overseasOnly}</Badge> : null}
-                    {v.launchDate >= "2026-01-01" && v.availability !== "overseas" ? <Badge tone="dark">{t.common.new}</Badge> : null}
+                    {v.isNew ? <Badge tone="dark">{t.common.new}</Badge> : null}
                   </div>
                 </Link>
                 <div className="flex flex-1 flex-col p-6">
@@ -147,7 +154,7 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
                   </div>
                   <dl className="mt-5 grid grid-cols-3 gap-3 border-t border-line pt-4">
                     <div>
-                      <dt className="text-[11px] text-ash">{v.powertrain === "erev" ? (locale === "zh" ? "综合续航" : "Combined range") : t.common.rangeCLTC}</dt>
+                      <dt className="text-[11px] text-ash">{v.powertrain === "erev" ? (locale === "zh" ? "综合续航" : "Combined range") : t.common.rangeCLTC.replace("CLTC", v.rangeStandard)}</dt>
                       <dd className="text-sm font-semibold tabular-nums">{v.rangeKm} <span className="text-xs font-normal text-slate">km</span></dd>
                     </div>
                     <div>

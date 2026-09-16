@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface RevealProps {
@@ -19,7 +19,8 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
   const ref = useRef<HTMLElement | null>(null);
   const [hidden, setHidden] = useState(false);
 
-  useEffect(() => {
+  // Layout effect: decide before the first paint so below-fold content never flashes visible→hidden.
+  useLayoutEffect(() => {
     const node = ref.current;
     if (!node) return;
     if (typeof IntersectionObserver === "undefined" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -45,7 +46,7 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
       ref={ref as React.RefObject<HTMLDivElement>}
       style={{ transitionDelay: `${delay}ms` }}
       className={cn(
-        "transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        "transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
         hidden ? "translate-y-6 opacity-0" : "translate-y-0 opacity-100",
         className,
       )}

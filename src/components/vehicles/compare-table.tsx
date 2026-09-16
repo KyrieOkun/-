@@ -9,6 +9,7 @@ import type { ClientVehicle } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn, formatCNY, formatPriceHeadline } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 
 interface Slot {
   slug: string;
@@ -23,8 +24,13 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
   const bySlug = useMemo(() => Object.fromEntries(vehicles.map((v) => [v.slug, v])), [vehicles]);
 
   const [slots, setSlots] = useState<Slot[]>(() => {
+    // `?v=slug:trim,slug:trim` — the trim part is optional and defaults to the entry trim.
     const raw = params.get("v")?.split(",").filter(Boolean) ?? [];
-    const initial = raw.filter((s) => bySlug[s]).slice(0, MAX).map((slug) => ({ slug, trimId: bySlug[slug].trims[0].id }));
+    const initial = raw
+      .map((entry) => entry.split(":"))
+      .filter(([slug]) => bySlug[slug])
+      .slice(0, MAX)
+      .map(([slug, trimId]) => ({ slug, trimId: bySlug[slug].trims.some((tr) => tr.id === trimId) ? trimId : bySlug[slug].trims[0].id }));
     if (initial.length === 0) return [
       { slug: "xiaomi-su7", trimId: "max" },
       { slug: "tesla-model-3", trimId: "lr-awd" },
@@ -45,31 +51,57 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
   const [diffOnly, setDiffOnly] = useState(false);
   const [picker, setPicker] = useState(false);
   const pickerCloseRef = useRef<HTMLButtonElement>(null);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const firstRun = useRef(true);
+  useScrollLock(picker);
 
   useEffect(() => {
-    const qs = slots.length ? `?v=${slots.map((s) => s.slug).join(",")}` : "";
+    // Don't rewrite a clean URL on mount; only reflect user changes.
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    const qs = slots.length ? `?v=${slots.map((s) => `${s.slug}:${s.trimId}`).join(",")}` : "";
     window.history.replaceState(window.history.state, "", `${window.location.pathname}${qs}`);
   }, [slots]);
 
   useEffect(() => {
     if (!picker) return;
+    const trigger = addButtonRef.current;
     pickerCloseRef.current?.focus();
-    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setPicker(false);
+      if (e.key !== "Tab" || !dialogRef.current) return;
+      // Keep Tab inside the dialog.
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>('button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
-      document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
+      trigger?.focus();
     };
   }, [picker]);
 
-  const columns = slots.map((s) => {
-    const v = bySlug[s.slug];
-    const trim = v.trims.find((tr) => tr.id === s.trimId) ?? v.trims[0];
-    return { v, trim, slot: s };
-  });
+  const columns = useMemo(
+    () =>
+      slots.map((s) => {
+        const v = bySlug[s.slug];
+        const trim = v.trims.find((tr) => tr.id === s.trimId) ?? v.trims[0];
+        return { v, trim, slot: s };
+      }),
+    [slots, bySlug],
+  );
 
   type Row = { key: string; label: string; values: string[]; group?: string };
   const rows: Row[] = useMemo(() => {
@@ -117,7 +149,7 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
         </label>
         <div className="flex gap-2">
           <Button variant="secondary" size="sm" onClick={() => setSlots([])}>{t.compare.clear}</Button>
-          <Button size="sm" onClick={() => setPicker(true)} disabled={slots.length >= MAX} icon={<Plus className="size-4" />}>{t.compare.add}</Button>
+          <Button ref={addButtonRef} size="sm" onClick={() => setPicker(true)} disabled={slots.length >= MAX} icon={<Plus className="size-4" />}>{t.compare.add}</Button>
         </div>
       </div>
 
@@ -128,12 +160,12 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
           <table className="w-full min-w-[720px] border-separate border-spacing-0 text-sm">
             <thead>
               <tr>
-                <th className="sticky left-0 z-10 w-44 bg-white p-4 text-left align-bottom text-xs font-semibold uppercase tracking-wider text-ash">{t.compare.title}</th>
+                <th scope="col" className="sticky left-0 z-10 w-44 bg-white p-4 text-left align-bottom text-xs font-semibold uppercase tracking-wider text-ash">{t.compare.title}</th>
                 {columns.map(({ v, trim, slot }) => (
-                  <th key={slot.slug} className="min-w-[200px] bg-white p-4 text-left align-top">
+                  <th key={slot.slug} scope="col" aria-label={`${pick(v.name)} · ${pick(trim.name)}`} className="min-w-[200px] bg-white p-4 text-left align-top">
                     <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-mist">
                       <Image src={v.hero.src} alt={pick(v.hero.alt)} fill sizes="240px" className="object-cover" />
-                      <button type="button" onClick={() => setSlots(slots.filter((s) => s.slug !== slot.slug))} className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-white/90 text-ink focus-ring" aria-label={t.compare.remove}>
+                      <button type="button" onClick={() => setSlots(slots.filter((s) => s.slug !== slot.slug))} className="absolute right-2 top-2 flex size-7 items-center justify-center rounded-full bg-white/90 text-ink focus-ring" aria-label={`${t.compare.remove} ${pick(v.name)}`}>
                         <X className="size-4" />
                       </button>
                     </div>
@@ -146,7 +178,7 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
                       value={trim.id}
                       onChange={(e) => setSlots(slots.map((s) => (s.slug === slot.slug ? { ...s, trimId: e.target.value } : s)))}
                       className="mt-2 h-9 w-full rounded-xl border border-line bg-white pl-3 pr-9 text-xs font-normal focus:border-ink focus:outline-none"
-                      aria-label={t.compare.chooseTrim}
+                      aria-label={`${t.compare.chooseTrim} · ${pick(v.name)}`}
                     >
                       {v.trims.map((tr) => (
                         <option key={tr.id} value={tr.id}>{pick(tr.name)}</option>
@@ -155,7 +187,7 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
                   </th>
                 ))}
                 {slots.length < MAX ? (
-                  <th className="min-w-[200px] bg-white p-4 align-top">
+                  <th scope="col" className="min-w-[200px] bg-white p-4 align-top">
                     <button type="button" onClick={() => setPicker(true)} className="flex aspect-[16/10] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-ash text-sm text-slate hover:border-ink hover:text-ink focus-ring">
                       <Plus className="size-5" />
                       {t.compare.add}
@@ -197,9 +229,9 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
 
       {picker ? (
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/50 p-0 sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label={t.compare.add} onClick={() => setPicker(false)}>
-          <div className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl bg-white p-6 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
+          <div ref={dialogRef} className="max-h-[85vh] w-full max-w-3xl overflow-y-auto rounded-t-3xl bg-white p-6 sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">{t.compare.add}</h3>
+              <h2 className="text-lg font-semibold">{t.compare.add}</h2>
               <button ref={pickerCloseRef} type="button" onClick={() => setPicker(false)} className="flex size-9 items-center justify-center rounded-full bg-mist focus-ring" aria-label={t.nav.close}><X className="size-4" /></button>
             </div>
             <ul className="grid gap-3 sm:grid-cols-2">
