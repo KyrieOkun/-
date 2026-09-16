@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Headphones, Mail, MapPin, Siren } from "lucide-react";
 import { getI18n } from "@/lib/i18n/server";
-import { faqs } from "@/data/site";
+import { contact, faqs } from "@/data/site";
 import { Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { FaqList } from "@/components/support/faq-list";
 import { absoluteUrl } from "@/lib/utils";
@@ -59,7 +59,7 @@ export default async function SupportPage() {
           <SectionHeading eyebrow={t.footer.accessibility} title={zh ? "无障碍声明" : "Accessibility statement"} />
           <div className="mt-6 max-w-3xl space-y-3 text-sm leading-7 text-graphite">
             <p>{zh ? "本站按 WCAG 2.1 AA 标准设计与验证：全站键盘可达、可见焦点、屏幕阅读器可读的表单与状态提示、文本对比度不低于 4.5:1，并尊重系统的“减少动态效果”设置。" : "This site is designed and tested against WCAG 2.1 AA: fully keyboard operable, visible focus, screen-reader readable forms and status messages, text contrast of at least 4.5:1, and respect for the system reduced-motion preference."}</p>
-            <p>{zh ? "如遇任何无障碍问题，请发送邮件至 care@mitesla-atelier.com 或拨打 400-800-0000，我们会在 3 个工作日内回复并修复。" : "If you encounter an accessibility barrier, email care@mitesla-atelier.com or call 400-800-0000; we respond and fix within three business days."}</p>
+            <p>{zh ? `如遇任何无障碍问题，请发送邮件至 ${contact.email} 或拨打 ${contact.hotline}，我们会在 3 个工作日内回复并修复。` : `If you encounter an accessibility barrier, email ${contact.email} or call ${contact.hotline}; we respond and fix within three business days.`}</p>
           </div>
         </Container>
       </section>
@@ -68,10 +68,10 @@ export default async function SupportPage() {
           <SectionHeading eyebrow={t.support.contact} title={t.support.contact} subtitle={t.support.hours} />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              { icon: <Headphones className="size-5" />, title: t.support.hotline, value: "400-800-0000", href: "tel:4008000000" },
-              { icon: <Siren className="size-5" />, title: t.support.roadside, value: "400-800-0001", href: "tel:4008000001" },
-              { icon: <Mail className="size-5" />, title: t.support.emailUs, value: "care@mitesla-atelier.com", href: "mailto:care@mitesla-atelier.com" },
-              { icon: <MapPin className="size-5" />, title: t.support.serviceCenters, value: zh ? "全国 300+ 服务中心" : "300+ centres nationwide", href: "/stores" },
+              { icon: <Headphones className="size-5" />, title: t.support.hotline, value: contact.hotline, href: `tel:${contact.hotline.replace(/-/g, "")}` },
+              { icon: <Siren className="size-5" />, title: t.support.roadside, value: contact.roadside, href: `tel:${contact.roadside.replace(/-/g, "")}` },
+              { icon: <Mail className="size-5" />, title: t.support.emailUs, value: contact.email, href: `mailto:${contact.email}` },
+              { icon: <MapPin className="size-5" />, title: t.support.serviceCenters, value: pick(contact.networkClaim, locale), href: "/stores" },
             ].map((c) => (
               <a key={c.title} href={c.href} className="rounded-3xl bg-white p-6 hairline transition-shadow hover:shadow-soft">
                 <span className="flex size-10 items-center justify-center rounded-2xl bg-mist">{c.icon}</span>

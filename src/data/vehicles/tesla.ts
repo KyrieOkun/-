@@ -7,6 +7,12 @@ const TESLA_WARRANTY_LR = [
   l("免费基础道路救援", "Complimentary roadside assistance"),
 ];
 
+const TESLA_WARRANTY_CYBERTRUCK = [
+  l("整车质保 4 年或 8 万公里（以先到者为准）", "Basic vehicle: 4 years or 80,000 km (whichever first)"),
+  l("电池与驱动单元质保 8 年或 24 万公里", "Battery & drive unit: 8 years or 240,000 km"),
+  l("免费基础道路救援", "Complimentary roadside assistance"),
+];
+
 const TESLA_WARRANTY_SX = [
   l("整车质保 4 年或 8 万公里（以先到者为准）", "Basic vehicle: 4 years or 80,000 km (whichever first)"),
   l("电池与驱动单元质保 8 年或 24 万公里", "Battery & drive unit: 8 years or 240,000 km"),
@@ -42,7 +48,7 @@ const teslaExtras = (opts: { homeCharging?: boolean; sevenSeat?: boolean } = { h
   { id: "eap", name: l("增强版自动辅助驾驶功能", "Enhanced Autopilot"), description: l("自动辅助导航驾驶、自动辅助变道、自动泊车、智能召唤", "Navigate on Autopilot, Auto Lane Change, Autopark, Smart Summon"), price: 32000, category: "adas", excludes: ["fsd"] },
   { id: "fsd", name: l("完全自动驾驶能力（FSD 智能辅助驾驶）", "Full Self-Driving (Supervised)"), description: l("含增强版自动辅助驾驶全部功能，城市街道智能辅助驾驶持续 OTA 推送", "Includes Enhanced Autopilot; city-streets capability delivered via OTA"), price: 64000, category: "adas", excludes: ["eap"] },
   ...(opts.homeCharging
-    ? [{ id: "wall-connector", name: l("家庭充电服务包", "Home charging package"), description: l("第三代壁挂式充电连接器 + 标准安装", "Gen 3 Wall Connector + standard installation"), price: 8000, category: "charging" as const }]
+    ? [{ id: "wall-connector", name: l("家庭充电服务包", "Home charging package"), description: l("第三代壁挂式充电连接器（¥4,800）+ 标准安装与电力报装", "Gen 3 Wall Connector (¥4,800) + standard installation and grid application"), price: 8000, category: "charging" as const }]
     : []),
   ...(opts.sevenSeat
     ? [
@@ -293,7 +299,7 @@ export const teslaModelY: Vehicle = {
   highlights: [
     { value: "821", unit: "km", label: l("CLTC 续航（长续航后驱）", "CLTC range (Long Range RWD)") },
     { value: "3.5", unit: "s", label: l("零百加速（高性能版）", "0–100 km/h (Performance)") },
-    { value: "6", unit: "座", label: l("Model Y L 六座布局", "Model Y L seating") },
+    { value: "6", unit: l("座", "seats"), label: l("Model Y L 六座布局", "Model Y L seating") },
     { value: "2138", unit: "L", label: l("储物空间", "Cargo") },
   ],
   trims: [
@@ -386,6 +392,7 @@ export const teslaModelY: Vehicle = {
       id: "l",
       name: l("Model Y L 六座长续航全轮驱动版", "Model Y L Six-Seat Long Range AWD"),
       price: 339000,
+      dimensions: { length: 4976, height: 1668, wheelbase: 3040 },
       drivetrain: l("双电机全轮驱动", "Dual-motor all-wheel drive"),
       motors: 2,
       powerKw: 340,
@@ -643,7 +650,7 @@ export const teslaModelX: Vehicle = {
   highlights: [
     { value: "700", unit: "km", label: l("CLTC 续航", "CLTC range") },
     { value: "3.9", unit: "s", label: l("零百加速", "0–100 km/h") },
-    { value: "7", unit: "座", label: l("最多座位", "Max seating") },
+    { value: "7", unit: l("座", "seats"), label: l("最多座位", "Max seating") },
     { value: "2250", unit: "kg", label: l("牵引能力", "Towing") },
   ],
   trims: [
@@ -758,7 +765,7 @@ export const teslaCybertruck: Vehicle = {
   ],
   theme: "dark",
   highlights: [
-    { value: "845", unit: "hp", label: l("Cyberbeast 最大马力", "Cyberbeast output") },
+    { value: "857", unit: "PS", label: l("Cyberbeast 最大马力（630 kW）", "Cyberbeast output (630 kW)") },
     { value: "2.6", unit: "s", label: l("0-60 mph（Cyberbeast）", "0–60 mph (Cyberbeast)") },
     { value: "523", unit: "km", label: l("EPA 续航（325 英里）", "EPA range (325 mi)") },
     { value: "4990", unit: "kg", label: l("牵引能力（11,000 lb）", "Towing (11,000 lb)") },
@@ -774,6 +781,7 @@ export const teslaCybertruck: Vehicle = {
       powerKw: 447,
       powerPs: 608,
       torqueNm: 10296,
+      torqueAtWheels: true,
       batteryKwh: 123,
       batteryType: l("三元锂", "NMC"),
       rangeKm: 523,
@@ -803,6 +811,7 @@ export const teslaCybertruck: Vehicle = {
       powerKw: 630,
       powerPs: 857,
       torqueNm: 13959,
+      torqueAtWheels: true,
       batteryKwh: 123,
       batteryType: l("三元锂", "NMC"),
       rangeKm: 484,
@@ -815,7 +824,7 @@ export const teslaCybertruck: Vehicle = {
       weightKg: 3104,
       seats: 5,
       features: [
-        l("845 hp，0-60 mph 2.6 秒", "845 hp, 0–60 mph in 2.6 s"),
+        l("630 kW（857 PS），0-60 mph 2.6 秒", "630 kW (857 PS), 0–60 mph in 2.6 s"),
         l("Beast 模式 · 三电机", "Beast Mode · three motors"),
         l("20 英寸 Cyber 轮毂 + 全地形胎", '20" Cyber wheels + all-terrain tyres'),
         l("EPA 续航 301 英里", "301 mi EPA range"),
@@ -850,7 +859,7 @@ export const teslaCybertruck: Vehicle = {
     {
       title: l("车身与空间", "Body & space"),
       rows: [
-        { label: l("长 × 宽 × 高", "L × W × H"), value: "5,683 × 2,413（含后视镜）× 1,791 mm" },
+        { label: l("长 × 宽 × 高", "L × W × H"), value: l("5,683 × 2,413（含后视镜）× 1,791 mm", "5,683 × 2,413 (incl. mirrors) × 1,791 mm") },
         { label: l("轴距", "Wheelbase"), value: "3,635 mm" },
         { label: l("货箱", "Bed"), value: l("6 × 4 英尺，1,897 L 锁闭空间", "6 × 4 ft, 1,897 L lockable") },
         { label: l("涉水深度", "Wading"), value: l("最高 32 英寸（Wade 模式）", "Up to 32 in (Wade Mode)") },
@@ -877,7 +886,7 @@ export const teslaCybertruck: Vehicle = {
   seats: [5],
   cargoL: 1897,
   frunkL: 205,
-  warranty: TESLA_WARRANTY_LR,
+  warranty: TESLA_WARRANTY_CYBERTRUCK,
   deposit: 1800,
   features: [
     { icon: "shield", title: l("不锈钢外骨骼", "Stainless exoskeleton"), body: l("超硬冷轧不锈钢，装甲玻璃。", "Ultra-hard cold-rolled stainless steel and armour glass.") },

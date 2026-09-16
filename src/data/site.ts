@@ -25,6 +25,14 @@ export const faqs: Faq[] = [
   { id: "f15", group: "atelier", q: l("定制周期多长？", "How long do Atelier programs take?"), a: l("限定车漆与内饰项目通常在交付周期基础上增加 2-4 周；碳纤维套件与纽北限量版等专属项目为 6-10 周。定制顾问会在下单时给出精确排期。", "Limited paints and interior programs typically add 2–4 weeks to delivery; carbon fibre kits and exclusive programs such as the Nürburgring Edition take 6–10 weeks. Your advisor confirms an exact schedule at order.") },
 ];
 
+export const contact = {
+  hotline: "400-800-0000",
+  roadside: "400-800-0001",
+  email: "care@mitesla-atelier.com",
+  /** Own centres plus partner service network; the data set lists flagship/experience/delivery sites only. */
+  networkClaim: l("300+ 服务与交付中心（含合作网络）", "300+ service and delivery centres (incl. partner network)"),
+} as const;
+
 export interface Store {
   id: string;
   name: L10n;

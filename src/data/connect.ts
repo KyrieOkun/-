@@ -156,7 +156,7 @@ export const otaReleases: OtaRelease[] = [
   {
     id: "hyperos-3-2",
     brand: "xiaomi",
-    version: "Xiaomi HyperOS 3.2 (车机)",
+    version: "Xiaomi HyperOS 3.2",
     date: "2026-09-10",
     title: l("端到端 NOA 2.0 全量推送，联名充电互通上线", "End-to-end NOA 2.0 full rollout; co-branded charging interop"),
     notes: [
@@ -184,9 +184,9 @@ export const otaReleases: OtaRelease[] = [
   {
     id: "hyperos-3-1",
     brand: "xiaomi",
-    version: "Xiaomi HyperOS 3.1 (车机)",
+    version: "Xiaomi HyperOS 3.1",
     date: "2026-07-22",
-    title: l("YU7 GT 赛道模式 Pro 与澎程 N90 露营模式", "YU7 GT Track Mode Pro and N90 camping mode"),
+    title: l("YU7 GT 赛道模式 Pro 与全系露营模式", "YU7 GT Track Mode Pro and camping mode for the line-up"),
     notes: [
       l("赛道模式 Pro：圈速计时、遥测导出、扭矩分配自定义", "Track Mode Pro: lap timing, telemetry export, custom torque split"),
       l("露营模式：空调 / 灯光 / 音响 12 小时低功耗联动", "Camping mode: 12-hour low-power climate, lights and audio"),
@@ -210,7 +210,7 @@ export const otaReleases: OtaRelease[] = [
   {
     id: "hyperos-3-3",
     brand: "xiaomi",
-    version: "Xiaomi HyperOS 3.3 (车机)",
+    version: "Xiaomi HyperOS 3.3",
     date: "2026-11-15",
     title: l("跨品牌行程规划上车，Tesla 超充预约充电", "In-car cross-brand trip planner; Tesla Supercharger reservations"),
     notes: [
