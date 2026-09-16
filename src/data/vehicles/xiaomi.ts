@@ -41,7 +41,6 @@ const su7Extras: ExtraOption[] = [
   { id: "audio-25", name: l("25 扬声器杜比全景声音响", "25-speaker Dolby Atmos audio"), description: l("头枕扬声器 + 7.1.4 声道", "Headrest speakers with 7.1.4 channels"), price: 6000, category: "comfort", includedIn: ["max"] },
   { id: "fridge", name: l("车载智能冰箱", "Smart cabin fridge"), description: l("4.7L 独立压缩机，-6℃ 至 50℃", "4.7 L compressor fridge, -6 °C to 50 °C"), price: 2000, category: "comfort" },
   { id: "spoiler", name: l("电动尾翼", "Active rear spoiler"), description: l("四挡可调，高速自动升起", "Four positions, auto-deploys at speed"), price: 7000, category: "exterior", includedIn: ["max"] },
-  { id: "hud-ar", name: l("56 英寸 AR-HUD", '56" AR head-up display'), description: l("导航、智驾信息投射前风挡", "Navigation and ADAS projected onto the windscreen"), price: 0, category: "comfort", includedIn: ["standard", "pro", "max"] },
   { id: "wallbox-11", name: l("11 kW 家充桩升级", "11 kW wall connector upgrade"), description: l("标配 7 kW 家充桩及基础安装，升级至 11 kW", "Standard 7 kW connector & install, upgrade to 11 kW"), price: 2000, category: "charging" },
   { id: "hyperos-care", name: l("小米汽车服务无忧包（3 年）", "Xiaomi EV Care (3 years)"), description: l("3 年保养 + 漆面养护 + 上门取送车", "3 years maintenance, paint care and valet pick-up"), price: 5999, category: "service" },
 ];
@@ -386,7 +385,6 @@ export const xiaomiSU7Ultra: Vehicle = {
   ],
   extras: [
     { id: "carbon-hood", name: l("碳纤维双风道前舱盖", "Carbon dual-duct hood"), description: l("与原型车同款造型，减重 1.3 kg", "Prototype-inspired design, saves 1.3 kg"), price: 42000, category: "performance", trims: ["ultra"], includedIn: ["track", "nurburgring"] },
-    { id: "carbon-roof", name: l("碳纤维车顶", "Carbon fibre roof"), description: l("1.7 m² 全碳车顶，减重 12 kg", "1.7 m² full carbon roof, saves 12 kg"), price: 0, category: "performance", includedIn: ["ultra", "track", "nurburgring"] },
     { id: "caliper-yellow", name: l("卡钳颜色 · 闪电黄", "Yellow calipers"), description: l("Akebono 六活塞卡钳定制配色", "Akebono 6-piston calipers in custom colour"), price: 4000, category: "exterior" },
     { id: "stripe", name: l("车身彩绘拉花", "Body stripe graphics"), description: l("赛道风格双色拉花", "Track-inspired two-tone stripe"), price: 8000, category: "exterior" },
     { id: "track-day", name: l("赛道日驾驶培训（2 天）", "Track day coaching (2 days)"), description: l("上海国际赛车场，专业教练一对一", "Shanghai International Circuit, 1-on-1 pro coaching"), price: 19800, category: "service" },
@@ -737,7 +735,7 @@ export const xiaomiYU7GT: Vehicle = {
       drivetrain: l("双电机全轮驱动", "Dual-motor all-wheel drive"),
       motors: 2,
       powerKw: 738,
-      powerPs: 990,
+      powerPs: 1003,
       torqueNm: 1180,
       batteryKwh: 101.7,
       batteryType: l("三元锂 · 麒麟", "NMC Qilin"),
@@ -765,7 +763,7 @@ export const xiaomiYU7GT: Vehicle = {
       drivetrain: l("双电机全轮驱动", "Dual-motor all-wheel drive"),
       motors: 2,
       powerKw: 738,
-      powerPs: 990,
+      powerPs: 1003,
       torqueNm: 1180,
       batteryKwh: 101.7,
       batteryType: l("三元锂 · 麒麟", "NMC Qilin"),
