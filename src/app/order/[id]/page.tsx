@@ -8,8 +8,9 @@ import { pick } from "@/lib/i18n/types";
 import { getVehicle } from "@/data/vehicles";
 import { stores } from "@/data/site";
 import { store } from "@/lib/store";
-import { getCurrentUser } from "@/lib/auth";
+import { canViewOrder } from "@/lib/guest-orders";
 import type { OrderRecord, OrderStatus } from "@/lib/orders";
+import { OrderPayment } from "@/components/forms/order-payment";
 import { computeQuote } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Container, Eyebrow, Badge } from "@/components/ui/primitives";
@@ -25,15 +26,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const FLOW: OrderStatus[] = ["pending", "paid", "production", "delivered"];
 
-export default async function OrderDetailPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ phone?: string }> }) {
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { phone } = await searchParams;
   const { t, locale } = await getI18n();
   const order = await store.get<OrderRecord>("orders", id);
   if (!order) notFound();
-  const user = await getCurrentUser().catch(() => null);
-  const isOwner = user && order.ownerId === user.id;
-  if (!isOwner && phone !== order.buyer.phone) notFound();
+  // Session owner or the browser that placed / looked up the order (signed cookie);
+  // an unauthorised visitor gets the same 404 as a non-existent order.
+  if (!(await canViewOrder(order))) notFound();
+  const pending = order.status === "pending";
   const vehicle = getVehicle(order.vehicleSlug);
   if (!vehicle) notFound();
   const quote = computeQuote(vehicle, order.selection);
@@ -46,15 +47,15 @@ export default async function OrderDetailPage({ params, searchParams }: { params
       <section className="border-b border-line bg-cloud">
         <Container className="py-12 lg:py-16">
           <div className="flex items-center gap-3">
-            <CheckCircle2 className="size-8 text-success" />
-            <Eyebrow>{t.order.successTitle}</Eyebrow>
+            {pending ? <Clock className="size-8 text-warning-deep" /> : <CheckCircle2 className="size-8 text-success" />}
+            <Eyebrow>{pending ? t.order.statusPending : t.order.successTitle}</Eyebrow>
           </div>
           <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">{pick(vehicle.name, locale)} · {pick(quote.trim.name, locale)}</h1>
-          <p className="mt-3 max-w-2xl text-pretty text-base leading-7 text-slate">{t.order.successBody}</p>
+          <p className="mt-3 max-w-2xl text-pretty text-base leading-7 text-slate">{pending ? (locale === "zh" ? "订单已创建，支付定金后即锁定配置与排产顺序。" : "Your order is created. Pay the deposit to lock the build and your production slot.") : t.order.successBody}</p>
           <div className="mt-6 flex flex-wrap items-center gap-3 text-sm">
             <span className="text-slate">{t.order.orderNo}</span>
             <span className="rounded-pill bg-white px-3 py-1 font-mono font-semibold hairline">{order.id}</span>
-            <Badge tone="success">{statusLabel[order.status]}</Badge>
+            <Badge tone={pending ? "neutral" : "success"}>{statusLabel[order.status]}</Badge>
           </div>
         </Container>
       </section>
@@ -104,7 +105,7 @@ export default async function OrderDetailPage({ params, searchParams }: { params
               <Row label={t.forms.phone} value={maskPhone(order.buyer.phone)} />
               <Row label={locale === "zh" ? "上牌城市" : "Registration city"} value={order.buyer.city} />
               <Row label={t.order.deliveryCenter} value={deliveryStore ? `${pick(deliveryStore.name, locale)} · ${pick(deliveryStore.address, locale)}` : order.deliveryStoreId} />
-              <Row label={t.order.payment} value={`${t.order[order.payment]} · ${formatCNY(order.quote.deposit)} · ${order.paidAt ? formatDateTime(order.paidAt, locale) : ""}`} />
+              <Row label={t.order.payment} value={`${t.order[order.payment]} · ${formatCNY(order.quote.deposit)}${order.paidAt ? ` · ${formatDateTime(order.paidAt, locale)}` : ` · ${t.order.statusPending}`}`} />
             </dl>
           </section>
         </div>
@@ -118,6 +119,7 @@ export default async function OrderDetailPage({ params, searchParams }: { params
               <p className="text-sm text-slate">{t.common.deposit}</p>
               <p className="text-3xl font-semibold tabular-nums">{formatCNY(order.quote.deposit)}</p>
               <p className="mt-2 flex items-center gap-1 text-xs text-ash"><Clock className="size-3.5" />{t.configurator.deliveryEta} {quote.deliveryWeeks[0]}-{quote.deliveryWeeks[1]} {t.common.weeks}</p>
+              {pending ? <OrderPayment orderId={order.id} method={order.payment} amount={order.quote.deposit} /> : null}
               <div className="mt-5 grid gap-2">
                 <Button href="/connect/garage">{t.connect.garage}</Button>
                 <Button href="/charging" variant="secondary">{t.charging.homeTitle}</Button>

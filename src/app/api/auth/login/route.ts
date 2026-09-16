@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SESSION_COOKIE, createSessionToken, findUserByIdentifier, sessionCookieOptions, toPublicUser, verifyPassword } from "@/lib/auth";
+import { SESSION_COOKIE, createSessionToken, findUserByIdentifier, sessionCookieOptions, toPublicUser, verifyPasswordOrDummy } from "@/lib/auth";
 import { fail, ok, parseBody, rateLimit } from "@/lib/api";
 
 const schema = z.object({
@@ -13,7 +13,8 @@ export async function POST(request: Request) {
   const parsed = await parseBody(request, schema);
   if ("error" in parsed) return parsed.error;
   const user = await findUserByIdentifier(parsed.data.identifier);
-  if (!user || !(await verifyPassword(parsed.data.password, user.passwordHash))) {
+  const valid = await verifyPasswordOrDummy(parsed.data.password, user?.passwordHash);
+  if (!user || !valid) {
     return fail("INVALID_CREDENTIALS", 401);
   }
   const token = await createSessionToken(user.id);

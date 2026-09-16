@@ -98,8 +98,13 @@ export function seededRandom(seed: number): () => number {
   };
 }
 
+/** Strips spaces, hyphens and a +86 prefix so the same number always indexes the same way. */
+export function normalizePhone(value: string): string {
+  return value.trim().replace(/\s|-/g, "").replace(/^(\+?86)(?=1[3-9]\d{9}$)/, "");
+}
+
 export function isValidCNPhone(value: string): boolean {
-  return /^1[3-9]\d{9}$/.test(value.replace(/\s|-/g, ""));
+  return /^1[3-9]\d{9}$/.test(normalizePhone(value));
 }
 
 export function isValidEmail(value: string): boolean {
@@ -107,7 +112,8 @@ export function isValidEmail(value: string): boolean {
 }
 
 export function maskPhone(phone: string): string {
-  return phone.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2");
+  const digits = normalizePhone(phone);
+  return digits.length === 11 ? digits.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") : phone.replace(/.(?=.{4})/g, "*");
 }
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I to avoid misreads

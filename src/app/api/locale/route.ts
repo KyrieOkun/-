@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { LOCALES, LOCALE_COOKIE } from "@/lib/i18n/types";
-import { fail, ok, parseBody } from "@/lib/api";
+import { fail, ok, parseBody, rateLimit } from "@/lib/api";
 
 const schema = z.object({ locale: z.enum(LOCALES) });
 
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "locale", 30);
+  if (limited) return limited;
   const parsed = await parseBody(request, schema);
   if ("error" in parsed) return parsed.error;
   const res = ok({ locale: parsed.data.locale });

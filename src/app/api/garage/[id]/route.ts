@@ -22,6 +22,7 @@ export async function DELETE(_request: Request, { params }: Ctx) {
   const gv = await store.get<GarageVehicle>("garage", id);
   if (!gv || gv.ownerId !== user.id) return fail("NOT_FOUND", 404);
   await store.remove("garage", id, user.id);
+  await store.releaseLookup("garage", "vin", gv.vin);
   // Shared keys for a removed vehicle must stop working immediately.
   const keys = await store.list<SharedKey>("keys", user.id);
   await Promise.all(keys.filter((k) => k.garageVehicleId === id && k.status === "active").map((k) => store.put("keys", { ...k, status: "revoked" as const }, { owner: user.id })));

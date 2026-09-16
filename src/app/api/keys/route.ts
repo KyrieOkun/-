@@ -24,7 +24,9 @@ export async function GET() {
   if (!user) return fail("UNAUTHORIZED", 401);
   const keys = await store.list<SharedKey>("keys", user.id);
   const now = Date.now();
-  const normalized = keys.map((k) => (k.status === "active" && new Date(k.expiresAt).getTime() < now ? { ...k, status: "expired" as const } : k));
+  const expired = keys.filter((k) => k.status === "active" && new Date(k.expiresAt).getTime() < now);
+  await Promise.all(expired.map((k) => store.put("keys", { ...k, status: "expired" as const }, { owner: user.id })));
+  const normalized = keys.map((k) => (expired.includes(k) ? { ...k, status: "expired" as const } : k));
   normalized.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   return ok({ keys: normalized });
 }

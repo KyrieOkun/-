@@ -61,7 +61,7 @@ export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle:
     });
     setLoading(false);
     if (!res.ok || !res.data) return setError(t.common.error);
-    router.push(`/order/${res.data.order.id}?phone=${encodeURIComponent(phone)}`);
+    router.push(`/order/${res.data.order.id}`);
   }
 
   const idTypeLabel = { "id-card": locale === "zh" ? "身份证" : "ID card", passport: locale === "zh" ? "护照" : "Passport", business: locale === "zh" ? "企业营业执照" : "Business licence" } as const;

@@ -4,11 +4,11 @@ import { store } from "@/lib/store";
 import { getVehicle } from "@/data/vehicles";
 import { stores } from "@/data/site";
 import { getCurrentUser } from "@/lib/auth";
-import { generateId, isValidCNPhone } from "@/lib/utils";
+import { generateId, isValidCNPhone, normalizePhone } from "@/lib/utils";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(40),
-  phone: z.string().trim().refine(isValidCNPhone, "INVALID_PHONE"),
+  phone: z.string().trim().refine(isValidCNPhone, "INVALID_PHONE").transform(normalizePhone),
   vehicleSlug: z.string().min(1),
   mode: z.enum(["store", "home"]),
   storeId: z.string().optional(),
@@ -18,6 +18,14 @@ const schema = z.object({
   slot: z.string().min(1).max(20),
   note: z.string().trim().max(500).optional(),
   agree: z.literal(true),
+}).superRefine((data, ctx) => {
+  if (data.mode === "home" && (!data.address || data.address.length < 5)) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["address"], message: "ADDRESS_REQUIRED" });
+  const [y, m, d] = data.date.split("-").map(Number);
+  const day = new Date(Date.UTC(y, m - 1, d));
+  const valid = day.getUTCFullYear() === y && day.getUTCMonth() === m - 1 && day.getUTCDate() === d;
+  const today = new Date();
+  const todayUtc = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  if (!valid || day.getTime() < todayUtc || day.getTime() > todayUtc + 90 * 86_400_000) ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["date"], message: "DATE_OUT_OF_RANGE" });
 });
 
 export async function POST(request: Request) {

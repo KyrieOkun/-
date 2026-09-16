@@ -50,7 +50,9 @@ export function estimateTradeIn(input: TradeInInput, now = new Date()): TradeInE
   const sourceIsXiaomi = brand.includes("xiaomi") || brand.includes("小米");
   const sourceIsTesla = brand.includes("tesla") || brand.includes("特斯拉");
   const crossBrand = Boolean(input.targetBrand && ((input.targetBrand === "xiaomi" && sourceIsTesla) || (input.targetBrand === "tesla" && sourceIsXiaomi)));
-  const subsidy = input.targetBrand ? (crossBrand ? CROSS_BRAND_BONUS : SAME_BRAND_BONUS) : 0;
+  const sameBrand = Boolean(input.targetBrand && ((input.targetBrand === "xiaomi" && sourceIsXiaomi) || (input.targetBrand === "tesla" && sourceIsTesla)));
+  // Third-party brands (BYD, BMW, …) get neither bonus — matches the published rule.
+  const subsidy = crossBrand ? CROSS_BRAND_BONUS : sameBrand ? SAME_BRAND_BONUS : 0;
   const validUntil = new Date(now.getTime() + 7 * 86_400_000).toISOString();
 
   return {
