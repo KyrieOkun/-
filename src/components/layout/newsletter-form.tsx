@@ -48,7 +48,7 @@ export function NewsletterForm() {
         }}
         placeholder={t.forms.email}
         aria-invalid={state === "error"}
-        className="h-10 flex-1 rounded-pill border border-line bg-white px-4 text-sm outline-none placeholder:text-ash focus:border-ink aria-[invalid=true]:border-danger"
+        className="h-10 flex-1 rounded-pill border border-line bg-white px-4 text-sm outline-none placeholder:text-slate focus:border-ink aria-[invalid=true]:border-danger"
       />
       <Button type="submit" size="sm" loading={state === "loading"} className="h-10">
         {t.footer.subscribe}

@@ -37,14 +37,14 @@ export default async function HomePage() {
         <div className="absolute inset-0 grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
           <Link href="/vehicles?brand=xiaomi" className="group relative overflow-hidden focus-visible:outline-none" aria-label={`${t.nav.xiaomi} · ${t.nav.allVehicles}`}>
             <Image src="/images/home/xiaomi.jpg" alt={locale === "zh" ? "新一代小米 SU7 官方图" : "New-generation Xiaomi SU7, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[70%_center] transition-transform duration-[1200ms] ease-brand group-hover:scale-[1.03]" />
-            <span className="absolute bottom-6 left-5 hidden items-center gap-2 rounded-pill bg-black/35 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/85 backdrop-blur-md transition-colors group-hover:bg-black/50 group-hover:text-white md:flex lg:bottom-8 lg:left-8">
+            <span className="eyebrow absolute bottom-6 left-5 hidden items-center gap-2 rounded-pill bg-black/40 px-3 py-1.5 text-white backdrop-blur-md transition-colors group-hover:bg-black/55 md:flex lg:bottom-8 lg:left-8">
               <span className="size-1.5 rounded-full bg-mi" />{t.nav.xiaomi}
               <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </span>
           </Link>
           <Link href="/vehicles?brand=tesla" className="group relative overflow-hidden focus-visible:outline-none" aria-label={`${t.nav.tesla} · ${t.nav.allVehicles}`}>
             <Image src="/images/home/tesla.jpg" alt={locale === "zh" ? "特斯拉 Model Y 官方图" : "Tesla Model Y, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[35%_center] transition-transform duration-[1200ms] ease-brand group-hover:scale-[1.03]" />
-            <span className="absolute bottom-6 right-5 hidden items-center gap-2 rounded-pill bg-black/35 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/85 backdrop-blur-md transition-colors group-hover:bg-black/50 group-hover:text-white md:flex lg:bottom-8 lg:right-8">
+            <span className="eyebrow absolute bottom-6 right-5 hidden items-center gap-2 rounded-pill bg-black/40 px-3 py-1.5 text-white backdrop-blur-md transition-colors group-hover:bg-black/55 md:flex lg:bottom-8 lg:right-8">
               <span className="size-1.5 rounded-full bg-tesla" />{t.nav.tesla}
               <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
             </span>
@@ -55,20 +55,20 @@ export default async function HomePage() {
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
         <div className="pointer-events-none relative flex flex-1 flex-col items-center justify-between px-5 pb-16 pt-24 text-center sm:pb-20 sm:pt-28">
           <div className="animate-fade-up flex flex-col items-center">
-            <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
+            <p className="eyebrow mb-5 flex items-center gap-3 text-dusk">
               <span className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-mi" />{t.nav.xiaomi}</span>
-              <span className="text-white/40">×</span>
+              <span className="text-fog">×</span>
               <span className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-tesla" />{t.nav.tesla}</span>
             </p>
             <h1 className="max-w-4xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">{t.home.heroTitle}</h1>
-            <p className="mt-5 max-w-2xl text-pretty text-base text-white/80 sm:text-xl">{t.home.heroSubtitle}</p>
+            <p className="mt-5 max-w-2xl text-pretty text-base text-fog sm:text-xl">{t.home.heroSubtitle}</p>
           </div>
           <div className="animate-fade-up pointer-events-auto flex w-full flex-col items-center [animation-delay:200ms]">
             <div className="flex w-full max-w-md flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
               <Button href="/vehicles" variant="light" size="lg" className="w-full sm:w-64">{t.home.heroCtaPrimary}</Button>
               <Button href="/test-drive" variant="glass" size="lg" className="w-full sm:w-64">{t.home.heroCtaSecondary}</Button>
             </div>
-            <a href="#featured" className="mt-8 hidden flex-col items-center gap-1 text-[11px] uppercase tracking-[0.2em] text-white/60 transition-colors hover:text-white sm:flex">
+            <a href="#featured" className="eyebrow mt-8 hidden flex-col items-center gap-1 text-dusk transition-colors hover:text-white sm:flex">
               {t.home.scroll}
               <ChevronDown className="size-4 animate-bounce" />
             </a>
@@ -114,7 +114,7 @@ export default async function HomePage() {
                     <Badge tone="light">{f.status === "live" ? t.connect.status : t.connect.beta}</Badge>
                   </div>
                   <h3 className="mt-5 text-lg font-semibold">{pick(f.title, locale)}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-6 text-white/70">{pick(f.summary, locale)}</p>
+                  <p className="mt-2 flex-1 text-sm leading-6 text-fog">{pick(f.summary, locale)}</p>
                   <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-white/90">
                     {t.connect.openFeature}
                     <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
@@ -127,7 +127,7 @@ export default async function HomePage() {
             {connectStats.map((s) => (
               <div key={s.label.zh}>
                 <dt className="text-3xl font-semibold tabular-nums sm:text-4xl">{locale === "en" && s.labelEn ? s.labelEn : s.value}</dt>
-                <dd className="mt-1 text-sm text-white/60">{pick(s.label, locale)}</dd>
+                <dd className="mt-1 text-sm text-dusk">{pick(s.label, locale)}</dd>
               </div>
             ))}
           </dl>
@@ -141,12 +141,12 @@ export default async function HomePage() {
             <Reveal>
               <Eyebrow className="mb-3">{t.charging.title}</Eyebrow>
               <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl lg:text-[44px] lg:leading-[1.08]">{t.home.chargingTitle}</h2>
-              <p className="mt-4 text-pretty text-base leading-7 text-slate sm:text-lg">{t.home.chargingSubtitle}</p>
+              <p className="mt-4 text-pretty text-base leading-7 text-graphite sm:text-lg">{t.home.chargingSubtitle}</p>
               <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-6">
                 {networkStats.slice(0, 4).map((s) => (
                   <div key={s.id}>
                     <dt className="text-2xl font-semibold tabular-nums sm:text-3xl">{locale === "en" && s.valueEn ? s.valueEn : s.value}</dt>
-                    <dd className="mt-1 text-sm text-slate">{pick(s.label, locale)}</dd>
+                    <dd className="mt-1 text-sm text-graphite">{pick(s.label, locale)}</dd>
                   </div>
                 ))}
               </dl>
@@ -176,9 +176,9 @@ export default async function HomePage() {
                   <div className="p-6">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold">{pick(p.title, locale)}</h3>
-                      <span className="text-sm text-slate">{p.priceFrom === 0 ? (locale === "zh" ? "赠送" : "Complimentary") : `${t.atelier.startingAt} ${formatCNY(p.priceFrom)}`}</span>
+                      <span className="text-sm text-graphite">{p.priceFrom === 0 ? (locale === "zh" ? "赠送" : "Complimentary") : `${t.atelier.startingAt} ${formatCNY(p.priceFrom)}`}</span>
                     </div>
-                    <p className="mt-2 text-sm leading-6 text-slate">{pick(p.summary, locale)}</p>
+                    <p className="mt-2 text-sm leading-6 text-graphite">{pick(p.summary, locale)}</p>
                   </div>
                 </Link>
               </Reveal>
@@ -198,12 +198,12 @@ export default async function HomePage() {
                   <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-mist">
                     <Image src={a.image} alt={pick(a.title, locale)} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                   </div>
-                  <div className="mt-4 flex items-center gap-2 text-xs text-slate">
+                  <div className="mt-4 flex items-center gap-2 text-xs text-graphite">
                     <Badge tone={a.brand === "xiaomi" ? "mi" : a.brand === "tesla" ? "tesla" : "neutral"}>{t.news.category[a.category]}</Badge>
                     <time dateTime={a.date}>{formatDate(a.date, locale)}</time>
                   </div>
                   <h3 className="mt-2 text-lg font-semibold leading-snug group-hover:underline underline-offset-4">{pick(a.title, locale)}</h3>
-                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate">{pick(a.excerpt, locale)}</p>
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-graphite">{pick(a.excerpt, locale)}</p>
                 </Link>
               </Reveal>
             ))}
@@ -218,7 +218,7 @@ export default async function HomePage() {
         <Container className="relative text-center">
           <Reveal className="mx-auto flex max-w-3xl flex-col items-center">
             <h2 className="text-balance text-3xl font-semibold tracking-tight sm:text-5xl">{t.home.ctaTitle}</h2>
-            <p className="mt-4 text-base text-white/75 sm:text-lg">{t.home.ctaSubtitle}</p>
+            <p className="mt-4 text-base text-fog sm:text-lg">{t.home.ctaSubtitle}</p>
             <div className="mt-8 flex w-full max-w-md flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
               <Button href="/vehicles" variant="light" size="lg" className="w-full sm:w-56">{t.nav.design}</Button>
               <Button href="/compare" variant="glass" size="lg" className="w-full sm:w-56">{t.nav.compare}</Button>

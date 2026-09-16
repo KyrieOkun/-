@@ -48,7 +48,7 @@ export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { p
       </div>
       <div className="space-y-8">
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-ash">{t.vehicles.colors}</h3>
+          <h3 className="text-sm font-semibold text-slate">{t.vehicles.colors}</h3>
           <div className="mt-4 flex flex-wrap gap-3">
             {paints.map((p) => (
               <button key={p.id} type="button" onClick={() => setPaint(p)} className="focus-ring rounded-full" aria-label={pick(p.name)} aria-pressed={paint.id === p.id}>
@@ -67,7 +67,7 @@ export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { p
           </ul>
         </div>
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-ash">{t.vehicles.wheels}</h3>
+          <h3 className="text-sm font-semibold text-slate">{t.vehicles.wheels}</h3>
           <div className="mt-4 flex flex-wrap gap-3">
             {wheels.map((w) => (
               <button key={w.id} type="button" onClick={() => setWheel(w)} className="focus-ring rounded-full" aria-label={pick(w.name)} aria-pressed={wheel.id === w.id}>
@@ -86,7 +86,7 @@ export function PaintExplorer({ paints, wheels, interiors, initialPaintId }: { p
           </p>
         </div>
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-ash">{t.vehicles.interiors}</h3>
+          <h3 className="text-sm font-semibold text-slate">{t.vehicles.interiors}</h3>
           <div className="mt-4 flex flex-wrap gap-3">
             {interiors.map((i) => (
               <button key={i.id} type="button" onClick={() => setInterior(i)} className="focus-ring rounded-full" aria-label={pick(i.name)} aria-pressed={interior.id === i.id}>

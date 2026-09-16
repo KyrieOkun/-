@@ -27,7 +27,7 @@ export default async function StoresPage() {
         <Container className="relative py-24 lg:py-32">
           <Eyebrow tone="light" className="mb-3">{t.nav.xiaomi} × {t.nav.tesla}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.stores.title}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-white/80 sm:text-lg">{t.stores.subtitle}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-fog sm:text-lg">{t.stores.subtitle}</p>
         </Container>
       </section>
       <Container className="py-12 pb-24">

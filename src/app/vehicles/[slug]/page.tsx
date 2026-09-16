@@ -81,8 +81,8 @@ export default async function VehiclePage({ params }: Params) {
           <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt, locale)} fill priority sizes="100vw" className="object-cover" />
           {light ? (
             <>
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-white/70 via-white/25 to-transparent" />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-mist to-transparent sm:h-3/5 sm:from-white/90 sm:via-white/45" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-[38%] bg-gradient-to-b from-white/90 via-white/45 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-mist to-transparent sm:h-3/5 sm:from-white/94 sm:via-white/55" />
             </>
           ) : (
             <>
@@ -94,12 +94,12 @@ export default async function VehiclePage({ params }: Params) {
         </div>
         <div className="relative flex flex-1 flex-col justify-end px-5 pb-12 pt-4 sm:px-8 sm:pt-32 lg:px-12">
           <Reveal className="max-w-3xl">
-            <p className={`mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] ${light ? "text-graphite" : "text-white/70"}`}>
+            <p className={`eyebrow mb-3 flex items-center gap-2 ${light ? "text-ink" : "text-dusk"}`}>
               <span className={vehicle.brand === "xiaomi" ? "size-1.5 rounded-full bg-mi" : "size-1.5 rounded-full bg-tesla"} />
               {vehicle.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla} · {pick(vehicle.segment, locale)}
             </p>
             <h1 className="text-balance text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">{pick(vehicle.name, locale)}</h1>
-            <p className={`mt-3 text-pretty text-lg sm:text-2xl ${light ? "text-graphite" : "text-white/80"}`}>{pick(vehicle.tagline, locale)}</p>
+            <p className={`mt-3 text-pretty text-lg sm:text-2xl ${light ? "text-graphite" : "text-fog"}`}>{pick(vehicle.tagline, locale)}</p>
           </Reveal>
           <Reveal delay={120} className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
             {vehicle.highlights.map((h) => (
@@ -115,7 +115,7 @@ export default async function VehiclePage({ params }: Params) {
             ) : (
               <Button href="#interest" variant="light" size="lg" className="sm:w-56">{locale === "zh" ? "登记关注" : "Register interest"}</Button>
             )}
-            <span className={`text-sm sm:ml-4 ${light ? "text-graphite" : "text-white/70"}`}>
+            <span className={`text-sm sm:ml-4 ${light ? "text-graphite" : "text-fog"}`}>
               {t.common.from} {formatPriceHeadline(startingPrice, locale)}
               {isOverseas && vehicle.trims[0].priceUSD ? ` (${formatUSD(vehicle.trims[0].priceUSD)})` : ""}
               {isInventory ? ` · ${t.common.inventoryOnly}` : ""}
@@ -162,29 +162,29 @@ export default async function VehiclePage({ params }: Params) {
             <p className="text-pretty text-lg leading-8 text-graphite">{pick(vehicle.description, locale)}</p>
             <dl className="mt-8 grid grid-cols-2 gap-6 text-sm sm:grid-cols-3">
               <div>
-                <dt className="text-ash">{t.vehicles.launch}</dt>
+                <dt className="text-slate">{t.vehicles.launch}</dt>
                 <dd className="mt-1 font-medium">{formatDate(vehicle.launchDate, locale)}</dd>
               </div>
               <div>
-                <dt className="text-ash">{t.vehicles.dimensions}</dt>
+                <dt className="text-slate">{t.vehicles.dimensions}</dt>
                 <dd className="mt-1 font-medium tabular-nums">{vehicle.dimensions.length} × {vehicle.dimensions.width} × {vehicle.dimensions.height} mm</dd>
               </div>
               <div>
-                <dt className="text-ash">{t.vehicles.wheelbase}</dt>
+                <dt className="text-slate">{t.vehicles.wheelbase}</dt>
                 <dd className="mt-1 font-medium tabular-nums">{vehicle.dimensions.wheelbase} mm</dd>
               </div>
               <div>
-                <dt className="text-ash">{t.common.seats}</dt>
+                <dt className="text-slate">{t.common.seats}</dt>
                 <dd className="mt-1 font-medium">{vehicle.seats.join(" / ")}</dd>
               </div>
               {vehicle.cargoL ? (
                 <div>
-                  <dt className="text-ash">{t.vehicles.cargo}</dt>
+                  <dt className="text-slate">{t.vehicles.cargo}</dt>
                   <dd className="mt-1 font-medium tabular-nums">{vehicle.cargoL} L{vehicle.frunkL ? ` + ${vehicle.frunkL} L` : ""}</dd>
                 </div>
               ) : null}
               <div>
-                <dt className="text-ash">{t.common.deposit}</dt>
+                <dt className="text-slate">{t.common.deposit}</dt>
                 <dd className="mt-1 font-medium">{formatCNY(vehicle.deposit)}</dd>
               </div>
             </dl>
@@ -206,42 +206,42 @@ export default async function VehiclePage({ params }: Params) {
                   </div>
                   <p className="mt-3 text-2xl font-semibold tabular-nums">
                     {formatPriceHeadline(tr.price, locale)}
-                    {tr.priceUSD ? <span className="ml-2 text-sm font-normal text-slate">{formatUSD(tr.priceUSD)}</span> : null}
+                    {tr.priceUSD ? <span className="ml-2 text-sm font-normal text-graphite">{formatUSD(tr.priceUSD)}</span> : null}
                   </p>
                   <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-3 border-y border-line py-4 text-sm">
                     <div>
-                      <dt className="text-ash">{vehicle.powertrain === "erev" ? (locale === "zh" ? "综合 / 纯电" : "Combined / EV") : `${tr.rangeStandard}`}</dt>
+                      <dt className="text-slate">{vehicle.powertrain === "erev" ? (locale === "zh" ? "综合 / 纯电" : "Combined / EV") : `${tr.rangeStandard}`}</dt>
                       <dd className="font-medium tabular-nums">{vehicle.powertrain === "erev" ? `${tr.rangeKm} / ${tr.evRangeKm} km` : `${tr.rangeKm} km`}</dd>
                     </div>
                     <div>
-                      <dt className="text-ash">{t.common.accel}</dt>
+                      <dt className="text-slate">{t.common.accel}</dt>
                       <dd className="font-medium tabular-nums">{tr.accel} s</dd>
                     </div>
                     <div>
-                      <dt className="text-ash">{t.common.power}</dt>
+                      <dt className="text-slate">{t.common.power}</dt>
                       <dd className="font-medium tabular-nums">{tr.powerKw} kW / {tr.powerPs} PS</dd>
                     </div>
                     <div>
-                      <dt className="text-ash">{t.common.topSpeed}</dt>
+                      <dt className="text-slate">{t.common.topSpeed}</dt>
                       <dd className="font-medium tabular-nums">{tr.topSpeed} km/h</dd>
                     </div>
                     <div>
-                      <dt className="text-ash">{t.common.battery}</dt>
+                      <dt className="text-slate">{t.common.battery}</dt>
                       <dd className="font-medium tabular-nums">{tr.batteryKwh} kWh · {pick(tr.batteryType, locale)}</dd>
                     </div>
                     <div>
-                      <dt className="text-ash">{t.common.drivetrain}</dt>
+                      <dt className="text-slate">{t.common.drivetrain}</dt>
                       <dd className="font-medium">{pick(tr.drivetrain, locale)}</dd>
                     </div>
                     {tr.peakChargeKw ? (
                       <div>
-                        <dt className="text-ash">{t.common.charging}</dt>
+                        <dt className="text-slate">{t.common.charging}</dt>
                         <dd className="font-medium tabular-nums">{tr.peakChargeKw} kW{tr.charge10to80Min ? ` · 10-80% ${tr.charge10to80Min} min` : ""}</dd>
                       </div>
                     ) : null}
                     {tr.platformVoltage ? (
                       <div>
-                        <dt className="text-ash">{locale === "zh" ? "平台电压" : "Architecture"}</dt>
+                        <dt className="text-slate">{locale === "zh" ? "平台电压" : "Architecture"}</dt>
                         <dd className="font-medium">{tr.platformVoltage}</dd>
                       </div>
                     ) : null}
@@ -281,7 +281,7 @@ export default async function VehiclePage({ params }: Params) {
                     <Icon name={f.icon} className="size-5" />
                   </span>
                   <h3 className="mt-5 text-lg font-semibold">{pick(f.title, locale)}</h3>
-                  <p className="mt-2 text-sm leading-6 text-slate">{pick(f.body, locale)}</p>
+                  <p className="mt-2 text-sm leading-6 text-graphite">{pick(f.body, locale)}</p>
                 </div>
               </Reveal>
             ))}
@@ -327,7 +327,7 @@ export default async function VehiclePage({ params }: Params) {
                 <dl className="mt-4 divide-y divide-line">
                   {group.rows.map((row) => (
                     <div key={row.label.zh} className="grid grid-cols-[minmax(110px,0.8fr)_1.6fr] gap-4 py-3 text-sm">
-                      <dt className="text-slate">{pick(row.label, locale)}</dt>
+                      <dt className="text-graphite">{pick(row.label, locale)}</dt>
                       <dd className="font-medium text-ink">{pick(row.value, locale)}</dd>
                     </div>
                   ))}

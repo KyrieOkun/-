@@ -19,7 +19,7 @@ export default async function ServicePage() {
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.connect.title}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.connect.serviceTitle}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-slate sm:text-lg">{t.connect.serviceSubtitle}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-graphite sm:text-lg">{t.connect.serviceSubtitle}</p>
         </Container>
       </section>
       <Container className="py-12 pb-24">

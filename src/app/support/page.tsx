@@ -35,7 +35,7 @@ export default async function SupportPage() {
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.nav.xiaomi} × {t.nav.tesla}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.support.title}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-slate sm:text-lg">{t.support.subtitle}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-graphite sm:text-lg">{t.support.subtitle}</p>
         </Container>
       </section>
       <Container className="py-12">

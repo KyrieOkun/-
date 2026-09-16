@@ -66,9 +66,9 @@ export function SiteFooter({ locale, vehicles }: { locale: Locale; vehicles: Foo
               <span className="text-lg font-bold tracking-[0.28em]">MI</span>
               <span className="text-xs text-slate">×</span>
               <span className="text-lg font-bold tracking-[0.28em]">TESLA</span>
-              <span className="ml-1 text-[10px] font-semibold tracking-[0.3em] text-ash">ATELIER</span>
+              <span className="ml-1 text-xs font-semibold tracking-[0.18em] text-slate">ATELIER</span>
             </div>
-            <p className="mt-3 max-w-sm text-sm leading-6 text-slate">{t.brand.tagline}</p>
+            <p className="mt-3 max-w-sm text-sm leading-6 text-graphite">{t.brand.tagline}</p>
             <div className="mt-8">
               <p className="text-sm font-semibold">{t.footer.newsletter}</p>
               <p className="mt-1 text-xs text-slate">{t.footer.newsletterHint}</p>
@@ -78,7 +78,7 @@ export function SiteFooter({ locale, vehicles }: { locale: Locale; vehicles: Foo
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {columns.map((col) => (
               <div key={col.title}>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ash">{col.title}</p>
+                <p className="eyebrow text-slate">{col.title}</p>
                 <ul className="mt-4 space-y-2.5">
                   {col.links.map((link) => (
                     <li key={link.href + link.label}>

@@ -31,7 +31,7 @@ export default async function OrderPage({ searchParams }: { searchParams: Promis
           <Container className="py-10 lg:py-14">
             <Eyebrow className="mb-3">{pick(vehicle.name, locale)}</Eyebrow>
             <h1 className="text-balance text-3xl font-semibold tracking-tight sm:text-4xl">{t.order.title}</h1>
-            <p className="mt-3 max-w-2xl text-pretty text-base leading-7 text-slate">{t.order.subtitle}</p>
+            <p className="mt-3 max-w-2xl text-pretty text-base leading-7 text-graphite">{t.order.subtitle}</p>
           </Container>
         </section>
         <Container className="py-10 pb-24">
@@ -47,7 +47,7 @@ export default async function OrderPage({ searchParams }: { searchParams: Promis
         <Container className="py-12 lg:py-16">
           <Eyebrow className="mb-3">{t.nav.xiaomi} × {t.nav.tesla}</Eyebrow>
           <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">{t.nav.order}</h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-slate sm:text-lg">{locale === "zh" ? "选择车型开始在线选配，支付定金即锁定配置与排产。" : "Pick a vehicle to configure online; pay the deposit to lock your build and production slot."}</p>
+          <p className="mt-4 max-w-2xl text-pretty text-base leading-7 text-graphite sm:text-lg">{locale === "zh" ? "选择车型开始在线选配，支付定金即锁定配置与排产。" : "Pick a vehicle to configure online; pay the deposit to lock your build and production slot."}</p>
         </Container>
       </section>
       <Container className="py-12">

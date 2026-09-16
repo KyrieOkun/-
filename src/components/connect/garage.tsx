@@ -120,12 +120,12 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
                   <div className="scrim-b absolute inset-x-0 bottom-0 h-2/3" />
                   <div className="absolute inset-x-5 bottom-4 flex items-end justify-between text-white">
                     <div>
-                      <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70">
+                      <p className="eyebrow flex items-center gap-2 text-dusk">
                         <span className={cn("size-1.5 rounded-full", v.brand === "xiaomi" ? "bg-mi" : "bg-tesla")} />
                         {v.brand === "xiaomi" ? t.nav.xiaomi : t.nav.tesla} · {pick(trim.name)}
                       </p>
                       <h3 className="mt-1 text-2xl font-semibold">{e.nickname}</h3>
-                      <p className="text-xs text-white/70">{pick(v.name)}{e.plate ? ` · ${e.plate}` : ""} · VIN {e.vin.slice(0, 5)}…{e.vin.slice(-4)}</p>
+                      <p className="text-xs text-fog">{pick(v.name)}{e.plate ? ` · ${e.plate}` : ""} · VIN {e.vin.slice(0, 5)}…{e.vin.slice(-4)}</p>
                     </div>
                     <PaintSwatch paint={paint} size={28} />
                   </div>

@@ -65,7 +65,7 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
     <div className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
       <div className="space-y-6">
         <div className="rounded-3xl bg-ink p-6 text-white">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">{locale === "zh" ? "我的钥匙" : "My keys"}</p>
+          <p className="eyebrow text-dusk">{locale === "zh" ? "我的钥匙" : "My keys"}</p>
           <div className="mt-4 grid grid-cols-3 gap-3">
             {[
               { icon: <Smartphone className="size-5" />, label: locale === "zh" ? "手机 · UWB" : "Phone · UWB" },
@@ -75,11 +75,11 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
               <div key={k.label} className="rounded-2xl bg-white/10 p-4 text-center">
                 <span className="mx-auto flex size-10 items-center justify-center rounded-full bg-white/10">{k.icon}</span>
                 <p className="mt-2 text-xs font-medium">{k.label}</p>
-                <p className="mt-0.5 text-[10px] text-white/60">{locale === "zh" ? "已激活" : "Active"}</p>
+                <p className="mt-0.5 text-xs text-dusk">{locale === "zh" ? "已激活" : "Active"}</p>
               </div>
             ))}
           </div>
-          <p className="mt-4 text-xs leading-5 text-white/60">{locale === "zh" ? "钥匙基于安全芯片与端到端加密，跨品牌车辆通用；手表与手环需 UWB 型号支持无感解锁。" : "Keys are secure-element based and end-to-end encrypted, valid across brands; hands-free unlock requires UWB watches/bands."}</p>
+          <p className="mt-4 text-xs leading-5 text-fog">{locale === "zh" ? "钥匙基于安全芯片与端到端加密，跨品牌车辆通用；手表与手环需 UWB 型号支持无感解锁。" : "Keys are secure-element based and end-to-end encrypted, valid across brands; hands-free unlock requires UWB watches/bands."}</p>
         </div>
 
         <form onSubmit={onSubmit} className="rounded-3xl bg-white p-6 hairline" noValidate>

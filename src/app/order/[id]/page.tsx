@@ -50,7 +50,7 @@ export default async function OrderDetailPage({ params, searchParams }: { params
             <Eyebrow>{t.order.successTitle}</Eyebrow>
           </div>
           <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">{pick(vehicle.name, locale)} · {pick(quote.trim.name, locale)}</h1>
-          <p className="mt-3 max-w-2xl text-pretty text-base leading-7 text-slate">{t.order.successBody}</p>
+          <p className="mt-3 max-w-2xl text-pretty text-base leading-7 text-graphite">{t.order.successBody}</p>
           <div className="mt-6 flex flex-wrap items-center gap-3 text-sm">
             <span className="text-slate">{t.order.orderNo}</span>
             <span className="rounded-pill bg-white px-3 py-1 font-mono font-semibold hairline">{order.id}</span>

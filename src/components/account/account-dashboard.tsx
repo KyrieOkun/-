@@ -53,10 +53,10 @@ export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
     <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
       <aside className="space-y-4">
         <div className="rounded-3xl bg-ink p-6 text-white">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-white/60">{t.account.oneIdTitle}</p>
+          <p className="eyebrow text-dusk">{t.account.oneIdTitle}</p>
           <h2 className="mt-2 text-2xl font-semibold">{user.name}</h2>
-          <p className="mt-1 text-sm text-white/70">{user.phone ? maskPhone(user.phone) : user.email}</p>
-          <p className="mt-4 text-xs text-white/60">{locale === "zh" ? "注册于" : "Member since"} {formatDateTime(user.createdAt, locale)}</p>
+          <p className="mt-1 text-sm text-fog">{user.phone ? maskPhone(user.phone) : user.email}</p>
+          <p className="mt-4 text-xs text-dusk">{locale === "zh" ? "注册于" : "Member since"} {formatDateTime(user.createdAt, locale)}</p>
           <Button variant="glass" size="sm" className="mt-5" onClick={logout} icon={<LogOut className="size-4" />}>{t.nav.logout}</Button>
         </div>
 
@@ -143,7 +143,7 @@ export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
 
         <section className="rounded-3xl bg-cloud p-6 hairline">
           <h2 className="text-lg font-semibold">{locale === "zh" ? "隐私中心" : "Privacy centre"}</h2>
-          <p className="mt-2 text-sm leading-6 text-slate">{locale === "zh" ? "您可以随时导出或删除账户数据。撤销品牌账号授权后，相关车辆数据将在 30 天内删除。" : "Export or delete your data at any time. After revoking a brand authorisation, related vehicle data is deleted within 30 days."}</p>
+          <p className="mt-2 text-sm leading-6 text-graphite">{locale === "zh" ? "您可以随时导出或删除账户数据。撤销品牌账号授权后，相关车辆数据将在 30 天内删除。" : "Export or delete your data at any time. After revoking a brand authorisation, related vehicle data is deleted within 30 days."}</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button href="/legal/privacy" variant="outline" size="sm">{t.footer.privacy}</Button>
             <Button href="/support#contact" variant="outline" size="sm">{locale === "zh" ? "申请导出 / 删除" : "Request export / deletion"}</Button>
