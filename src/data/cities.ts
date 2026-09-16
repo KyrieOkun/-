@@ -74,6 +74,9 @@ export const cities: City[] = [
   { id: "sanmenxia", name: l("三门峡", "Sanmenxia"), province: l("河南省", "Henan"), lat: 34.7732, lng: 111.2003 },
 ];
 
+/** Hand-curated major cities (registration / delivery / store cities), before highway waypoints are appended. */
+export const majorCities: City[] = [...cities];
+
 for (const [id, zh, en, provZh, provEn, lat, lng] of corridorWaypoints) {
   if (!cities.some((c) => c.id === id)) cities.push({ id, name: l(zh, en), province: l(provZh, provEn), lat, lng });
 }

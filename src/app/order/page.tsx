@@ -5,7 +5,7 @@ import { getI18n } from "@/lib/i18n/server";
 import { pick } from "@/lib/i18n/types";
 import { getVehicle, vehicles } from "@/data/vehicles";
 import { stores } from "@/data/site";
-import { cities } from "@/data/cities";
+import { majorCities } from "@/data/cities";
 import { decodeSelection, normalizeSelection } from "@/lib/pricing";
 import { Container, Eyebrow, SectionHeading } from "@/components/ui/primitives";
 import { OrderCheckout } from "@/components/forms/order-checkout";
@@ -35,7 +35,7 @@ export default async function OrderPage({ searchParams }: { searchParams: Promis
           </Container>
         </section>
         <Container className="py-10 pb-24">
-          <OrderCheckout vehicle={vehicle} selection={selection} stores={stores} cities={cities} />
+          <OrderCheckout vehicle={vehicle} selection={selection} stores={stores} cities={majorCities} />
         </Container>
       </div>
     );

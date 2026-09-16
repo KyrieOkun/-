@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
-import { ArrowRight, Clock, Fuel, Navigation, PlugZap, Route as RouteIcon, Zap } from "lucide-react";
+import { ArrowLeftRight, ArrowRight, Clock, Fuel, Navigation, PlugZap, Route as RouteIcon, Zap } from "lucide-react";
 import type { City } from "@/data/cities";
 import type { Vehicle } from "@/data/types";
 import type { TripPlan, TripError } from "@/lib/trip";
@@ -15,7 +15,7 @@ import { NetworkMap, type MapStation } from "@/components/charging/network-map";
 
 const NETWORK_LABEL = { tesla: { zh: "特斯拉超充", en: "Tesla" }, xiaomi: { zh: "小米超充", en: "Xiaomi" }, partner: { zh: "合作网络", en: "Partner" } } as const;
 
-export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { cities: City[]; vehicles: Vehicle[]; initialVehicle?: string; stations: MapStation[] }) {
+export function TripPlanner({ cities, majorCityIds, vehicles, initialVehicle, stations }: { cities: City[]; majorCityIds?: string[]; vehicles: Vehicle[]; initialVehicle?: string; stations: MapStation[] }) {
   const { t, pick, locale } = useI18n();
   const [originId, setOriginId] = useState("beijing");
   const [destinationId, setDestinationId] = useState("shanghai");
@@ -31,9 +31,27 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
   const [loading, setLoading] = useState(false);
 
   const sortedCities = useMemo(() => [...cities].sort((a, b) => pick(a.name).localeCompare(pick(b.name), locale === "zh" ? "zh-Hans-CN" : "en")), [cities, pick, locale]);
+  const majorSet = useMemo(() => new Set(majorCityIds ?? cities.map((c) => c.id)), [majorCityIds, cities]);
+  const cityGroups = useMemo(
+    () => [
+      { label: locale === "zh" ? "主要城市" : "Major cities", items: sortedCities.filter((c) => majorSet.has(c.id)) },
+      { label: locale === "zh" ? "沿线城镇 / 服务区" : "Corridor towns", items: sortedCities.filter((c) => !majorSet.has(c.id)) },
+    ].filter((g) => g.items.length > 0),
+    [sortedCities, majorSet, locale],
+  );
+  const sameCity = originId === destinationId;
+
+  const swap = () => {
+    setOriginId(destinationId);
+    setDestinationId(originId);
+  };
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (sameCity) {
+      setError(locale === "zh" ? "出发地与目的地不能相同" : "Origin and destination must differ");
+      return;
+    }
     setLoading(true);
     setError(null);
     const res = await apiFetch<TripPlan>("/api/trip/plan", {
@@ -60,20 +78,31 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
     <div className="grid gap-8 lg:grid-cols-[400px_1fr]">
       <form onSubmit={onSubmit} className="h-fit rounded-3xl bg-white p-6 hairline lg:sticky lg:top-24" noValidate>
         <div className="grid gap-4">
-          <div className="grid grid-cols-2 gap-3">
-            <div>
+          <div className="grid grid-cols-[1fr_auto_1fr] items-end gap-2">
+            <div className="min-w-0">
               <Label htmlFor="origin" required>{t.connect.origin}</Label>
-              <Select id="origin" value={originId} onChange={(e) => setOriginId(e.target.value)}>
-                {sortedCities.map((c) => (
-                  <option key={c.id} value={c.id}>{pick(c.name)}</option>
+              <Select id="origin" value={originId} onChange={(e) => setOriginId(e.target.value)} aria-invalid={sameCity || undefined}>
+                {cityGroups.map((g) => (
+                  <optgroup key={g.label} label={g.label}>
+                    {g.items.map((c) => (
+                      <option key={c.id} value={c.id}>{pick(c.name)}</option>
+                    ))}
+                  </optgroup>
                 ))}
               </Select>
             </div>
-            <div>
+            <button type="button" onClick={swap} className="mb-1 flex size-10 items-center justify-center rounded-full bg-mist text-graphite transition-colors hover:bg-line focus-ring" aria-label={locale === "zh" ? "交换出发地与目的地" : "Swap origin and destination"}>
+              <ArrowLeftRight className="size-4" />
+            </button>
+            <div className="min-w-0">
               <Label htmlFor="destination" required>{t.connect.destination}</Label>
-              <Select id="destination" value={destinationId} onChange={(e) => setDestinationId(e.target.value)}>
-                {sortedCities.map((c) => (
-                  <option key={c.id} value={c.id}>{pick(c.name)}</option>
+              <Select id="destination" value={destinationId} onChange={(e) => setDestinationId(e.target.value)} aria-invalid={sameCity || undefined}>
+                {cityGroups.map((g) => (
+                  <optgroup key={g.label} label={g.label}>
+                    {g.items.map((c) => (
+                      <option key={c.id} value={c.id}>{pick(c.name)}</option>
+                    ))}
+                  </optgroup>
                 ))}
               </Select>
             </div>
@@ -104,11 +133,11 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
           </div>
           <div>
             <Label htmlFor="start-soc" hint={`${startSoc}%`}>{t.connect.startSoc}</Label>
-            <input id="start-soc" type="range" min={10} max={100} step={5} value={startSoc} onChange={(e) => setStartSoc(Number(e.target.value))} className="w-full" />
+            <input id="start-soc" type="range" min={10} max={100} step={5} value={startSoc} onChange={(e) => setStartSoc(Number(e.target.value))} aria-valuetext={`${startSoc}%`} className="w-full accent-ink" />
           </div>
           <div>
             <Label htmlFor="arrival-soc" hint={`${minArrivalSoc}%`}>{t.connect.arrivalSoc}</Label>
-            <input id="arrival-soc" type="range" min={5} max={40} step={5} value={minArrivalSoc} onChange={(e) => setMinArrivalSoc(Number(e.target.value))} className="w-full" />
+            <input id="arrival-soc" type="range" min={5} max={40} step={5} value={minArrivalSoc} onChange={(e) => setMinArrivalSoc(Number(e.target.value))} aria-valuetext={`${minArrivalSoc}%`} className="w-full accent-ink" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
@@ -129,7 +158,7 @@ export function TripPlanner({ cities, vehicles, initialVehicle, stations }: { ci
             </div>
           </div>
           <FieldError>{error}</FieldError>
-          <Button type="submit" size="lg" loading={loading} icon={<RouteIcon className="size-4" />}>{loading ? t.connect.planning : t.connect.plan}</Button>
+          <Button type="submit" size="lg" loading={loading} disabled={sameCity} icon={<RouteIcon className="size-4" />}>{loading ? t.connect.planning : t.connect.plan}</Button>
         </div>
       </form>
 

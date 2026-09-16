@@ -20,13 +20,18 @@ export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle:
   const { t, pick, locale } = useI18n();
   const router = useRouter();
   const quote = useMemo(() => computeQuote(vehicle, selection), [vehicle, selection]);
-  const deliveryStores = stores.filter((s) => (s.type === "delivery" || s.type === "flagship" || s.type === "experience") && s.brands.includes(vehicle.brand));
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [idType, setIdType] = useState<"id-card" | "passport" | "business">("id-card");
   const [idLast4, setIdLast4] = useState("");
   const [city, setCity] = useState("beijing");
-  const [storeId, setStoreId] = useState(deliveryStores[0]?.id ?? "");
+  // Delivery centres for this brand, with the registration city's own centres listed first.
+  const deliveryStores = useMemo(() => {
+    const eligible = stores.filter((s) => (s.type === "delivery" || s.type === "flagship" || s.type === "experience") && s.brands.includes(vehicle.brand));
+    return [...eligible.filter((s) => s.cityId === city), ...eligible.filter((s) => s.cityId !== city)];
+  }, [stores, vehicle.brand, city]);
+  const [storeChoice, setStoreChoice] = useState<string | null>(null);
+  const storeId = storeChoice && deliveryStores.some((s) => s.id === storeChoice) ? storeChoice : deliveryStores[0]?.id ?? "";
   const [financing, setFinancing] = useState<"cash" | "loan" | "lease">("cash");
   const [payment, setPayment] = useState<"wechat" | "alipay" | "card">("wechat");
   const [agree, setAgree] = useState(false);
@@ -95,19 +100,20 @@ export function OrderCheckout({ vehicle, selection, stores, cities }: { vehicle:
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="o-city" required>{locale === "zh" ? "上牌城市" : "Registration city"}</Label>
-              <Select id="o-city" value={city} onChange={(e) => setCity(e.target.value)}>
-                {cities.slice(0, 40).map((c) => (
+              <Select id="o-city" value={city} onChange={(e) => { setCity(e.target.value); setStoreChoice(null); }}>
+                {cities.map((c) => (
                   <option key={c.id} value={c.id}>{pick(c.name)}</option>
                 ))}
               </Select>
             </div>
             <div>
               <Label htmlFor="o-store" required>{t.order.deliveryCenter}</Label>
-              <Select id="o-store" value={storeId} onChange={(e) => setStoreId(e.target.value)}>
+              <Select id="o-store" value={storeId} onChange={(e) => setStoreChoice(e.target.value)}>
                 {deliveryStores.map((s) => (
-                  <option key={s.id} value={s.id}>{pick(s.name)}</option>
+                  <option key={s.id} value={s.id}>{pick(s.name)}{s.cityId !== city ? ` · ${pick(cities.find((c) => c.id === s.cityId)?.name ?? { zh: "", en: "" })}` : ""}</option>
                 ))}
               </Select>
+              {deliveryStores[0]?.cityId !== city ? <p className="mt-1.5 text-xs text-ash">{locale === "zh" ? "该城市暂无交付中心，将安排最近的中心交付或送车上门。" : "No delivery centre in this city yet — the nearest centre or home delivery will be arranged."}</p> : null}
             </div>
           </div>
         </section>
