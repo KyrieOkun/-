@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { MapPin, Navigation, RefreshCw, Zap } from "lucide-react";
 import type { Station, Network } from "@/data/charging";
 import type { City } from "@/data/cities";
@@ -9,6 +9,9 @@ import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn, formatDateTime } from "@/lib/utils";
 import { Badge } from "@/components/ui/primitives";
+import { Button } from "@/components/ui/button";
+
+const PAGE_SIZE = 24;
 
 type LiveStation = Station & { live: LiveAvailability };
 
@@ -30,20 +33,31 @@ export function StationFinder({ cities }: { cities: City[] }) {
   const [stations, setStations] = useState<LiveStation[]>([]);
   const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     const res = await apiFetch<{ stations: LiveStation[]; updatedAt: string }>("/api/charging/stations");
-    setStations(res.data?.stations ?? []);
-    setUpdatedAt(res.data?.updatedAt ?? null);
+    if (res.ok && res.data) {
+      setStations(res.data.stations);
+      setUpdatedAt(res.data.updatedAt);
+      setError(null);
+    } else {
+      setError(res.error ?? "NETWORK_ERROR");
+    }
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     void load();
     const id = setInterval(() => void load(), 60_000);
     return () => clearInterval(id);
-  }, []);
+  }, [load]);
+
+  useEffect(() => {
+    setVisible(PAGE_SIZE);
+  }, [network, cityId, query]);
 
   const cityMap = useMemo(() => Object.fromEntries(cities.map((c) => [c.id, c])), [cities]);
   const filtered = useMemo(() => {
@@ -68,10 +82,10 @@ export function StationFinder({ cities }: { cities: City[] }) {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
-        <button className={chip(network === "all")} onClick={() => setNetwork("all")}>{t.charging.filterAll}</button>
-        <button className={chip(network === "tesla", "tesla")} onClick={() => setNetwork("tesla")}>{t.charging.filterTesla}</button>
-        <button className={chip(network === "xiaomi", "mi")} onClick={() => setNetwork("xiaomi")}>{t.charging.filterXiaomi}</button>
-        <button className={chip(network === "partner")} onClick={() => setNetwork("partner")}>{t.charging.filterPartner}</button>
+        <button type="button" aria-pressed={network === "all"} className={chip(network === "all")} onClick={() => setNetwork("all")}>{t.charging.filterAll}</button>
+        <button type="button" aria-pressed={network === "tesla"} className={chip(network === "tesla", "tesla")} onClick={() => setNetwork("tesla")}>{t.charging.filterTesla}</button>
+        <button type="button" aria-pressed={network === "xiaomi"} className={chip(network === "xiaomi", "mi")} onClick={() => setNetwork("xiaomi")}>{t.charging.filterXiaomi}</button>
+        <button type="button" aria-pressed={network === "partner"} className={chip(network === "partner")} onClick={() => setNetwork("partner")}>{t.charging.filterPartner}</button>
         <select value={cityId} onChange={(e) => setCityId(e.target.value)} className="h-9 rounded-pill border border-line bg-white pl-3 pr-9 text-sm focus:border-ink focus:outline-none" aria-label={t.forms.city}>
           <option value="all">{locale === "zh" ? "全部城市 / 高速" : "All cities / corridors"}</option>
           {cityOptions.map((c) => (
@@ -89,8 +103,15 @@ export function StationFinder({ cities }: { cities: City[] }) {
         {filtered.length} {locale === "zh" ? "个站点" : "stations"} · {totals.available}/{totals.stalls} {t.charging.available}
       </p>
 
+      {error && stations.length === 0 ? (
+        <div role="alert" className="mt-6 flex flex-col items-center gap-3 rounded-3xl bg-mist p-10 text-center text-slate">
+          <p>{t.common.error}</p>
+          <Button size="sm" variant="secondary" onClick={() => void load()}>{t.common.retry}</Button>
+        </div>
+      ) : null}
+
       <ul className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {(loading && stations.length === 0 ? Array.from({ length: 6 }) : filtered).map((s, i) => {
+        {(loading && stations.length === 0 && !error ? Array.from({ length: 6 }) : filtered.slice(0, visible)).map((s, i) => {
           if (!s) return <li key={i} className="h-52 animate-pulse rounded-3xl bg-mist" />;
           const st = s as LiveStation;
           const ratio = st.live.available / Math.max(1, st.stalls);
@@ -128,7 +149,14 @@ export function StationFinder({ cities }: { cities: City[] }) {
           );
         })}
       </ul>
-      {!loading && filtered.length === 0 ? <p className="mt-6 rounded-3xl bg-mist p-10 text-center text-slate">{t.vehicles.noResults}</p> : null}
+      {!loading && !error && filtered.length === 0 ? <p className="mt-6 rounded-3xl bg-mist p-10 text-center text-slate">{t.vehicles.noResults}</p> : null}
+      {filtered.length > visible ? (
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <Button variant="secondary" onClick={() => setVisible((v) => v + PAGE_SIZE)}>
+            {locale === "zh" ? `加载更多（还有 ${filtered.length - visible} 个）` : `Load more (${filtered.length - visible} remaining)`}
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

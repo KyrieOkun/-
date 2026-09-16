@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/provider";
@@ -29,12 +30,33 @@ export interface ExplorerVehicle {
 }
 
 type Sort = "default" | "priceAsc" | "priceDesc" | "range" | "accel";
+type BrandFilter = "all" | "xiaomi" | "tesla";
+type BodyFilter = "all" | "sedan" | "suv" | "truck" | "performance";
+
+const BRANDS: BrandFilter[] = ["all", "xiaomi", "tesla"];
+const BODIES: BodyFilter[] = ["all", "sedan", "suv", "truck", "performance"];
+const SORTS: Sort[] = ["default", "priceAsc", "priceDesc", "range", "accel"];
+
+function pickParam<T extends string>(value: string | null, allowed: T[], fallback: T): T {
+  return allowed.includes(value as T) ? (value as T) : fallback;
+}
 
 export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
   const { t, pick, locale } = useI18n();
-  const [brand, setBrand] = useState<"all" | "xiaomi" | "tesla">("all");
-  const [body, setBody] = useState<"all" | "sedan" | "suv" | "truck" | "performance">("all");
-  const [sort, setSort] = useState<Sort>("default");
+  const params = useSearchParams();
+  const [brand, setBrand] = useState<BrandFilter>(() => pickParam(params.get("brand"), BRANDS, "all"));
+  const [body, setBody] = useState<BodyFilter>(() => pickParam(params.get("body"), BODIES, "all"));
+  const [sort, setSort] = useState<Sort>(() => pickParam(params.get("sort"), SORTS, "default"));
+
+  // Keep filters shareable and stable across back/forward without triggering navigation.
+  useEffect(() => {
+    const qs = new URLSearchParams();
+    if (brand !== "all") qs.set("brand", brand);
+    if (body !== "all") qs.set("body", body);
+    if (sort !== "default") qs.set("sort", sort);
+    const search = qs.toString();
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}${search ? `?${search}` : ""}`);
+  }, [brand, body, sort]);
 
   const list = useMemo(() => {
     let out = vehicles.filter((v) => (brand === "all" ? true : v.brand === brand));
@@ -69,16 +91,16 @@ export function VehicleExplorer({ vehicles }: { vehicles: ExplorerVehicle[] }) {
       <div className="sticky top-14 z-30 -mx-5 border-b border-line bg-white/85 px-5 py-3 backdrop-blur sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
         <div className="flex flex-wrap items-center gap-2">
           <span className="mr-1 hidden text-xs font-semibold uppercase tracking-wider text-ash sm:inline">{t.vehicles.brandFilter}</span>
-          <button className={chip(brand === "all")} onClick={() => setBrand("all")}>{t.common.all}</button>
-          <button className={chip(brand === "xiaomi")} onClick={() => setBrand("xiaomi")}>{t.nav.xiaomi}</button>
-          <button className={chip(brand === "tesla")} onClick={() => setBrand("tesla")}>{t.nav.tesla}</button>
+          <button type="button" aria-pressed={brand === "all"} className={chip(brand === "all")} onClick={() => setBrand("all")}>{t.common.all}</button>
+          <button type="button" aria-pressed={brand === "xiaomi"} className={chip(brand === "xiaomi")} onClick={() => setBrand("xiaomi")}>{t.nav.xiaomi}</button>
+          <button type="button" aria-pressed={brand === "tesla"} className={chip(brand === "tesla")} onClick={() => setBrand("tesla")}>{t.nav.tesla}</button>
           <span className="mx-2 hidden h-5 w-px bg-line sm:block" />
           <span className="mr-1 hidden text-xs font-semibold uppercase tracking-wider text-ash sm:inline">{t.vehicles.bodyFilter}</span>
-          <button className={chip(body === "all")} onClick={() => setBody("all")}>{t.common.all}</button>
-          <button className={chip(body === "sedan")} onClick={() => setBody("sedan")}>{t.vehicles.sedan}</button>
-          <button className={chip(body === "suv")} onClick={() => setBody("suv")}>{t.vehicles.suv}</button>
-          <button className={chip(body === "truck")} onClick={() => setBody("truck")}>{t.vehicles.truck}</button>
-          <button className={chip(body === "performance")} onClick={() => setBody("performance")}>{t.vehicles.performance}</button>
+          <button type="button" aria-pressed={body === "all"} className={chip(body === "all")} onClick={() => setBody("all")}>{t.common.all}</button>
+          <button type="button" aria-pressed={body === "sedan"} className={chip(body === "sedan")} onClick={() => setBody("sedan")}>{t.vehicles.sedan}</button>
+          <button type="button" aria-pressed={body === "suv"} className={chip(body === "suv")} onClick={() => setBody("suv")}>{t.vehicles.suv}</button>
+          <button type="button" aria-pressed={body === "truck"} className={chip(body === "truck")} onClick={() => setBody("truck")}>{t.vehicles.truck}</button>
+          <button type="button" aria-pressed={body === "performance"} className={chip(body === "performance")} onClick={() => setBody("performance")}>{t.vehicles.performance}</button>
           <div className="ml-auto flex items-center gap-2">
             <label htmlFor="sort" className="text-xs font-semibold uppercase tracking-wider text-ash">{t.vehicles.sortBy}</label>
             <select id="sort" value={sort} onChange={(e) => setSort(e.target.value as Sort)} className="h-9 rounded-pill border border-line bg-white pl-3 pr-9 text-sm focus:border-ink focus:outline-none">

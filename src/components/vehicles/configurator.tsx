@@ -21,9 +21,9 @@ import {
 } from "@/lib/pricing";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/primitives";
+import { saveBuild } from "@/lib/saved-builds";
 import { InteriorSwatch, PaintPanel, PaintSwatch, WheelGlyph } from "./swatches";
-
-const SAVED_KEY = "mta:saved-configs";
+import { SavedBuilds } from "./saved-builds";
 
 export function Configurator({ vehicle }: { vehicle: Vehicle }) {
   const { t, pick, locale } = useI18n();
@@ -63,10 +63,8 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
 
   const saveConfig = () => {
     try {
-      const existing = JSON.parse(localStorage.getItem(SAVED_KEY) ?? "[]") as unknown[];
-      const entry = { vehicle: vehicle.slug, selection, total: quote.total, savedAt: new Date().toISOString() };
-      localStorage.setItem(SAVED_KEY, JSON.stringify([entry, ...existing].slice(0, 20)));
-      setToast(locale === "zh" ? "配置已保存到本地" : "Configuration saved");
+      saveBuild({ vehicle: vehicle.slug, selection, total: quote.total });
+      setToast(locale === "zh" ? "配置已保存到本设备" : "Configuration saved on this device");
     } catch {
       setToast(t.common.error);
     }
@@ -235,7 +233,7 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
                   )}
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">{pick(w.name)}</p>
-                    <p className="text-xs text-slate">{w.price === 0 ? t.common.included : `+${formatCNY(w.price)}`}{w.rangeDeltaKm ? ` · ${w.rangeDeltaKm} km` : ""}</p>
+                    <p className="text-xs text-slate">{w.price === 0 ? t.common.included : `+${formatCNY(w.price)}`}{w.rangeDeltaKm ? ` · ${w.rangeDeltaKm > 0 ? "+" : ""}${w.rangeDeltaKm} km ${t.configurator.range}` : ""}</p>
                   </div>
                 </button>
               );
@@ -339,6 +337,21 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
             <Link href={`/test-drive?vehicle=${vehicle.slug}`} className="text-center text-sm text-graphite underline-offset-4 hover:underline">{t.nav.testDrive}</Link>
           </div>
           <p className="mt-4 text-[11px] leading-5 text-ash">{t.common.officialNote}</p>
+        </section>
+
+        <section className="mt-8" aria-labelledby="saved-builds-title">
+          <h2 id="saved-builds-title" className="text-lg font-semibold">{locale === "zh" ? "已保存的配置" : "Saved builds"}</h2>
+          <SavedBuilds
+            className="mt-4"
+            vehicles={[vehicle]}
+            vehicleSlug={vehicle.slug}
+            emptyHint={false}
+            onLoad={(sel) => {
+              setSelection(normalizeSelection(vehicle, sel));
+              setToast(locale === "zh" ? "已载入配置" : "Build loaded");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
         </section>
       </div>
 

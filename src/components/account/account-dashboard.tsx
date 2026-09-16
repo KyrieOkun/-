@@ -13,6 +13,7 @@ import { cn, formatCNY, formatDateTime, maskPhone } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/primitives";
 import { useUser } from "@/components/auth/auth-gate";
+import { SavedBuilds } from "@/components/vehicles/saved-builds";
 
 export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
   const { t, pick, locale } = useI18n();
@@ -60,7 +61,7 @@ export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
         </div>
 
         <div className="rounded-3xl bg-white p-6 hairline">
-          <h3 className="flex items-center gap-2 font-semibold"><ShieldCheck className="size-4" />{locale === "zh" ? "账号绑定" : "Linked accounts"}</h3>
+          <h2 className="flex items-center gap-2 font-semibold"><ShieldCheck className="size-4" />{locale === "zh" ? "账号绑定" : "Linked accounts"}</h2>
           <p className="mt-1 text-xs text-slate">{t.account.oneIdBody}</p>
           <div className="mt-4 space-y-3">
             {(["xiaomi", "tesla"] as const).map((p) => {
@@ -103,7 +104,7 @@ export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
       <div className="space-y-8">
         <section>
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold">{t.account.orders}</h3>
+            <h2 className="text-lg font-semibold">{t.account.orders}</h2>
             <Link href="/order" className="text-sm text-graphite underline-offset-4 hover:underline">{t.nav.order}</Link>
           </div>
           {orders.length === 0 ? (
@@ -131,8 +132,17 @@ export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
           )}
         </section>
 
+        <section>
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">{locale === "zh" ? "已保存的配置" : "Saved builds"}</h2>
+            <Link href="/vehicles" className="text-sm text-graphite underline-offset-4 hover:underline">{t.nav.design}</Link>
+          </div>
+          <p className="mt-1 text-xs text-slate">{locale === "zh" ? "保存在本设备浏览器中，可随时继续选配或直接定购。" : "Stored in this browser; resume the build or order it directly."}</p>
+          <SavedBuilds className="mt-4" vehicles={vehicles} />
+        </section>
+
         <section className="rounded-3xl bg-cloud p-6 hairline">
-          <h3 className="text-lg font-semibold">{locale === "zh" ? "隐私中心" : "Privacy centre"}</h3>
+          <h2 className="text-lg font-semibold">{locale === "zh" ? "隐私中心" : "Privacy centre"}</h2>
           <p className="mt-2 text-sm leading-6 text-slate">{locale === "zh" ? "您可以随时导出或删除账户数据。撤销品牌账号授权后，相关车辆数据将在 30 天内删除。" : "Export or delete your data at any time. After revoking a brand authorisation, related vehicle data is deleted within 30 days."}</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button href="/legal/privacy" variant="outline" size="sm">{t.footer.privacy}</Button>

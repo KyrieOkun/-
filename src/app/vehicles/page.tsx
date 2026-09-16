@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getI18n } from "@/lib/i18n/server";
 import { vehicles, getBestAccel, getMaxRange, getStartingPrice } from "@/data/vehicles";
-import { Container, Eyebrow } from "@/components/ui/primitives";
+import { Container, Eyebrow, Skeleton } from "@/components/ui/primitives";
 import { VehicleExplorer, type ExplorerVehicle } from "@/components/vehicles/vehicle-explorer";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,7 +41,9 @@ export default async function VehiclesPage() {
         </Container>
       </section>
       <Container className="pb-24">
-        <VehicleExplorer vehicles={list} />
+        <Suspense fallback={<Skeleton className="mt-8 h-[60vh] w-full" />}>
+          <VehicleExplorer vehicles={list} />
+        </Suspense>
         <p className="mt-12 text-xs leading-5 text-ash">{t.common.officialNote}</p>
       </Container>
     </div>
