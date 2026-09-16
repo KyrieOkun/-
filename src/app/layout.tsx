@@ -65,13 +65,22 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     availability: v.availability,
   }));
   const footerVehicles = vehicles.map((v) => ({ slug: v.slug, brand: v.brand, name: pick(v.name, locale) }));
+  // Routes whose first section is a full-bleed hero: lets the header render
+  // transparent on the server so there is no solid-to-transparent flash.
+  const heroRoutes: Record<string, "overlay" | "overlay-dark"> = {
+    "/": "overlay",
+    "/charging": "overlay",
+    "/connect": "overlay",
+    "/atelier": "overlay",
+    ...Object.fromEntries(vehicles.map((v) => [`/vehicles/${v.slug}`, v.theme === "light" ? "overlay-dark" : "overlay"])),
+  };
 
   return (
     <html lang={localeToLang(locale)} suppressHydrationWarning>
       <body className="min-h-dvh flex flex-col">
         <LocaleProvider locale={locale}>
           <HeaderThemeProvider>
-            <SiteHeader vehicles={headerVehicles} user={user ? { name: user.name } : null} />
+            <SiteHeader vehicles={headerVehicles} user={user ? { name: user.name } : null} heroRoutes={heroRoutes} />
             <main id="main" className="flex-1">
               {children}
             </main>

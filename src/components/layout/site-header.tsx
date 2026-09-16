@@ -28,12 +28,15 @@ export interface HeaderUser {
 interface Props {
   vehicles: HeaderVehicle[];
   user: HeaderUser | null;
+  /** Server-known hero routes so the very first paint is already transparent. */
+  heroRoutes?: Record<string, "overlay" | "overlay-dark">;
 }
 
-export function SiteHeader({ vehicles, user }: Props) {
+export function SiteHeader({ vehicles, user, heroRoutes }: Props) {
   const { t, locale, pick, setLocale } = useI18n();
-  const { mode } = useHeaderTheme();
+  const { mode: contextMode } = useHeaderTheme();
   const pathname = usePathname();
+  const mode = contextMode !== "solid" ? contextMode : heroRoutes?.[pathname] ?? "solid";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState<null | "vehicles" | "connect" | "discover">(null);
