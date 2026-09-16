@@ -26,7 +26,7 @@ export default async function ChargingPage() {
   return (
     <div>
       <HeroOverlay />
-      <section className="relative flex min-h-[86svh] flex-col overflow-hidden bg-carbon text-white">
+      <section className="relative flex min-h-[78svh] flex-col overflow-hidden bg-carbon text-white">
         <Image src="/images/charging/hero.jpg" alt={t.charging.subtitle} fill priority sizes="100vw" className="object-cover" />
         <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-1/2" />
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-2/3" />
@@ -40,7 +40,12 @@ export default async function ChargingPage() {
               <Button href="/connect/trip-planner" variant="glass" size="lg" className="sm:w-56">{t.connect.trip}</Button>
             </div>
           </div>
-          <dl className="mt-14 grid grid-cols-2 gap-6 border-t border-white/10 pt-8 md:grid-cols-3 lg:grid-cols-6">
+        </Container>
+      </section>
+      {/* Network figures on a solid band so they stay legible on every photo crop. */}
+      <section className="bg-carbon text-white">
+        <Container>
+          <dl className="grid grid-cols-2 gap-6 border-t border-white/10 py-10 md:grid-cols-3 lg:grid-cols-6">
             {networkStats.map((s) => (
               <div key={s.id}>
                 <dt className="text-2xl font-semibold tabular-nums sm:text-3xl">{locale === "en" && s.valueEn ? s.valueEn : s.value}</dt>
