@@ -17,6 +17,10 @@ export interface Trim {
   powerKw: number;
   powerPs: number;
   torqueNm?: number;
+  /** True when the published figure is wheel torque (Cybertruck), not motor torque. */
+  torqueAtWheels?: boolean;
+  /** Body dimensions that differ from the model (e.g. long-wheelbase Model Y L). */
+  dimensions?: Partial<{ length: number; width: number; height: number; wheelbase: number }>;
   batteryKwh: number;
   batteryType: L10n;
   rangeKm: number;
@@ -127,7 +131,7 @@ export interface Vehicle {
   heroPaintId?: string;
   images: VehicleImage[];
   theme: "dark" | "light";
-  highlights: { value: string; unit?: string; label: L10n }[];
+  highlights: { value: string; unit?: string | L10n; label: L10n }[];
   trims: Trim[];
   paints: PaintOption[];
   wheels: WheelOption[];

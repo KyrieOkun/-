@@ -4,6 +4,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { CheckCircle2, Wrench } from "lucide-react";
 import type { VehicleSummary } from "@/data/types";
 import type { Store } from "@/data/site";
+import { contact } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -184,8 +185,8 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: VehicleSum
         <h2 className="font-semibold">{zh ? "服务承诺" : "Service promise"}</h2>
         <ul className="mt-4 space-y-2 text-sm text-graphite">
           {(zh
-            ? ["全国 300+ 服务中心与移动服务车", "原厂配件、原厂标准工时", "维保进度实时推送到账户与 App", "24 小时道路救援 400-800-0000"]
-            : ["300+ service centres and mobile vans", "Genuine parts, factory labour standards", "Live progress in your account and app", "24h roadside assistance 400-800-0000"]
+            ? ["全国 300+ 服务与交付中心（含合作网络）及移动服务车", "原厂配件、原厂标准工时", "维保进度实时推送到账户与 App", `24 小时道路救援 ${contact.roadside}`]
+            : ["300+ service and delivery centres (incl. partners) plus mobile vans", "Genuine parts, factory labour standards", "Live progress in your account and app", `24h roadside assistance ${contact.roadside}`]
           ).map((s) => (
             <li key={s} className="flex gap-2"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-success" />{s}</li>
           ))}

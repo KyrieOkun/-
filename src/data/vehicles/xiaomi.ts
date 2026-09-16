@@ -216,7 +216,7 @@ export const xiaomiSU7: Vehicle = {
       rows: [
         { label: l("安全气囊", "Airbags"), value: l("9 气囊（含前排中央、远端气囊）", "9 airbags incl. far-side") },
         { label: l("车身", "Body"), value: l("2000 MPa 超高强钢 + 一体化压铸后地板", "2,000 MPa steel + one-piece cast rear floor") },
-        { label: l("评级", "Rating"), value: "C-NCAP 2024 五星 · 93.5%" },
+        { label: l("评级", "Rating"), value: l("C-NCAP 2024 五星 · 93.5%", "C-NCAP 2024 five stars · 93.5%") },
       ],
     },
   ],
@@ -704,8 +704,8 @@ export const xiaomiYU7GT: Vehicle = {
   series: l("YU7 GT", "YU7 GT"),
   tagline: l("适合长途旅行的跑车级 SUV", "The grand-touring SUV"),
   description: l(
-    "2026 年 5 月 21 日上市，搭载小米 V8s EVO 超级电机与自研碳化硅功率模块，738 kW / 990 PS，2.92 秒破百，最高 300 km/h，CLTC 705 公里。纽北 SUV 圈速纪录 7:22.755。",
-    "Launched 21 May 2026 with Xiaomi V8s EVO motors and in-house SiC power modules: 738 kW / 990 PS, 0–100 km/h in 2.92 s, 300 km/h and 705 km CLTC. Holder of the Nürburgring SUV lap record at 7:22.755.",
+    "2026 年 5 月 21 日上市，搭载小米 V8s EVO 超级电机与自研碳化硅功率模块，738 kW（1003 PS），2.92 秒破百，最高 300 km/h，CLTC 705 公里。纽北 SUV 圈速纪录 7:22.755。",
+    "Launched 21 May 2026 with Xiaomi V8s EVO motors and in-house SiC power modules: 738 kW (1003 PS), 0–100 km/h in 2.92 s, 300 km/h and 705 km CLTC. Holder of the Nürburgring SUV lap record at 7:22.755.",
   ),
   bodyType: "suv",
   powertrain: "bev",
@@ -722,7 +722,7 @@ export const xiaomiYU7GT: Vehicle = {
   ],
   theme: "dark",
   highlights: [
-    { value: "990", unit: "PS", label: l("最大马力", "Peak output") },
+    { value: "1003", unit: "PS", label: l("最大马力（738 kW）", "Peak output (738 kW)") },
     { value: "2.92", unit: "s", label: l("零百加速", "0–100 km/h") },
     { value: "705", unit: "km", label: l("CLTC 续航", "CLTC range") },
     { value: "7:22.755", label: l("纽北 SUV 圈速纪录", "Nürburgring SUV record") },
@@ -854,7 +854,7 @@ export const xiaomiYU7GT: Vehicle = {
     { icon: "armchair", title: l("GT 座舱", "GT cabin"), body: l("Alcantara、碳纤维与零重力座椅。", "Alcantara, carbon fibre and zero-gravity seats.") },
     { icon: "cpu", title: l("自动驾驶纽北", "Autonomous Nürburgring"), body: l("全球首个自动驾驶纽北圈速纪录。", "World's first autonomous Nürburgring lap record.") },
   ],
-  tags: [l("990 PS", "990 PS"), l("2.92 s", "2.92 s"), l("纽北 SUV 纪录", "SUV record")],
+  tags: [l("738 kW", "738 kW"), l("2.92 s", "2.92 s"), l("纽北 SUV 纪录", "SUV record")],
   order: 4,
 };
 

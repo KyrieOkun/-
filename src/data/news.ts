@@ -91,7 +91,7 @@ export const articles: Article[] = [
     body: [
       l("新一代 SU7 定位「新一代驾驶者之车」，全系换装 HyperEngine V6s Plus 电机；标准版与 Pro 版升级至 752V 高压平台，Max 版进入 897V「准 900V」时代。电池分别为 73 kWh 磷酸铁锂、96.3 kWh 磷酸铁锂与 101.7 kWh 麒麟三元锂。", "Positioned as 'the driver's car, reimagined', the new SU7 moves every trim to HyperEngine V6s Plus motors; Standard and Pro adopt a 752 V platform while Max reaches 897 V. Batteries are 73 kWh LFP, 96.3 kWh LFP and 101.7 kWh Qilin NMC."),
       l("智驾平权：标准版即标配激光雷达、4D 毫米波雷达与 700 TOPS 英伟达 Thor 芯片，端到端城市 NOA 全系可用。安全升级包括门锁备用电源、半隐藏机械门把手、9 气囊与全系前四活塞卡钳。", "ADAS parity: even the Standard gets LiDAR, 4D radar and a 700 TOPS NVIDIA Thor computer, with end-to-end urban NOA available across the range. Safety upgrades include door-lock backup power, semi-hidden mechanical handles, nine airbags and four-piston front calipers on every trim."),
-      l("外观新增卡布里蓝、赤霞红、靛石绿三款专属色，共 9 色车漆、5 款内饰、6 款轮毂，Max 版另有卡布里蓝特别版内饰。", "Three new exclusive paints — Capri Blue, Chixia Red and Indigo Stone Green — bring the palette to nine, with five interiors and six wheels; Max adds a Capri Blue special-edition interior."),
+      l("外观新增卡布里蓝、赤霞红、靛石绿三款专属色，共 8 色车漆、5 款内饰、6 款轮毂，Max 版另有卡布里蓝特别版内饰。", "Three new exclusive paints — Capri Blue, Chixia Red and Indigo Stone Green — bring the palette to eight, with five interiors and six wheels; Max adds a Capri Blue special-edition interior."),
     ],
     related: ["yu7-gt-launch", "atelier-launch"],
   },

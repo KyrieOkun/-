@@ -103,7 +103,7 @@ export default async function VehiclePage({ params }: Params) {
           </Reveal>
           <Reveal delay={120} className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
             {vehicle.highlights.map((h) => (
-              <Stat key={h.label.zh} value={h.value} unit={h.unit} label={pick(h.label, locale)} tone={light ? "dark" : "light"} />
+              <Stat key={h.label.zh} value={h.value} unit={typeof h.unit === "string" ? h.unit : h.unit ? pick(h.unit, locale) : undefined} label={pick(h.label, locale)} tone={light ? "dark" : "light"} />
             ))}
           </Reveal>
           <Reveal delay={200} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
