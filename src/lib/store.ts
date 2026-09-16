@@ -21,6 +21,7 @@ export type Collection =
 
 interface Driver {
   get<T>(key: string): Promise<T | null>;
+  mget<T>(keys: string[]): Promise<(T | null)[]>;
   set<T>(key: string, value: T, ttlSeconds?: number): Promise<void>;
   del(key: string): Promise<void>;
   sadd(key: string, member: string): Promise<void>;
@@ -40,6 +41,9 @@ class MemoryDriver implements Driver {
       return null;
     }
     return entry.value as T;
+  }
+  async mget<T>(keys: string[]): Promise<(T | null)[]> {
+    return Promise.all(keys.map((k) => this.get<T>(k)));
   }
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
     this.data.set(key, { value, expiresAt: ttlSeconds ? Date.now() + ttlSeconds * 1000 : undefined });
@@ -78,6 +82,11 @@ class UpstashDriver implements Driver {
   async get<T>(key: string): Promise<T | null> {
     const raw = await this.command<string | null>("GET", key);
     return raw ? (JSON.parse(raw) as T) : null;
+  }
+  async mget<T>(keys: string[]): Promise<(T | null)[]> {
+    if (keys.length === 0) return [];
+    const raw = await this.command<(string | null)[]>("MGET", ...keys);
+    return (raw ?? []).map((r) => (r ? (JSON.parse(r) as T) : null));
   }
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
     const payload = JSON.stringify(value);
@@ -143,8 +152,8 @@ export const store = {
 
   async list<T>(col: Collection, owner?: string): Promise<T[]> {
     const ids = await driver().smembers(indexKey(col, owner));
-    const docs: (T | null)[] = [];
-    for (const id of ids) docs.push(await driver().get<T>(docKey(col, id)));
+    // One round-trip instead of N sequential GETs (matters for the Redis REST driver).
+    const docs = await driver().mget<T>(ids.map((id) => docKey(col, id)));
     return docs.filter((d): d is T => d !== null);
   },
 

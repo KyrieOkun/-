@@ -83,6 +83,21 @@ export function defaultSelection(vehicle: ClientVehicle, trimId?: string): Vehic
 }
 
 /** Coerces a possibly-invalid selection (e.g. after a trim change) into a valid one. */
+/** Keeps the first of any mutually exclusive pair (callers that add an option remove its rivals first). */
+function dedupeExclusive(ids: string[], extras: ExtraOption[]): string[] {
+  const kept: string[] = [];
+  for (const id of ids) {
+    if (kept.includes(id)) continue;
+    const option = extras.find((e) => e.id === id);
+    const conflicts = kept.some((k) => {
+      const other = extras.find((e) => e.id === k);
+      return option?.excludes?.includes(k) || other?.excludes?.includes(id);
+    });
+    if (!conflicts) kept.push(id);
+  }
+  return kept;
+}
+
 export function normalizeSelection(vehicle: ClientVehicle, selection: Partial<VehicleSelection>): VehicleSelection {
   const trim = vehicle.trims.find((t) => t.id === selection.trimId) ?? vehicle.trims[0];
   const base = defaultSelection(vehicle, trim.id);
@@ -95,7 +110,10 @@ export function normalizeSelection(vehicle: ClientVehicle, selection: Partial<Ve
     paintId: paints.some((p) => p.id === selection.paintId) ? (selection.paintId as string) : base.paintId,
     wheelId: wheels.some((w) => w.id === selection.wheelId) ? (selection.wheelId as string) : base.wheelId,
     interiorId: interiors.some((i) => i.id === selection.interiorId) ? (selection.interiorId as string) : base.interiorId,
-    extraIds: (selection.extraIds ?? []).filter((id) => extras.some((e) => e.id === id && !isIncludedInTrim(e, trim.id))),
+    extraIds: dedupeExclusive(
+      (selection.extraIds ?? []).filter((id) => extras.some((e) => e.id === id && !isIncludedInTrim(e, trim.id))),
+      extras,
+    ),
   };
 }
 

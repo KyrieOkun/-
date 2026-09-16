@@ -1,3 +1,4 @@
+import { useId } from "react";
 import type { InteriorOption, PaintOption, WheelOption } from "@/data/types";
 import { cn } from "@/lib/utils";
 
@@ -54,21 +55,22 @@ export function WheelGlyph({ wheel, size = 56, selected, className }: { wheel: W
   const spokes = wheel.style === "aero" ? 5 : wheel.style === "sport" ? 10 : wheel.style === "forged" ? 7 : 6;
   const spokeWidth = wheel.style === "aero" ? 14 : wheel.style === "forged" ? 6 : 8;
   const rimStroke = wheel.style === "aero" ? "#c9ccd1" : "#a3a7ad";
+  const uid = useId();
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden className={cn("shrink-0 transition-transform", selected && "scale-105", className)}>
       <defs>
-        <radialGradient id={`tyre-${wheel.id}`} cx="50%" cy="50%" r="50%">
+        <radialGradient id={`tyre-${uid}`} cx="50%" cy="50%" r="50%">
           <stop offset="70%" stopColor="#2a2b2f" />
           <stop offset="100%" stopColor="#0f1012" />
         </radialGradient>
-        <linearGradient id={`rim-${wheel.id}`} x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={`rim-${uid}`} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#f4f5f7" />
           <stop offset="55%" stopColor={rimStroke} />
           <stop offset="100%" stopColor="#5f6368" />
         </linearGradient>
       </defs>
-      <circle cx="50" cy="50" r="48" fill={`url(#tyre-${wheel.id})`} />
-      <circle cx="50" cy="50" r={wheel.size >= 21 ? 40 : wheel.size >= 20 ? 37 : 34} fill={`url(#rim-${wheel.id})`} />
+      <circle cx="50" cy="50" r="48" fill={`url(#tyre-${uid})`} />
+      <circle cx="50" cy="50" r={wheel.size >= 21 ? 40 : wheel.size >= 20 ? 37 : 34} fill={`url(#rim-${uid})`} />
       <circle cx="50" cy="50" r={wheel.size >= 21 ? 34 : wheel.size >= 20 ? 31 : 28} fill="#1b1c20" />
       {Array.from({ length: spokes }).map((_, i) => (
         <rect
@@ -78,7 +80,7 @@ export function WheelGlyph({ wheel, size = 56, selected, className }: { wheel: W
           width={spokeWidth}
           height="34"
           rx={spokeWidth / 2}
-          fill={`url(#rim-${wheel.id})`}
+          fill={`url(#rim-${uid})`}
           transform={`rotate(${(360 / spokes) * i} 50 50)`}
         />
       ))}

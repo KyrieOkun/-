@@ -84,6 +84,8 @@ export interface ExtraOption {
   category: ExtraCategory;
   trims?: string[];
   includedIn?: string[];
+  /** Options that cannot be combined with this one (e.g. FSD supersedes EAP, 6- vs 7-seat). */
+  excludes?: string[];
 }
 
 export interface SpecRow {

@@ -57,7 +57,14 @@ export function SceneBuilder() {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) setScenes(JSON.parse(raw) as Scene[]);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as unknown;
+      if (Array.isArray(parsed)) {
+        const valid = parsed.filter(
+          (x): x is Scene => !!x && typeof x === "object" && typeof (x as Scene).id === "string" && typeof (x as Scene).name === "string" && Array.isArray((x as Scene).actions),
+        );
+        if (valid.length) setScenes(valid);
+      }
     } catch {
       /* ignore */
     }

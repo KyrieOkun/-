@@ -39,15 +39,15 @@ const teslaInteriors = (opts: { cream?: boolean; images?: Record<string, string>
 ];
 
 const teslaExtras = (opts: { homeCharging?: boolean; sevenSeat?: boolean } = { homeCharging: true }): ExtraOption[] => [
-  { id: "eap", name: l("增强版自动辅助驾驶功能", "Enhanced Autopilot"), description: l("自动辅助导航驾驶、自动辅助变道、自动泊车、智能召唤", "Navigate on Autopilot, Auto Lane Change, Autopark, Smart Summon"), price: 32000, category: "adas" },
-  { id: "fsd", name: l("完全自动驾驶能力（FSD 智能辅助驾驶）", "Full Self-Driving (Supervised)"), description: l("含增强版自动辅助驾驶全部功能，城市街道智能辅助驾驶持续 OTA 推送", "Includes Enhanced Autopilot; city-streets capability delivered via OTA"), price: 64000, category: "adas" },
+  { id: "eap", name: l("增强版自动辅助驾驶功能", "Enhanced Autopilot"), description: l("自动辅助导航驾驶、自动辅助变道、自动泊车、智能召唤", "Navigate on Autopilot, Auto Lane Change, Autopark, Smart Summon"), price: 32000, category: "adas", excludes: ["fsd"] },
+  { id: "fsd", name: l("完全自动驾驶能力（FSD 智能辅助驾驶）", "Full Self-Driving (Supervised)"), description: l("含增强版自动辅助驾驶全部功能，城市街道智能辅助驾驶持续 OTA 推送", "Includes Enhanced Autopilot; city-streets capability delivered via OTA"), price: 64000, category: "adas", excludes: ["eap"] },
   ...(opts.homeCharging
     ? [{ id: "wall-connector", name: l("家庭充电服务包", "Home charging package"), description: l("第三代壁挂式充电连接器 + 标准安装", "Gen 3 Wall Connector + standard installation"), price: 8000, category: "charging" as const }]
     : []),
   ...(opts.sevenSeat
     ? [
-        { id: "six-seat", name: l("六座布局", "Six-seat interior"), description: l("第二排独立座椅 + 中央通道", "Independent second-row captain's chairs"), price: 52000, category: "comfort" as const },
-        { id: "seven-seat", name: l("七座布局", "Seven-seat interior"), description: l("2+3+2 布局", "2+3+2 layout"), price: 26000, category: "comfort" as const },
+        { id: "six-seat", name: l("六座布局", "Six-seat interior"), description: l("第二排独立座椅 + 中央通道", "Independent second-row captain's chairs"), price: 52000, category: "comfort" as const, excludes: ["seven-seat"] },
+        { id: "seven-seat", name: l("七座布局", "Seven-seat interior"), description: l("2+3+2 布局", "2+3+2 layout"), price: 26000, category: "comfort" as const, excludes: ["six-seat"] },
       ]
     : []),
   { id: "premium-connectivity", name: l("高级车载娱乐服务包（1 年）", "Premium Connectivity (1 year)"), description: l("实时路况、卡拉 OK、视频流媒体、网页浏览", "Live traffic, karaoke, video streaming, browser"), price: 1188, category: "service" },
