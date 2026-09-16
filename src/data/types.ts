@@ -143,6 +143,19 @@ export interface Vehicle {
   order: number;
 }
 
+/**
+ * Vehicle without the long-form content (specs tables, feature blocks, gallery,
+ * marketing copy). Client components receive this shape so pages that list
+ * every vehicle don't ship ~15 KB of prose per car in the RSC payload.
+ */
+export type ClientVehicle = Omit<Vehicle, "specs" | "features" | "images" | "description" | "highlights" | "tags">;
+
+export function toClientVehicle(vehicle: Vehicle): ClientVehicle {
+  const { specs: _specs, features: _features, images: _images, description: _description, highlights: _highlights, tags: _tags, ...rest } = vehicle;
+  void _specs; void _features; void _images; void _description; void _highlights; void _tags;
+  return rest;
+}
+
 export interface VehicleSelection {
   trimId: string;
   paintId: string;

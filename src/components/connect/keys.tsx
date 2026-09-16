@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { KeyRound, Smartphone, Watch, Copy, Check } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { GarageVehicle } from "@/lib/garage";
 import type { SharedKey } from "@/lib/orders";
 import { apiFetch } from "@/lib/client";
@@ -11,7 +11,7 @@ import { cn, formatDate, isValidCNPhone, isValidEmail } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge, FieldError, Input, Label, Select } from "@/components/ui/primitives";
 
-export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
+export function Keys({ vehicles }: { vehicles: ClientVehicle[] }) {
   const { t, pick, locale } = useI18n();
   const [garage, setGarage] = useState<GarageVehicle[]>([]);
   const [keys, setKeys] = useState<SharedKey[]>([]);

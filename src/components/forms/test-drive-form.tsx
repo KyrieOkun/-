@@ -3,7 +3,7 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { Store } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
@@ -24,7 +24,7 @@ function nextDays(n: number): string[] {
   return out;
 }
 
-export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { vehicles: Vehicle[]; stores: Store[]; cities: City[]; initialVehicle?: string }) {
+export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { vehicles: ClientVehicle[]; stores: Store[]; cities: City[]; initialVehicle?: string }) {
   const { t, pick, locale } = useI18n();
   const orderable = vehicles.filter((v) => v.availability !== "overseas");
   const [vehicleSlug, setVehicleSlug] = useState(orderable.some((v) => v.slug === initialVehicle) ? (initialVehicle as string) : orderable[0].slug);

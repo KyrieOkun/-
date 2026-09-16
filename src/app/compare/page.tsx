@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getI18n } from "@/lib/i18n/server";
 import { vehicles } from "@/data/vehicles";
+import { toClientVehicle } from "@/data/types";
 import { Container, Eyebrow, Skeleton } from "@/components/ui/primitives";
 import { CompareTable } from "@/components/vehicles/compare-table";
 
@@ -23,7 +24,7 @@ export default async function ComparePage() {
       </section>
       <Container className="py-12 pb-24">
         <Suspense fallback={<Skeleton className="h-96 w-full" />}>
-          <CompareTable vehicles={vehicles} />
+          <CompareTable vehicles={vehicles.map(toClientVehicle)} />
         </Suspense>
         <p className="mt-10 text-xs leading-5 text-ash">{t.common.officialNote}</p>
       </Container>

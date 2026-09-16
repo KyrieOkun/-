@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { CheckCircle2 } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { AtelierProgram } from "@/data/site";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -10,7 +10,7 @@ import { cn, isValidCNPhone } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/primitives";
 
-export function ConsultationForm({ vehicles, programs }: { vehicles: Vehicle[]; programs: AtelierProgram[] }) {
+export function ConsultationForm({ vehicles, programs }: { vehicles: ClientVehicle[]; programs: AtelierProgram[] }) {
   const { t, pick, locale } = useI18n();
   const zh = locale === "zh";
   const [name, setName] = useState("");

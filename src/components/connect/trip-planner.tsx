@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState, type FormEvent } from "react";
 import { ArrowLeftRight, ArrowRight, Clock, Fuel, Navigation, PlugZap, Route as RouteIcon, Zap } from "lucide-react";
 import type { City } from "@/data/cities";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { TripPlan, TripError } from "@/lib/trip";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -15,7 +15,7 @@ import { NetworkMap, type MapStation } from "@/components/charging/network-map";
 
 const NETWORK_LABEL = { tesla: { zh: "特斯拉超充", en: "Tesla" }, xiaomi: { zh: "小米超充", en: "Xiaomi" }, partner: { zh: "合作网络", en: "Partner" } } as const;
 
-export function TripPlanner({ cities, majorCityIds, vehicles, initialVehicle, stations }: { cities: City[]; majorCityIds?: string[]; vehicles: Vehicle[]; initialVehicle?: string; stations: MapStation[] }) {
+export function TripPlanner({ cities, majorCityIds, vehicles, initialVehicle, stations }: { cities: City[]; majorCityIds?: string[]; vehicles: ClientVehicle[]; initialVehicle?: string; stations: MapStation[] }) {
   const { t, pick, locale } = useI18n();
   const [originId, setOriginId] = useState("beijing");
   const [destinationId, setDestinationId] = useState("shanghai");

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn, formatCNY, formatPriceHeadline } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,7 +17,7 @@ interface Slot {
 
 const MAX = 4;
 
-export function CompareTable({ vehicles }: { vehicles: Vehicle[] }) {
+export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
   const { t, pick, locale } = useI18n();
   const params = useSearchParams();
   const bySlug = useMemo(() => Object.fromEntries(vehicles.map((v) => [v.slug, v])), [vehicles]);

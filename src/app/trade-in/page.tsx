@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
 import { vehicles } from "@/data/vehicles";
+import { toClientVehicle } from "@/data/types";
 import { Container, Eyebrow } from "@/components/ui/primitives";
 import { TradeInForm } from "@/components/forms/trade-in-form";
 
@@ -21,7 +22,7 @@ export default async function TradeInPage() {
         </Container>
       </section>
       <Container className="py-12 pb-24">
-        <TradeInForm vehicles={vehicles} />
+        <TradeInForm vehicles={vehicles.map(toClientVehicle)} />
       </Container>
     </div>
   );

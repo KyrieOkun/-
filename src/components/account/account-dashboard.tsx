@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowRight, Link2, LogOut, ShieldCheck, Unlink } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { OrderRecord } from "@/lib/orders";
 import type { PublicUser } from "@/lib/auth";
 import { apiFetch } from "@/lib/client";
@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/primitives";
 import { useUser } from "@/components/auth/auth-gate";
 import { SavedBuilds } from "@/components/vehicles/saved-builds";
 
-export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
+export function AccountDashboard({ vehicles }: { vehicles: ClientVehicle[] }) {
   const { t, pick, locale } = useI18n();
   const { user, setUser } = useUser();
   const router = useRouter();

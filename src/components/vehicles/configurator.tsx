@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Check, Link2, Save, ChevronRight } from "lucide-react";
-import type { Vehicle, VehicleSelection } from "@/data/types";
+import type { ClientVehicle, VehicleSelection } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn, formatCNY, formatPriceHeadline } from "@/lib/utils";
 import {
@@ -25,7 +25,7 @@ import { saveBuild } from "@/lib/saved-builds";
 import { InteriorSwatch, PaintPanel, PaintSwatch, WheelGlyph } from "./swatches";
 import { SavedBuilds } from "./saved-builds";
 
-export function Configurator({ vehicle }: { vehicle: Vehicle }) {
+export function Configurator({ vehicle }: { vehicle: ClientVehicle }) {
   const { t, pick, locale } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();

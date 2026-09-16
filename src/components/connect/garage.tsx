@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { Battery, Car, Fan, Lock, LockOpen, MapPin, Plus, RefreshCw, Sun, Thermometer, Trash2, Zap, ZapOff, Lightbulb, ShieldCheck } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { GarageVehicle, VehicleStatus, GarageCommand } from "@/lib/garage";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -15,7 +15,7 @@ import { useUser } from "@/components/auth/auth-gate";
 
 type GarageEntry = GarageVehicle & { status: VehicleStatus };
 
-export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
+export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
   const { t, pick, locale } = useI18n();
   const { user } = useUser();
   const [entries, setEntries] = useState<GarageEntry[]>([]);
@@ -208,7 +208,7 @@ function Action({ icon, label, ariaLabel, onClick, active, disabled }: { icon: R
   );
 }
 
-function AddVehicleForm({ vehicles, onCancel, onAdded }: { vehicles: Vehicle[]; onCancel: () => void; onAdded: (entry: GarageEntry) => void }) {
+function AddVehicleForm({ vehicles, onCancel, onAdded }: { vehicles: ClientVehicle[]; onCancel: () => void; onAdded: (entry: GarageEntry) => void }) {
   const { t, pick, locale } = useI18n();
   const orderable = vehicles.filter((v) => v.availability !== "overseas");
   const [slug, setSlug] = useState(orderable[0].slug);
