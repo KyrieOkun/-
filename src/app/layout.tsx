@@ -37,7 +37,6 @@ export async function generateMetadata(): Promise<Metadata> {
     robots: { index: true, follow: true },
     icons: { icon: [{ url: "/icon.svg", type: "image/svg+xml" }], apple: "/apple-icon.png" },
     manifest: "/manifest.webmanifest",
-    alternates: { canonical: "/" },
     formatDetection: { telephone: false },
   };
 }
