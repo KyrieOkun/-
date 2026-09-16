@@ -31,6 +31,8 @@ interface Props {
   activeNetwork?: Network | "all";
   className?: string;
   compact?: boolean;
+  /** Draw the route as a faint dashed line (origin/destination chosen, not yet planned). */
+  preview?: boolean;
 }
 
 // Schematic projection of the mainland charging network (equirectangular,
@@ -51,7 +53,7 @@ function project(p: { lat: number; lng: number }): { x: number; y: number } {
 
 const COLOR: Record<Network, string> = { tesla: "#e82127", xiaomi: "#ff6900", partner: "#8e8e93" };
 
-export function NetworkMap({ stations, route, stops, activeNetwork = "all", className, compact }: Props) {
+export function NetworkMap({ stations, route, stops, activeNetwork = "all", className, compact, preview }: Props) {
   const { t, pick, locale } = useI18n();
   const [hover, setHover] = useState<MapStation | null>(null);
 
@@ -94,7 +96,10 @@ export function NetworkMap({ stations, route, stops, activeNetwork = "all", clas
         })}
 
         {/* Route */}
-        {routePts.length > 1 ? (
+        {routePts.length > 1 && preview ? (
+          <polyline points={routePts.map((r) => `${r.x},${r.y}`).join(" ")} fill="none" stroke="#ffffff" strokeWidth={1.5} strokeOpacity={0.45} strokeDasharray="6 8" strokeLinecap="round" strokeLinejoin="round" />
+        ) : null}
+        {routePts.length > 1 && !preview ? (
           <>
             <polyline points={routePts.map((r) => `${r.x},${r.y}`).join(" ")} fill="none" stroke="#ffffff" strokeWidth={10} strokeOpacity={0.25} strokeLinecap="round" strokeLinejoin="round" filter="url(#soft)" />
             <polyline points={routePts.map((r) => `${r.x},${r.y}`).join(" ")} fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" />

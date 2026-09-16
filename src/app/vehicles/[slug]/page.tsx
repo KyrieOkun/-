@@ -74,19 +74,23 @@ export default async function VehiclePage({ params }: Params) {
 
       {/* Hero */}
       <section className={`relative flex min-h-[100svh] flex-col overflow-hidden ${light ? "bg-mist text-ink" : "bg-carbon text-white"}`}>
-        <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt, locale)} fill priority sizes="100vw" className="object-cover" />
-        {light ? (
-          <>
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-white/70 via-white/25 to-transparent" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-white/90 via-white/45 to-transparent" />
-          </>
-        ) : (
-          <>
-            <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-2/5" />
-            <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
-          </>
-        )}
-        <div className="relative flex flex-1 flex-col justify-end px-5 pb-12 pt-32 sm:px-8 lg:px-12">
+        {/* On phones the photo sits above the copy on a solid panel; from `sm` up the copy overlays the photo. */}
+        <div className="relative h-[54svh] shrink-0 sm:absolute sm:inset-0 sm:h-auto">
+          <Image src={vehicle.hero.src} alt={pick(vehicle.hero.alt, locale)} fill priority sizes="100vw" className="object-cover" />
+          {light ? (
+            <>
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-2/5 bg-gradient-to-b from-white/70 via-white/25 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-mist to-transparent sm:h-3/5 sm:from-white/90 sm:via-white/45" />
+            </>
+          ) : (
+            <>
+              <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-2/5" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-carbon to-transparent sm:hidden" />
+              <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 hidden h-3/5 sm:block" />
+            </>
+          )}
+        </div>
+        <div className="relative flex flex-1 flex-col justify-end px-5 pb-12 pt-4 sm:px-8 sm:pt-32 lg:px-12">
           <Reveal className="max-w-3xl">
             <p className={`mb-3 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] ${light ? "text-graphite" : "text-white/70"}`}>
               <span className={vehicle.brand === "xiaomi" ? "size-1.5 rounded-full bg-mi" : "size-1.5 rounded-full bg-tesla"} />

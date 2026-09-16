@@ -40,6 +40,8 @@ export function TripPlanner({ cities, majorCityIds, vehicles, initialVehicle, st
     [sortedCities, majorSet, locale],
   );
   const sameCity = originId === destinationId;
+  const originCity = cities.find((c) => c.id === originId);
+  const destinationCity = cities.find((c) => c.id === destinationId);
 
   const swap = () => {
     setOriginId(destinationId);
@@ -164,9 +166,20 @@ export function TripPlanner({ cities, majorCityIds, vehicles, initialVehicle, st
 
       <div>
         {!plan ? (
-          <div className="flex h-full min-h-80 flex-col items-center justify-center rounded-3xl bg-cloud p-10 text-center hairline">
-            <Navigation className="size-10 text-ash" />
-            <p className="mt-4 max-w-md text-slate">{t.connect.tripSubtitle}</p>
+          <div className="space-y-4">
+            <NetworkMap
+              stations={stations}
+              route={originCity && destinationCity && !sameCity ? [
+                { lat: originCity.lat, lng: originCity.lng, label: originCity.name, kind: "origin" },
+                { lat: destinationCity.lat, lng: destinationCity.lng, label: destinationCity.name, kind: "destination" },
+              ] : undefined}
+              compact
+              preview
+            />
+            <div className="flex items-center gap-3 rounded-3xl bg-cloud p-5 text-sm text-slate hairline">
+              <Navigation className="size-5 shrink-0 text-ash" />
+              <p>{t.connect.tripSubtitle}</p>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">

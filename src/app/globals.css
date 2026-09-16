@@ -40,9 +40,9 @@
   --color-slate: #5c5e62;
   /* 4.5:1+ on white / cloud / mist so small labels pass WCAG AA */
   --color-ash: #6e6e73;
-  --color-mi-deep: #bf4a00;
+  --color-mi-deep: #b34500;
   --color-tesla-deep: #b91c1c;
-  --color-success-deep: #15803d;
+  --color-success-deep: #137038;
   --color-warning-deep: #b45309;
   --color-atelier-deep: #8a6a2f;
   --color-mist: #f4f4f4;
@@ -182,6 +182,16 @@ body {
       rgb(0 0 0 / 0.55) 0%,
       rgb(0 0 0 / 0.15) 40%,
       rgb(0 0 0 / 0) 75%
+    );
+  }
+  /* Heavier top scrim for heroes whose photography is bright at the top (sky, glass). */
+  .scrim-t-strong {
+    background: linear-gradient(
+      to bottom,
+      rgb(0 0 0 / 0.78) 0%,
+      rgb(0 0 0 / 0.5) 30%,
+      rgb(0 0 0 / 0.2) 60%,
+      rgb(0 0 0 / 0) 100%
     );
   }
   .no-scrollbar {
