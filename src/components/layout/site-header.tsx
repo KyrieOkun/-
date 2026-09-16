@@ -88,6 +88,7 @@ export function SiteHeader({ vehicles, user }: Props) {
 
   const xiaomi = vehicles.filter((v) => v.brand === "xiaomi");
   const tesla = vehicles.filter((v) => v.brand === "tesla");
+  const isCurrent = (prefixes: string[]) => prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   const connectLinks = [
     { href: "/connect", label: t.connect.title },
@@ -132,11 +133,11 @@ export function SiteHeader({ vehicles, user }: Props) {
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
-            <NavItem label={t.nav.vehicles} active={mega === "vehicles"} onEnter={() => openMega("vehicles")} href="/vehicles" />
-            <NavItem label={t.nav.connect} active={mega === "connect"} onEnter={() => openMega("connect")} href="/connect" />
-            <NavItem label={t.nav.charging} onEnter={() => setMega(null)} href="/charging" />
-            <NavItem label={t.nav.atelier} onEnter={() => setMega(null)} href="/atelier" />
-            <NavItem label={t.nav.discover} active={mega === "discover"} onEnter={() => openMega("discover")} href="/news" />
+            <NavItem label={t.nav.vehicles} active={mega === "vehicles"} current={isCurrent(["/vehicles", "/compare"])} onEnter={() => openMega("vehicles")} href="/vehicles" />
+            <NavItem label={t.nav.connect} active={mega === "connect"} current={isCurrent(["/connect", "/service", "/trade-in"])} onEnter={() => openMega("connect")} href="/connect" />
+            <NavItem label={t.nav.charging} current={isCurrent(["/charging"])} onEnter={() => setMega(null)} href="/charging" />
+            <NavItem label={t.nav.atelier} current={isCurrent(["/atelier"])} onEnter={() => setMega(null)} href="/atelier" />
+            <NavItem label={t.nav.discover} active={mega === "discover"} current={isCurrent(["/news", "/stores", "/test-drive"])} onEnter={() => openMega("discover")} href="/news" />
           </nav>
 
           <div className="flex items-center gap-1">
@@ -265,13 +266,18 @@ export function SiteHeader({ vehicles, user }: Props) {
   );
 }
 
-function NavItem({ label, href, active, onEnter }: { label: string; href: string; active?: boolean; onEnter: () => void }) {
+function NavItem({ label, href, active, current, onEnter }: { label: string; href: string; active?: boolean; current?: boolean; onEnter: () => void }) {
   return (
     <Link
       href={href}
       onMouseEnter={onEnter}
       onFocus={onEnter}
-      className={cn("inline-flex items-center gap-1 rounded-pill px-3 py-1.5 text-sm font-medium transition-colors hover:bg-current/5", active && "bg-current/5")}
+      aria-current={current ? "page" : undefined}
+      className={cn(
+        "relative inline-flex items-center gap-1 rounded-pill px-3 py-1.5 text-sm font-medium transition-colors hover:bg-current/5",
+        active && "bg-current/5",
+        current && "after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:rounded-full after:bg-current after:opacity-70",
+      )}
     >
       {label}
     </Link>

@@ -32,17 +32,25 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="snap-section relative flex min-h-[100svh] flex-col overflow-hidden bg-carbon text-white">
         <div className="absolute inset-0 grid grid-rows-2 md:grid-cols-2 md:grid-rows-1">
-          <div className="relative overflow-hidden">
-            <Image src="/images/home/xiaomi.jpg" alt={locale === "zh" ? "新一代小米 SU7 官方图" : "New-generation Xiaomi SU7, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[70%_center]" />
-          </div>
-          <div className="relative overflow-hidden">
-            <Image src="/images/home/tesla.jpg" alt={locale === "zh" ? "特斯拉 Model Y 官方图" : "Tesla Model Y, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[35%_center]" />
-          </div>
+          <Link href="/vehicles?brand=xiaomi" className="group relative overflow-hidden focus-visible:outline-none" aria-label={`${t.nav.xiaomi} · ${t.nav.allVehicles}`}>
+            <Image src="/images/home/xiaomi.jpg" alt={locale === "zh" ? "新一代小米 SU7 官方图" : "New-generation Xiaomi SU7, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[70%_center] transition-transform duration-[1200ms] ease-brand group-hover:scale-[1.03]" />
+            <span className="absolute bottom-6 left-5 hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70 transition-colors group-hover:text-white md:flex lg:bottom-8 lg:left-8">
+              <span className="size-1.5 rounded-full bg-mi" />{t.nav.xiaomi}
+              <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+            </span>
+          </Link>
+          <Link href="/vehicles?brand=tesla" className="group relative overflow-hidden focus-visible:outline-none" aria-label={`${t.nav.tesla} · ${t.nav.allVehicles}`}>
+            <Image src="/images/home/tesla.jpg" alt={locale === "zh" ? "特斯拉 Model Y 官方图" : "Tesla Model Y, official imagery"} fill priority sizes="(min-width: 768px) 50vw, 100vw" className="object-cover object-[35%_center] transition-transform duration-[1200ms] ease-brand group-hover:scale-[1.03]" />
+            <span className="absolute bottom-6 right-5 hidden items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70 transition-colors group-hover:text-white md:flex lg:bottom-8 lg:right-8">
+              <span className="size-1.5 rounded-full bg-tesla" />{t.nav.tesla}
+              <ArrowRight className="size-3.5 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100" />
+            </span>
+          </Link>
           <div className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-white/30 md:block" />
         </div>
         <div className="scrim-t pointer-events-none absolute inset-x-0 top-0 h-1/2" />
         <div className="scrim-b pointer-events-none absolute inset-x-0 bottom-0 h-3/5" />
-        <div className="relative flex flex-1 flex-col items-center justify-between px-5 pb-16 pt-24 text-center sm:pb-20 sm:pt-28">
+        <div className="pointer-events-none relative flex flex-1 flex-col items-center justify-between px-5 pb-16 pt-24 text-center sm:pb-20 sm:pt-28">
           <div className="animate-fade-up flex flex-col items-center">
             <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70">
               <span className="flex items-center gap-1.5"><span className="size-1.5 rounded-full bg-mi" />{t.nav.xiaomi}</span>
@@ -52,7 +60,7 @@ export default async function HomePage() {
             <h1 className="max-w-4xl text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl">{t.home.heroTitle}</h1>
             <p className="mt-5 max-w-2xl text-pretty text-base text-white/80 sm:text-xl">{t.home.heroSubtitle}</p>
           </div>
-          <div className="animate-fade-up flex w-full flex-col items-center [animation-delay:200ms]">
+          <div className="animate-fade-up pointer-events-auto flex w-full flex-col items-center [animation-delay:200ms]">
             <div className="flex w-full max-w-md flex-col gap-3 sm:w-auto sm:max-w-none sm:flex-row">
               <Button href="/vehicles" variant="light" size="lg" className="w-full sm:w-64">{t.home.heroCtaPrimary}</Button>
               <Button href="/test-drive" variant="glass" size="lg" className="w-full sm:w-64">{t.home.heroCtaSecondary}</Button>
