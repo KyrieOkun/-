@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { vehicles } from "@/data/vehicles";
-import { toClientVehicle } from "@/data/types";
+import { toVehicleSummary } from "@/data/types";
 import { Container, Eyebrow } from "@/components/ui/primitives";
 import { AuthGate } from "@/components/auth/auth-gate";
 import { Keys } from "@/components/connect/keys";
@@ -25,7 +25,7 @@ export default async function KeysPage() {
       </section>
       <Container className="py-12 pb-24">
         <AuthGate title={t.connect.requireLogin} description={t.connect.keysSubtitle} initialUser={user ? toPublicUser(user) : null}>
-          <Keys vehicles={vehicles.map(toClientVehicle)} />
+          <Keys vehicles={vehicles.map(toVehicleSummary)} />
         </AuthGate>
       </Container>
     </div>

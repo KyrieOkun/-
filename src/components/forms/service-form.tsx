@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { CheckCircle2, Wrench } from "lucide-react";
-import type { ClientVehicle } from "@/data/types";
+import type { VehicleSummary } from "@/data/types";
 import type { Store } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
@@ -13,7 +13,7 @@ import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/prim
 
 const SLOTS = ["08:30-10:30", "10:30-12:30", "13:30-15:30", "15:30-17:30"];
 
-export function ServiceForm({ vehicles, stores, cities }: { vehicles: ClientVehicle[]; stores: Store[]; cities: City[] }) {
+export function ServiceForm({ vehicles, stores, cities }: { vehicles: VehicleSummary[]; stores: Store[]; cities: City[] }) {
   const { t, pick, locale } = useI18n();
   const zh = locale === "zh";
   const types = [

@@ -5,7 +5,7 @@ import { getI18n } from "@/lib/i18n/server";
 import { pick } from "@/lib/i18n/types";
 import { atelierPrograms, atelierSteps } from "@/data/site";
 import { vehicles } from "@/data/vehicles";
-import { toClientVehicle } from "@/data/types";
+import { toVehicleSummary } from "@/data/types";
 import { HeroOverlay } from "@/components/layout/header-theme";
 import { Button } from "@/components/ui/button";
 import { Badge, Container, SectionHeading } from "@/components/ui/primitives";
@@ -108,7 +108,7 @@ export default async function AtelierPage() {
               <Image src="/images/atelier/paint.jpg" alt={t.atelier.title} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
             </div>
           </div>
-          <ConsultationForm vehicles={vehicles.filter((v) => v.availability !== "overseas").map(toClientVehicle)} programs={atelierPrograms} />
+          <ConsultationForm vehicles={vehicles.filter((v) => v.availability !== "overseas").map(toVehicleSummary)} programs={atelierPrograms} />
         </Container>
       </section>
     </div>
