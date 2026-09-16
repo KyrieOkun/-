@@ -20,6 +20,11 @@ export function AuthForm({ initialMode = "login", onSuccess, compact }: { initia
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const switchMode = (next: "login" | "register") => {
+    setMode(next);
+    setError(null);
+  };
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
@@ -51,8 +56,8 @@ export function AuthForm({ initialMode = "login", onSuccess, compact }: { initia
   return (
     <div className={cn("rounded-3xl bg-white hairline", compact ? "p-6" : "p-8")}>
       <div className="mb-6 flex rounded-pill bg-mist p-1 text-sm font-medium">
-        <button type="button" onClick={() => setMode("login")} className={cn("flex-1 rounded-pill py-2 transition-colors", mode === "login" ? "bg-white shadow-soft" : "text-slate")}>{t.account.loginTitle}</button>
-        <button type="button" onClick={() => setMode("register")} className={cn("flex-1 rounded-pill py-2 transition-colors", mode === "register" ? "bg-white shadow-soft" : "text-slate")}>{t.account.registerTitle}</button>
+        <button type="button" aria-pressed={mode === "login"} onClick={() => switchMode("login")} className={cn("flex-1 rounded-pill py-2 transition-colors focus-ring", mode === "login" ? "bg-white shadow-soft" : "text-slate")}>{t.account.loginTitle}</button>
+        <button type="button" aria-pressed={mode === "register"} onClick={() => switchMode("register")} className={cn("flex-1 rounded-pill py-2 transition-colors focus-ring", mode === "register" ? "bg-white shadow-soft" : "text-slate")}>{t.account.registerTitle}</button>
       </div>
       <form onSubmit={onSubmit} className="space-y-4" noValidate>
         {mode === "register" ? (

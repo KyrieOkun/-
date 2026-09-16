@@ -26,10 +26,23 @@ export function useUser(): UserContextValue {
  * Loads the current session and either renders children (with the user
  * available through useUser) or an inline sign-in / sign-up card.
  */
-export function AuthGate({ children, title, description }: { children: ReactNode; title?: string; description?: string }) {
+export function AuthGate({
+  children,
+  title,
+  description,
+  initialUser,
+  initialMode = "login",
+}: {
+  children: ReactNode;
+  title?: string;
+  description?: string;
+  /** Session resolved on the server; avoids a loading flash and a client round-trip. */
+  initialUser?: PublicUser | null;
+  initialMode?: "login" | "register";
+}) {
   const { t } = useI18n();
-  const [user, setUser] = useState<PublicUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<PublicUser | null>(initialUser ?? null);
+  const [loading, setLoading] = useState(initialUser === undefined);
 
   const refresh = useCallback(async () => {
     const res = await apiFetch<{ user: PublicUser | null }>("/api/auth/me");
@@ -38,8 +51,8 @@ export function AuthGate({ children, title, description }: { children: ReactNode
   }, []);
 
   useEffect(() => {
-    void refresh();
-  }, [refresh]);
+    if (initialUser === undefined) void refresh();
+  }, [refresh, initialUser]);
 
   if (loading) {
     return (
@@ -57,7 +70,7 @@ export function AuthGate({ children, title, description }: { children: ReactNode
           <h2 className="text-2xl font-semibold tracking-tight">{title ?? t.connect.requireLogin}</h2>
           {description ? <p className="mt-2 text-sm text-slate">{description}</p> : null}
         </div>
-        <AuthForm onSuccess={(u) => setUser(u)} />
+        <AuthForm initialMode={initialMode} onSuccess={(u) => setUser(u)} />
       </div>
     );
   }

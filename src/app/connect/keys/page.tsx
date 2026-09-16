@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
+import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { vehicles } from "@/data/vehicles";
 import { Container, Eyebrow } from "@/components/ui/primitives";
 import { AuthGate } from "@/components/auth/auth-gate";
@@ -11,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function KeysPage() {
-  const { t } = await getI18n();
+  const [{ t }, user] = await Promise.all([getI18n(), getCurrentUser()]);
   return (
     <div className="pt-14">
       <section className="border-b border-line bg-cloud">
@@ -22,7 +23,7 @@ export default async function KeysPage() {
         </Container>
       </section>
       <Container className="py-12 pb-24">
-        <AuthGate title={t.connect.requireLogin} description={t.connect.keysSubtitle}>
+        <AuthGate title={t.connect.requireLogin} description={t.connect.keysSubtitle} initialUser={user ? toPublicUser(user) : null}>
           <Keys vehicles={vehicles} />
         </AuthGate>
       </Container>
