@@ -40,8 +40,14 @@ export function formatNumber(value: number, locale: Locale = "zh", fractionDigit
   });
 }
 
+/** Date-only ISO strings are calendar dates: parse them in local time so they never shift a day across time zones. */
+function parseIso(iso: string): Date {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(iso);
+}
+
 export function formatDate(iso: string, locale: Locale = "zh"): string {
-  const d = new Date(iso);
+  const d = parseIso(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US", {
     year: "numeric",
