@@ -12,7 +12,9 @@ export function formatCNY(amount: number, options: { compact?: boolean; locale?:
   if (compact && Math.abs(amount) >= 10_000) {
     const wan = amount / 10_000;
     const text = Number.isInteger(wan) ? wan.toFixed(0) : wan.toFixed(2).replace(/\.?0+$/, "");
-    return locale === "zh" ? `${text} 万元` : `¥${text}0K`.replace("0K", "0k");
+    if (locale === "zh") return `${text} 万元`;
+    const thousands = amount / 1_000;
+    return `¥${(Number.isInteger(thousands) ? thousands.toFixed(0) : thousands.toFixed(1).replace(/\.0$/, ""))}k`;
   }
   return `¥${Math.round(amount).toLocaleString("en-US")}`;
 }

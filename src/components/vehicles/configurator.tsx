@@ -328,7 +328,7 @@ export function Configurator({ vehicle }: { vehicle: ClientVehicle }) {
             </div>
             <Row label={t.configurator.monthly} value={`${formatCNY(quote.monthly)}${t.common.perMonth}`} muted hint={t.configurator.monthlyNote} />
             <Row label={t.configurator.deliveryEta} value={`${quote.deliveryWeeks[0]}-${quote.deliveryWeeks[1]} ${t.common.weeks}`} muted />
-            <Row label={t.configurator.range} value={`${quote.rangeKm} km`} muted />
+            <Row label={vehicle.powertrain === "erev" ? (locale === "zh" ? "纯电续航" : "EV range") : t.configurator.range} value={`${quote.rangeKm} km`} muted />
           </dl>
           <div className="mt-6 flex flex-col gap-3">
             <Button href={orderHref} size="lg" fullWidth iconRight={<ChevronRight className="size-4" />}>
