@@ -73,6 +73,9 @@ export function Divider({ className }: { className?: string }) {
   return <hr className={cn("border-0 border-t border-line", className)} />;
 }
 
+// Keep the label component locale-agnostic: both readings are given for screen readers.
+const REQUIRED_LABEL = "必填 / required";
+
 export const Label = forwardRef<HTMLLabelElement, LabelHTMLAttributes<HTMLLabelElement> & { required?: boolean; hint?: ReactNode }>(function Label(
   { className, children, required, hint, ...props },
   ref,
@@ -81,7 +84,12 @@ export const Label = forwardRef<HTMLLabelElement, LabelHTMLAttributes<HTMLLabelE
     <label ref={ref} className={cn("mb-1.5 flex items-baseline justify-between text-[13px] font-medium text-graphite", className)} {...props}>
       <span>
         {children}
-        {required ? <span className="ml-0.5 text-tesla">*</span> : null}
+        {required ? (
+          <>
+            <span aria-hidden className="ml-0.5 text-tesla">*</span>
+            <span className="sr-only"> ({REQUIRED_LABEL})</span>
+          </>
+        ) : null}
       </span>
       {hint ? <span className="text-xs font-normal text-ash">{hint}</span> : null}
     </label>

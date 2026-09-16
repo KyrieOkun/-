@@ -67,7 +67,18 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: VehicleSum
         <p className="mt-2 text-slate">{zh ? "服务顾问将在 30 分钟内确认，取送车服务会提前一天与您联系。" : "A service advisor will confirm within 30 minutes; valet pick-up is arranged the day before."}</p>
         <p className="mt-4 font-mono text-sm font-semibold">{done.id}</p>
         <div className="mt-6 flex justify-center gap-3">
-          <Button variant="secondary" onClick={() => setDone(null)}>{zh ? "再预约一次" : "Book another"}</Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              // Fresh booking: clear the request-specific fields, keep the contact details.
+              setPlate("");
+              setNote("");
+              setAgree(false);
+              setDone(null);
+            }}
+          >
+            {zh ? "再预约一次" : "Book another"}
+          </Button>
           <Button href="/connect/garage">{t.connect.garage}</Button>
         </div>
       </div>
@@ -98,17 +109,17 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: VehicleSum
           </div>
           <div>
             <Label htmlFor="sv-plate" hint={t.common.optionalField}>{t.forms.licensePlate}</Label>
-            <Input id="sv-plate" value={plate} onChange={(e) => setPlate(e.target.value.toUpperCase())} placeholder="京A·D12345" />
+            <Input id="sv-plate" value={plate} onChange={(e) => setPlate(e.target.value.toUpperCase())} placeholder={zh ? "例如：京A·D12345" : "e.g. 京A·D12345"} />
           </div>
         </div>
-        <div>
-          <Label>{zh ? "服务类型" : "Service type"}</Label>
+        <fieldset>
+          <legend className="mb-1.5 text-[13px] font-medium text-graphite">{zh ? "服务类型" : "Service type"}</legend>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {types.map((ty) => (
               <button key={ty.id} type="button" onClick={() => setServiceType(ty.id)} aria-pressed={serviceType === ty.id} className={cn("h-11 rounded-xl border px-2 text-xs font-medium transition-colors focus-ring", serviceType === ty.id ? "border-ink bg-ink text-white" : "border-line hover:border-ash")}>{ty.label}</button>
             ))}
           </div>
-        </div>
+        </fieldset>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="sv-city" required>{t.forms.city}</Label>

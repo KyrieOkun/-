@@ -113,8 +113,8 @@ export function Keys({ vehicles }: { vehicles: VehicleSummary[] }) {
               </div>
             </fieldset>
             <div>
-              <Label htmlFor="key-days" hint={`${days} ${locale === "zh" ? "天" : "days"}`}>{t.connect.keyExpiry}</Label>
-              <input id="key-days" type="range" min={1} max={365} value={days} onChange={(e) => setDays(Number(e.target.value))} aria-valuetext={`${days} ${locale === "zh" ? "天" : "days"}`} className="w-full accent-ink" />
+              <Label htmlFor="key-days" hint={`${days} ${locale === "zh" ? t.common.days : days === 1 ? "day" : t.common.days}`}>{t.connect.keyExpiry}</Label>
+              <input id="key-days" type="range" min={1} max={365} value={days} onChange={(e) => setDays(Number(e.target.value))} aria-valuetext={`${days} ${locale === "zh" ? t.common.days : days === 1 ? "day" : t.common.days}`} className="w-full accent-ink" />
             </div>
             <FieldError>{error}</FieldError>
             <Button type="submit" loading={submitting} disabled={garage.length === 0}>{t.connect.createKey}</Button>

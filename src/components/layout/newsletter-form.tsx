@@ -29,30 +29,35 @@ export function NewsletterForm() {
     }
   }
 
-  if (state === "done") {
-    return <p className="mt-3 text-sm font-medium text-success-deep">{t.footer.subscribed}</p>;
-  }
-
+  const done = state === "done";
   return (
-    <form onSubmit={onSubmit} className="mt-3 flex max-w-sm gap-2" noValidate>
-      <label htmlFor="newsletter-email" className="sr-only">
-        {t.forms.email}
-      </label>
-      <input
-        id="newsletter-email"
-        type="email"
-        value={email}
-        onChange={(e) => {
-          setEmail(e.target.value);
-          if (state === "error") setState("idle");
-        }}
-        placeholder={t.forms.email}
-        aria-invalid={state === "error"}
-        className="h-10 flex-1 rounded-pill border border-line bg-white px-4 text-sm outline-none placeholder:text-ash focus:border-ink aria-[invalid=true]:border-danger"
-      />
-      <Button type="submit" size="sm" loading={state === "loading"} className="h-10">
-        {t.footer.subscribe}
-      </Button>
+    <form onSubmit={onSubmit} className="mt-3 max-w-sm" noValidate>
+      <div className="flex gap-2">
+        <label htmlFor="newsletter-email" className="sr-only">
+          {t.forms.email}
+        </label>
+        <input
+          id="newsletter-email"
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (state === "error") setState("idle");
+          }}
+          placeholder={t.forms.email}
+          aria-invalid={state === "error"}
+          aria-describedby="newsletter-status"
+          disabled={done}
+          className="h-10 flex-1 rounded-pill border border-line bg-white px-4 text-sm outline-none placeholder:text-ash focus:border-ink aria-[invalid=true]:border-danger disabled:bg-mist"
+        />
+        <Button type="submit" size="sm" loading={state === "loading"} disabled={done} className="h-10">
+          {done ? t.footer.subscribed : t.footer.subscribe}
+        </Button>
+      </div>
+      {/* Always mounted so screen readers announce both the error and the success. */}
+      <p id="newsletter-status" role="status" aria-live="polite" className={state === "error" ? "mt-2 text-xs text-danger" : "mt-2 text-xs text-success-deep"}>
+        {state === "error" ? t.forms.invalidEmail : done ? t.footer.subscribed : ""}
+      </p>
     </form>
   );
 }

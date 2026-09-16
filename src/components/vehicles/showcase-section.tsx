@@ -25,8 +25,8 @@ export function ShowcaseSection({ vehicle, locale, priority, align = "center", i
   const isInventory = vehicle.availability === "inventory";
   const stats = vehicle.highlights.slice(0, 3);
   const light = vehicle.theme === "light";
-  const muted = light ? "text-graphite" : "text-white/70";
-  const subtle = light ? "text-slate" : "text-white/60";
+  const muted = light ? "text-graphite" : "text-white/85";
+  const subtle = light ? "text-slate" : "text-white/80";
 
   return (
     <section className={cn("snap-section relative flex min-h-[100svh] flex-col overflow-hidden", light ? "bg-mist text-ink" : "bg-carbon text-white", className)}>

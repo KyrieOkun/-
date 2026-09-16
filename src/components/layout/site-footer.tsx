@@ -70,7 +70,7 @@ export function SiteFooter({ locale, vehicles }: { locale: Locale; vehicles: Foo
             </div>
             <p className="mt-3 max-w-sm text-sm leading-6 text-slate">{t.brand.tagline}</p>
             <div className="mt-8">
-              <p className="text-sm font-semibold">{t.footer.newsletter}</p>
+              <h2 className="text-sm font-semibold">{t.footer.newsletter}</h2>
               <p className="mt-1 text-xs text-slate">{t.footer.newsletterHint}</p>
               <NewsletterForm />
             </div>
@@ -78,7 +78,7 @@ export function SiteFooter({ locale, vehicles }: { locale: Locale; vehicles: Foo
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {columns.map((col) => (
               <div key={col.title}>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ash">{col.title}</p>
+                <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-ash">{col.title}</h2>
                 <ul className="mt-4 space-y-2.5">
                   {col.links.map((link) => (
                     <li key={link.href + link.label}>
@@ -111,7 +111,7 @@ export function SiteFooter({ locale, vehicles }: { locale: Locale; vehicles: Foo
             <div className="flex gap-4">
               <Link href="/legal/privacy" className="hover:text-ink">{t.footer.privacy}</Link>
               <Link href="/legal/terms" className="hover:text-ink">{t.footer.terms}</Link>
-              <Link href="/support" className="hover:text-ink">{t.footer.accessibility}</Link>
+              <Link href="/support#accessibility" className="hover:text-ink">{t.footer.accessibility}</Link>
             </div>
           </div>
         </div>

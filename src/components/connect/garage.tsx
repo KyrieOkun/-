@@ -26,9 +26,16 @@ export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
   const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
   const bySlug = useMemo(() => Object.fromEntries(vehicles.map((v) => [v.slug, v])), [vehicles]);
 
+  const [error, setError] = useState<string | null>(null);
   const load = useCallback(async () => {
+    setLoading(true);
     const res = await apiFetch<{ vehicles: GarageEntry[] }>("/api/garage");
-    setEntries(res.data?.vehicles ?? []);
+    if (res.ok && res.data) {
+      setEntries(res.data.vehicles);
+      setError(null);
+    } else {
+      setError(res.status === 401 ? "UNAUTHORIZED" : res.error ?? "ERROR");
+    }
     setLoading(false);
   }, []);
 
@@ -77,7 +84,7 @@ export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
           <h2 className="mt-1 text-2xl font-semibold tracking-tight">{t.connect.garage}</h2>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => void load()} icon={<RefreshCw className="size-4" />}>{t.connect.lastSync}</Button>
+          <Button variant="secondary" onClick={() => void load()} icon={<RefreshCw className={cn("size-4", loading && "animate-spin")} />}>{t.connect.refresh}</Button>
           <Button onClick={() => setAdding(true)} icon={<Plus className="size-4" />} disabled={entries.length >= 6}>{t.connect.addVehicle}</Button>
         </div>
       </div>
@@ -94,12 +101,18 @@ export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
         />
       ) : null}
 
-      {loading ? (
+      {error && !loading ? (
+        <div role="alert" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-mist p-5 text-sm text-graphite">
+          <span>{error === "UNAUTHORIZED" ? t.connect.requireLogin : t.common.error}</span>
+          {error === "UNAUTHORIZED" ? <Button size="sm" href="/account?mode=login">{t.nav.login}</Button> : <Button size="sm" variant="secondary" onClick={() => void load()}>{t.common.retry}</Button>}
+        </div>
+      ) : null}
+      {loading && entries.length === 0 ? (
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="h-80 animate-pulse rounded-3xl bg-mist" />
           <div className="h-80 animate-pulse rounded-3xl bg-mist" />
         </div>
-      ) : entries.length === 0 && !adding ? (
+      ) : entries.length === 0 && !adding && !error ? (
         <div className="rounded-3xl bg-cloud p-12 text-center hairline">
           <Car className="mx-auto size-10 text-ash" />
           <p className="mt-4 text-slate">{t.connect.noVehicles}</p>
@@ -155,9 +168,10 @@ export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Badge tone={s.locked ? "success" : "tesla"}>{s.locked ? t.connect.locked : t.connect.unlocked}</Badge>
                     <Badge tone={s.climateOn ? "mi" : "neutral"}>{s.climateOn ? `${t.connect.climateOn} · ${s.targetTempC}°C` : t.connect.climateOff}</Badge>
-                    <Badge tone={s.sentry ? "dark" : "neutral"}><ShieldCheck className="size-3" />{locale === "zh" ? "哨兵" : "Sentry"} {s.sentry ? "ON" : "OFF"}</Badge>
+                    <Badge tone={s.sentry ? "dark" : "neutral"}><ShieldCheck className="size-3" />{s.sentry ? t.connect.sentryOn : t.connect.sentryOff}</Badge>
                     {s.updateAvailable ? <Badge tone="gold">OTA · {s.updateAvailable.split(" (")[0]}</Badge> : null}
                     <Badge tone="neutral">{locale === "zh" ? "电池健康" : "Battery health"} {s.health.batteryHealthPercent}%</Badge>
+                    <Badge tone="neutral">{locale === "zh" ? "胎压" : "Tyres"} {s.tyrePressureBar.map((b) => b.toFixed(1)).join(" / ")} bar</Badge>
                   </div>
 
                   <div className={cn("mt-5 grid grid-cols-3 gap-2 sm:grid-cols-6 transition-opacity", pending === e.id && "pointer-events-none opacity-60")} aria-busy={pending === e.id}>
@@ -190,11 +204,9 @@ export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
         </div>
       )}
 
-      {toast ? (
-        <div className="pointer-events-none fixed inset-x-0 bottom-8 z-50 flex justify-center">
-          <div role="status" className="rounded-2xl bg-ink px-4 py-2.5 text-sm text-white shadow-lift">{toast}</div>
-        </div>
-      ) : null}
+      <div className="pointer-events-none fixed inset-x-0 bottom-8 z-50 flex justify-center" role="status" aria-live="polite">
+        {toast ? <div className="rounded-2xl bg-ink px-4 py-2.5 text-sm text-white shadow-lift">{toast}</div> : null}
+      </div>
     </div>
   );
 }

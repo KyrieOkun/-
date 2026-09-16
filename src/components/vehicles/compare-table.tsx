@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import type { ClientVehicle } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
-import { cn, formatCNY, formatPriceHeadline } from "@/lib/utils";
+import { cn, formatCNY, formatPriceFrom, formatPriceHeadline } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useScrollLock } from "@/lib/use-scroll-lock";
 
@@ -245,7 +245,7 @@ export function CompareTable({ vehicles }: { vehicles: ClientVehicle[] }) {
                       </span>
                       <span className="min-w-0">
                         <span className="block truncate text-sm font-semibold">{pick(v.name)}</span>
-                        <span className="block text-xs text-slate">{formatPriceHeadline(Math.min(...v.trims.map((tr) => tr.price)), locale)} {locale === "zh" ? "起" : ""}</span>
+                        <span className="block text-xs text-slate">{formatPriceFrom(Math.min(...v.trims.map((tr) => tr.price)), locale)}</span>
                       </span>
                     </button>
                   </li>
