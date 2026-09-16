@@ -11,12 +11,9 @@ export async function POST(request: Request) {
   const parsed = await parseBody(request, schema);
   if ("error" in parsed) return parsed.error;
   const email = parsed.data.email.toLowerCase();
-  const existing = await store.getByLookup<{ id: string }>("newsletter", "email", email);
-  if (!existing) {
-    const doc = { id: generateId("NL"), email, createdAt: new Date().toISOString() };
-    await store.put("newsletter", doc);
-    await store.setLookup("newsletter", "email", email, doc.id);
-  }
+  const doc = { id: generateId("NL"), email, createdAt: new Date().toISOString() };
+  // SET NX makes the dedupe atomic; the response is identical either way.
+  if (await store.claimLookup("newsletter", "email", email, doc.id)) await store.put("newsletter", doc);
   return created({ subscribed: true });
 }
 

@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { ArrowRight, Link2, LogOut, ShieldCheck, Unlink } from "lucide-react";
-import type { Vehicle } from "@/data/types";
-import type { OrderRecord } from "@/lib/orders";
+import type { ClientVehicle } from "@/data/types";
+import type { PublicOrder } from "@/lib/guest-orders";
 import type { PublicUser } from "@/lib/auth";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -15,15 +15,15 @@ import { Badge } from "@/components/ui/primitives";
 import { useUser } from "@/components/auth/auth-gate";
 import { SavedBuilds } from "@/components/vehicles/saved-builds";
 
-export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
+export function AccountDashboard({ vehicles }: { vehicles: ClientVehicle[] }) {
   const { t, pick, locale } = useI18n();
   const { user, setUser } = useUser();
   const router = useRouter();
-  const [orders, setOrders] = useState<OrderRecord[]>([]);
+  const [orders, setOrders] = useState<PublicOrder[]>([]);
   const [linking, setLinking] = useState<"xiaomi" | "tesla" | null>(null);
 
   const load = useCallback(async () => {
-    const res = await apiFetch<{ orders: OrderRecord[] }>("/api/orders");
+    const res = await apiFetch<{ orders: PublicOrder[] }>("/api/orders");
     setOrders(res.data?.orders ?? []);
   }, []);
 
@@ -123,7 +123,7 @@ export function AccountDashboard({ vehicles }: { vehicles: Vehicle[] }) {
                         <p className="font-semibold">{v ? pick(v.name) : o.vehicleSlug} <span className="ml-2 font-mono text-xs font-normal text-slate">{o.id}</span></p>
                         <p className="mt-1 text-xs text-slate">{formatDateTime(o.createdAt, locale)} · {formatCNY(o.quote.total)}</p>
                       </div>
-                      <Badge tone="success">{statusLabel[o.status]}</Badge>
+                      <Badge tone={o.status === "pending" ? "neutral" : "success"}>{statusLabel[o.status]}</Badge>
                     </Link>
                   </li>
                 );

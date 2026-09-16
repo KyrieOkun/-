@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
-import type { Vehicle, VehicleSelection } from "@/data/types";
+import type { ClientVehicle, VehicleSelection } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
 import { computeQuote, encodeSelection, normalizeSelection } from "@/lib/pricing";
 import { useSavedBuilds } from "@/lib/saved-builds";
@@ -11,7 +11,7 @@ import { cn, formatCNY, formatDateTime } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 interface Props {
-  vehicles: Vehicle[];
+  vehicles: ClientVehicle[];
   /** Restrict the list to one vehicle (used inside its configurator). */
   vehicleSlug?: string;
   /** Called when the user chooses to load a build into the current configurator. */

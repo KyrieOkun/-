@@ -14,7 +14,7 @@ import { Icon } from "@/components/ui/icon";
 import { PaintExplorer } from "@/components/vehicles/paint-explorer";
 import { VehicleCard } from "@/components/vehicles/vehicle-card";
 import { InterestForm } from "@/components/forms/interest-form";
-import { formatCNY, formatDate, formatPriceHeadline, formatUSD, absoluteUrl } from "@/lib/utils";
+import { formatCNY, formatDate, formatPriceHeadline, formatUSD, absoluteUrl, formatPriceFrom, jsonLd as toJsonLd } from "@/lib/utils";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title,
     description: pick(vehicle.description, locale),
     alternates: { canonical: `/vehicles/${vehicle.slug}` },
-    openGraph: { title, description: pick(vehicle.description, locale), images: [{ url: vehicle.hero.src, width: 1280, height: 720 }] },
+    openGraph: { title, description: pick(vehicle.description, locale), images: [{ url: vehicle.hero.src }] },
   };
 }
 
@@ -60,19 +60,26 @@ export default async function VehiclePage({ params }: Params) {
     image: absoluteUrl(vehicle.hero.src),
     url: absoluteUrl(`/vehicles/${vehicle.slug}`),
     vehicleConfiguration: vehicle.trims.map((tr) => pick(tr.name, locale)).join(" / "),
-    offers: vehicle.trims.map((tr) => ({
-      "@type": "Offer",
-      name: pick(tr.name, locale),
-      price: tr.price,
-      priceCurrency: "CNY",
-      availability: isOverseas ? "https://schema.org/PreOrder" : "https://schema.org/InStock",
-    })),
+    // Overseas-only models have no CN offer yet; don't advertise a converted price.
+    ...(isOverseas
+      ? {}
+      : {
+          offers: vehicle.trims.map((tr) => ({
+            "@type": "Offer",
+            name: pick(tr.name, locale),
+            price: tr.price,
+            priceCurrency: "CNY",
+            availability: isInventory ? "https://schema.org/LimitedAvailability" : "https://schema.org/InStock",
+            url: absoluteUrl(isInventory ? `/order?vehicle=${vehicle.slug}&trim=${tr.id}` : `/vehicles/${vehicle.slug}/design?trim=${tr.id}`),
+            itemCondition: "https://schema.org/NewCondition",
+          })),
+        }),
   };
 
   return (
     <div>
       <HeroOverlay tone={vehicle.theme} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }} />
 
       {/* Hero */}
       <section className={`relative flex min-h-[100svh] flex-col overflow-hidden ${light ? "bg-mist text-ink" : "bg-carbon text-white"}`}>
@@ -103,20 +110,20 @@ export default async function VehiclePage({ params }: Params) {
           </Reveal>
           <Reveal delay={120} className="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-4">
             {vehicle.highlights.map((h) => (
-              <Stat key={h.label.zh} value={h.value} unit={h.unit} label={pick(h.label, locale)} tone={light ? "dark" : "light"} />
+              <Stat key={h.label.zh} value={h.value} unit={typeof h.unit === "string" ? h.unit : h.unit ? pick(h.unit, locale) : undefined} label={pick(h.label, locale)} tone={light ? "dark" : "light"} />
             ))}
           </Reveal>
           <Reveal delay={200} className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
             {!isOverseas ? (
               <>
-                <Button href={`/vehicles/${vehicle.slug}/design`} variant={light ? "primary" : "light"} size="lg" className="sm:w-56">{t.vehicles.designCta}</Button>
+                <Button href={isInventory ? `/order?vehicle=${vehicle.slug}` : `/vehicles/${vehicle.slug}/design`} variant={light ? "primary" : "light"} size="lg" className="sm:w-56">{isInventory ? (locale === "zh" ? "选购现车" : "Shop inventory") : t.vehicles.designCta}</Button>
                 <Button href={`/test-drive?vehicle=${vehicle.slug}`} variant={light ? "light" : "glass"} size="lg" className={`sm:w-56 ${light ? "bg-white/70 backdrop-blur-md hover:bg-white" : ""}`}>{t.vehicles.testDriveCta}</Button>
               </>
             ) : (
               <Button href="#interest" variant="light" size="lg" className="sm:w-56">{locale === "zh" ? "登记关注" : "Register interest"}</Button>
             )}
             <span className={`text-sm sm:ml-4 ${light ? "text-graphite" : "text-white/70"}`}>
-              {t.common.from} {formatPriceHeadline(startingPrice, locale)}
+              {formatPriceFrom(startingPrice, locale)}
               {isOverseas && vehicle.trims[0].priceUSD ? ` (${formatUSD(vehicle.trims[0].priceUSD)})` : ""}
               {isInventory ? ` · ${t.common.inventoryOnly}` : ""}
             </span>
@@ -125,7 +132,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {/* Sub nav */}
-      <nav className="sticky top-14 z-30 border-b border-line bg-white/85 backdrop-blur" aria-label="Sections">
+      <nav className="sticky top-14 z-30 border-b border-line bg-white/85 backdrop-blur" aria-label={t.a11y.sectionsNav}>
         <Container className="no-scrollbar flex items-center gap-6 overflow-x-auto py-3 text-sm">
           {[
             ["#overview", t.nav.learnMore],
@@ -147,7 +154,7 @@ export default async function VehiclePage({ params }: Params) {
       </nav>
 
       {/* Overview */}
-      <section id="overview" className="py-20 lg:py-28">
+      <section id="overview" className="scroll-mt-28 py-20 lg:py-28">
         <Container className="grid gap-12 lg:grid-cols-[1fr_1.2fr]">
           <Reveal>
             <Eyebrow className="mb-3">{pick(vehicle.series, locale)}</Eyebrow>
@@ -193,7 +200,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {/* Trims */}
-      <section id="trims" className="bg-cloud py-20 lg:py-28">
+      <section id="trims" className="scroll-mt-28 bg-cloud py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.vehicles.trims} title={locale === "zh" ? `${pick(vehicle.name, locale)} 全部版本` : `Every ${pick(vehicle.name, locale)}`} subtitle={t.common.officialNote} />
           <div className={`mt-12 grid gap-5 ${vehicle.trims.length >= 4 ? "md:grid-cols-2 xl:grid-cols-4" : vehicle.trims.length === 3 ? "md:grid-cols-3" : vehicle.trims.length === 2 ? "md:grid-cols-2" : ""}`}>
@@ -270,7 +277,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-20 lg:py-28">
+      <section id="features" className="scroll-mt-28 py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.vehicles.highlights} title={locale === "zh" ? "核心亮点" : "Highlights"} />
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -290,7 +297,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {/* Design */}
-      <section id="design" className="bg-cloud py-20 lg:py-28">
+      <section id="design" className="scroll-mt-28 bg-cloud py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.configurator.title} title={`${t.vehicles.colors} · ${t.vehicles.wheels} · ${t.vehicles.interiors}`} action={!isOverseas ? <Button href={`/vehicles/${vehicle.slug}/design`} iconRight={<ArrowRight className="size-4" />}>{t.vehicles.designCta}</Button> : undefined} />
           <div className="mt-12">
@@ -300,7 +307,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {/* Gallery */}
-      <section id="gallery" className="py-20 lg:py-28">
+      <section id="gallery" className="scroll-mt-28 py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.vehicles.gallery} title={pick(vehicle.name, locale)} />
           <div className="mt-12 grid gap-4 md:grid-cols-2">
@@ -317,7 +324,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {/* Specs */}
-      <section id="specs" className="bg-cloud py-20 lg:py-28">
+      <section id="specs" className="scroll-mt-28 bg-cloud py-20 lg:py-28">
         <Container>
           <SectionHeading eyebrow={t.vehicles.specs} title={locale === "zh" ? "参数配置" : "Specifications"} />
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
@@ -351,7 +358,7 @@ export default async function VehiclePage({ params }: Params) {
       </section>
 
       {isOverseas ? (
-        <section id="interest" className="py-20 lg:py-28">
+        <section id="interest" className="scroll-mt-28 py-20 lg:py-28">
           <Container className="max-w-3xl">
             <SectionHeading title={locale === "zh" ? `登记关注 ${pick(vehicle.name, locale)}` : `Register interest in ${pick(vehicle.name, locale)}`} subtitle={locale === "zh" ? "中国大陆暂未上市。留下联系方式，有引进与预订信息时我们会第一时间通知您。" : "Not yet available in mainland China. Leave your details and we'll notify you as soon as there is news."} />
             <div className="mt-8">

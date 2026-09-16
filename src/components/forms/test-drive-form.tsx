@@ -3,28 +3,22 @@
 import { useMemo, useState, type FormEvent } from "react";
 import Image from "next/image";
 import { CalendarDays, CheckCircle2 } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { VehicleSummary } from "@/data/types";
 import type { Store } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
-import { cn, isValidCNPhone } from "@/lib/utils";
+import { cn, isValidCNPhone, isoDateInCST } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/primitives";
 
 const SLOTS = ["09:00-11:00", "11:00-13:00", "13:00-15:00", "15:00-17:00", "17:00-19:00", "19:00-21:00"];
 
 function nextDays(n: number): string[] {
-  const out: string[] = [];
-  const d = new Date();
-  for (let i = 1; i <= n; i++) {
-    const x = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
-    out.push(`${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`);
-  }
-  return out;
+  return Array.from({ length: n }, (_, i) => isoDateInCST(i + 1));
 }
 
-export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { vehicles: Vehicle[]; stores: Store[]; cities: City[]; initialVehicle?: string }) {
+export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { vehicles: VehicleSummary[]; stores: Store[]; cities: City[]; initialVehicle?: string }) {
   const { t, pick, locale } = useI18n();
   const orderable = vehicles.filter((v) => v.availability !== "overseas");
   const [vehicleSlug, setVehicleSlug] = useState(orderable.some((v) => v.slug === initialVehicle) ? (initialVehicle as string) : orderable[0].slug);
@@ -80,7 +74,16 @@ export function TestDriveForm({ vehicles, stores, cities, initialVehicle }: { ve
           <div className="flex justify-between"><dt className="text-slate">{mode === "store" ? t.forms.store : t.testDrive.door}</dt><dd className="max-w-[60%] text-right font-medium">{mode === "store" ? pick(st?.name ?? { zh: "", en: "" }) : address}</dd></div>
         </dl>
         <div className="mt-6 flex justify-center gap-3">
-          <Button onClick={() => setBooking(null)} variant="secondary">{t.testDrive.another}</Button>
+          <Button
+            onClick={() => {
+              setNote("");
+              setAgree(false);
+              setBooking(null);
+            }}
+            variant="secondary"
+          >
+            {t.testDrive.another}
+          </Button>
           <Button href={`/vehicles/${vehicle.slug}/design`}>{t.nav.design}</Button>
         </div>
       </div>

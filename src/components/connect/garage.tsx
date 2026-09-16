@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { Battery, Car, Fan, Lock, LockOpen, MapPin, Plus, RefreshCw, Sun, Thermometer, Trash2, Zap, ZapOff, Lightbulb, ShieldCheck } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { ClientVehicle } from "@/data/types";
 import type { GarageVehicle, VehicleStatus, GarageCommand } from "@/lib/garage";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -15,7 +15,7 @@ import { useUser } from "@/components/auth/auth-gate";
 
 type GarageEntry = GarageVehicle & { status: VehicleStatus };
 
-export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
+export function Garage({ vehicles }: { vehicles: ClientVehicle[] }) {
   const { t, pick, locale } = useI18n();
   const { user } = useUser();
   const [entries, setEntries] = useState<GarageEntry[]>([]);
@@ -26,9 +26,16 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
   const [confirmRemove, setConfirmRemove] = useState<string | null>(null);
   const bySlug = useMemo(() => Object.fromEntries(vehicles.map((v) => [v.slug, v])), [vehicles]);
 
+  const [error, setError] = useState<string | null>(null);
   const load = useCallback(async () => {
+    setLoading(true);
     const res = await apiFetch<{ vehicles: GarageEntry[] }>("/api/garage");
-    setEntries(res.data?.vehicles ?? []);
+    if (res.ok && res.data) {
+      setEntries(res.data.vehicles);
+      setError(null);
+    } else {
+      setError(res.status === 401 ? "UNAUTHORIZED" : res.error ?? "ERROR");
+    }
     setLoading(false);
   }, []);
 
@@ -73,11 +80,11 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
     <div>
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-slate">{t.account.welcome}，{user?.name}</p>
+          <p className="text-sm text-slate">{t.account.welcome}{locale === "zh" ? "，" : ", "}{user?.name}</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight">{t.connect.garage}</h2>
         </div>
         <div className="flex gap-2">
-          <Button variant="secondary" onClick={() => void load()} icon={<RefreshCw className="size-4" />}>{t.connect.lastSync}</Button>
+          <Button variant="secondary" onClick={() => void load()} icon={<RefreshCw className={cn("size-4", loading && "animate-spin")} />}>{t.connect.refresh}</Button>
           <Button onClick={() => setAdding(true)} icon={<Plus className="size-4" />} disabled={entries.length >= 6}>{t.connect.addVehicle}</Button>
         </div>
       </div>
@@ -94,12 +101,18 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
         />
       ) : null}
 
-      {loading ? (
+      {error && !loading ? (
+        <div role="alert" className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-mist p-5 text-sm text-graphite">
+          <span>{error === "UNAUTHORIZED" ? t.connect.requireLogin : t.common.error}</span>
+          {error === "UNAUTHORIZED" ? <Button size="sm" href="/account?mode=login">{t.nav.login}</Button> : <Button size="sm" variant="secondary" onClick={() => void load()}>{t.common.retry}</Button>}
+        </div>
+      ) : null}
+      {loading && entries.length === 0 ? (
         <div className="grid gap-6 lg:grid-cols-2">
           <div className="h-80 animate-pulse rounded-3xl bg-mist" />
           <div className="h-80 animate-pulse rounded-3xl bg-mist" />
         </div>
-      ) : entries.length === 0 && !adding ? (
+      ) : entries.length === 0 && !adding && !error ? (
         <div className="rounded-3xl bg-cloud p-12 text-center hairline">
           <Car className="mx-auto size-10 text-ash" />
           <p className="mt-4 text-slate">{t.connect.noVehicles}</p>
@@ -155,9 +168,10 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
                   <div className="mt-4 flex flex-wrap gap-2">
                     <Badge tone={s.locked ? "success" : "tesla"}>{s.locked ? t.connect.locked : t.connect.unlocked}</Badge>
                     <Badge tone={s.climateOn ? "mi" : "neutral"}>{s.climateOn ? `${t.connect.climateOn} · ${s.targetTempC}°C` : t.connect.climateOff}</Badge>
-                    <Badge tone={s.sentry ? "dark" : "neutral"}><ShieldCheck className="size-3" />{locale === "zh" ? "哨兵" : "Sentry"} {s.sentry ? "ON" : "OFF"}</Badge>
+                    <Badge tone={s.sentry ? "dark" : "neutral"}><ShieldCheck className="size-3" />{s.sentry ? t.connect.sentryOn : t.connect.sentryOff}</Badge>
                     {s.updateAvailable ? <Badge tone="gold">OTA · {s.updateAvailable.split(" (")[0]}</Badge> : null}
                     <Badge tone="neutral">{locale === "zh" ? "电池健康" : "Battery health"} {s.health.batteryHealthPercent}%</Badge>
+                    <Badge tone="neutral">{locale === "zh" ? "胎压" : "Tyres"} {s.tyrePressureBar.map((b) => b.toFixed(1)).join(" / ")} bar</Badge>
                   </div>
 
                   <div className={cn("mt-5 grid grid-cols-3 gap-2 sm:grid-cols-6 transition-opacity", pending === e.id && "pointer-events-none opacity-60")} aria-busy={pending === e.id}>
@@ -190,11 +204,9 @@ export function Garage({ vehicles }: { vehicles: Vehicle[] }) {
         </div>
       )}
 
-      {toast ? (
-        <div className="pointer-events-none fixed inset-x-0 bottom-8 z-50 flex justify-center">
-          <div role="status" className="rounded-2xl bg-ink px-4 py-2.5 text-sm text-white shadow-lift">{toast}</div>
-        </div>
-      ) : null}
+      <div className="pointer-events-none fixed inset-x-0 bottom-8 z-50 flex justify-center" role="status" aria-live="polite">
+        {toast ? <div className="rounded-2xl bg-ink px-4 py-2.5 text-sm text-white shadow-lift">{toast}</div> : null}
+      </div>
     </div>
   );
 }
@@ -208,7 +220,7 @@ function Action({ icon, label, ariaLabel, onClick, active, disabled }: { icon: R
   );
 }
 
-function AddVehicleForm({ vehicles, onCancel, onAdded }: { vehicles: Vehicle[]; onCancel: () => void; onAdded: (entry: GarageEntry) => void }) {
+function AddVehicleForm({ vehicles, onCancel, onAdded }: { vehicles: ClientVehicle[]; onCancel: () => void; onAdded: (entry: GarageEntry) => void }) {
   const { t, pick, locale } = useI18n();
   const orderable = vehicles.filter((v) => v.availability !== "overseas");
   const [slug, setSlug] = useState(orderable[0].slug);
@@ -279,7 +291,7 @@ function AddVehicleForm({ vehicles, onCancel, onAdded }: { vehicles: Vehicle[]; 
         </div>
         <div>
           <Label htmlFor="gv-vin" hint={locale === "zh" ? "留空自动生成演示车辆" : "Leave blank for a demo VIN"}>{t.connect.vin}</Label>
-          <Input id="gv-vin" value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} placeholder="17 位" maxLength={17} className="font-mono uppercase" />
+          <Input id="gv-vin" value={vin} onChange={(e) => setVin(e.target.value.toUpperCase())} placeholder={locale === "zh" ? "17 位车架号" : "17-character VIN"} maxLength={17} className="font-mono uppercase" />
         </div>
       </div>
       <FieldError>{error}</FieldError>

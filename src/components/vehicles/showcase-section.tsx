@@ -25,8 +25,8 @@ export function ShowcaseSection({ vehicle, locale, priority, align = "center", i
   const isInventory = vehicle.availability === "inventory";
   const stats = vehicle.highlights.slice(0, 3);
   const light = vehicle.theme === "light";
-  const muted = light ? "text-graphite" : "text-white/70";
-  const subtle = light ? "text-slate" : "text-white/60";
+  const muted = light ? "text-graphite" : "text-white/85";
+  const subtle = light ? "text-slate" : "text-white/80";
 
   return (
     <section className={cn("snap-section relative flex min-h-[100svh] flex-col overflow-hidden", light ? "bg-mist text-ink" : "bg-carbon text-white", className)}>
@@ -68,7 +68,7 @@ export function ShowcaseSection({ vehicle, locale, priority, align = "center", i
               <div key={s.label.zh} className={cn(align === "center" && "text-center")}>
                 <div className="flex items-baseline gap-1 text-2xl font-semibold tabular-nums lg:text-3xl">
                   {s.value}
-                  {s.unit ? <span className={cn("text-sm font-medium", muted)}>{s.unit}</span> : null}
+                  {s.unit ? <span className={cn("text-sm font-medium", muted)}>{typeof s.unit === "string" ? s.unit : pick(s.unit, locale)}</span> : null}
                 </div>
                 <div className={cn("mt-0.5 text-xs", subtle)}>{pick(s.label, locale)}</div>
               </div>

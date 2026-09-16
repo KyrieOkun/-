@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { vehicles } from "@/data/vehicles";
+import { toClientVehicle } from "@/data/types";
 import { Container, Eyebrow } from "@/components/ui/primitives";
 import { AuthGate } from "@/components/auth/auth-gate";
 import { AccountDashboard } from "@/components/account/account-dashboard";
@@ -24,7 +25,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       </section>
       <Container className="py-12 pb-24">
         <AuthGate title={mode === "register" ? t.account.registerTitle : t.account.loginTitle} description={t.account.oneIdBody} initialUser={user ? toPublicUser(user) : null} initialMode={mode === "register" ? "register" : "login"}>
-          <AccountDashboard vehicles={vehicles} />
+          <AccountDashboard vehicles={vehicles.map(toClientVehicle)} />
         </AuthGate>
       </Container>
     </div>

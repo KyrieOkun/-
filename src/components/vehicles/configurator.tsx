@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Check, Link2, Save, ChevronRight } from "lucide-react";
-import type { Vehicle, VehicleSelection } from "@/data/types";
+import type { ClientVehicle, VehicleSelection } from "@/data/types";
 import { useI18n } from "@/lib/i18n/provider";
 import { cn, formatCNY, formatPriceHeadline } from "@/lib/utils";
 import {
@@ -25,7 +25,7 @@ import { saveBuild } from "@/lib/saved-builds";
 import { InteriorSwatch, PaintPanel, PaintSwatch, WheelGlyph } from "./swatches";
 import { SavedBuilds } from "./saved-builds";
 
-export function Configurator({ vehicle }: { vehicle: Vehicle }) {
+export function Configurator({ vehicle }: { vehicle: ClientVehicle }) {
   const { t, pick, locale } = useI18n();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,16 +34,28 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
 
   const quote = useMemo(() => computeQuote(vehicle, selection), [vehicle, selection]);
   const trimId = selection.trimId;
-  const paints = availablePaints(vehicle, trimId);
-  const wheels = availableWheels(vehicle, trimId);
-  const interiors = availableInteriors(vehicle, trimId);
-  const extras = availableExtras(vehicle, trimId);
+  const paints = useMemo(() => availablePaints(vehicle, trimId), [vehicle, trimId]);
+  const wheels = useMemo(() => availableWheels(vehicle, trimId), [vehicle, trimId]);
+  const interiors = useMemo(() => availableInteriors(vehicle, trimId), [vehicle, trimId]);
+  const extras = useMemo(() => availableExtras(vehicle, trimId), [vehicle, trimId]);
+  const firstRun = useRef(true);
 
+  // Reflect the build in the URL (shareable), but leave a clean URL untouched on first paint.
   useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
     const qs = encodeSelection(selection);
-    const url = `${window.location.pathname}?${qs}`;
-    window.history.replaceState(window.history.state, "", url);
+    window.history.replaceState(window.history.state, "", `${window.location.pathname}?${qs}`);
   }, [selection]);
+
+  // Back/forward or a link that only changes the query string must update the build.
+  useEffect(() => {
+    const fromUrl = normalizeSelection(vehicle, decodeSelection(searchParams));
+    if (searchParams.toString() && encodeSelection(fromUrl) !== encodeSelection(selection)) setSelection(fromUrl);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only react to URL changes
+  }, [searchParams]);
 
   useEffect(() => {
     if (!toast) return;
@@ -56,8 +68,12 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
     [vehicle],
   );
 
-  const toggleExtra = (id: string) =>
-    update({ extraIds: selection.extraIds.includes(id) ? selection.extraIds.filter((x) => x !== id) : [...selection.extraIds, id] });
+  const toggleExtra = (id: string) => {
+    if (selection.extraIds.includes(id)) return update({ extraIds: selection.extraIds.filter((x) => x !== id) });
+    const option = extras.find((e) => e.id === id);
+    const rivals = new Set([...(option?.excludes ?? []), ...extras.filter((e) => e.excludes?.includes(id)).map((e) => e.id)]);
+    update({ extraIds: [...selection.extraIds.filter((x) => !rivals.has(x)), id] });
+  };
 
   const orderHref = `/order?vehicle=${vehicle.slug}&${encodeSelection(selection)}`;
 
@@ -157,24 +173,30 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
       </div>
 
       {/* Options */}
-      <div className="px-5 pb-40 pt-8 sm:px-8 lg:h-[calc(100vh-56px)] lg:overflow-y-auto lg:px-10 lg:pb-12">
+      <div className="px-5 pb-12 pt-8 sm:px-8 lg:h-[calc(100vh-56px)] lg:overflow-y-auto lg:px-10">
         <div className="mb-8">
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-ash">{t.configurator.title}</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight">{pick(vehicle.name)}</h1>
           <p className="mt-1 text-sm text-slate">{pick(vehicle.tagline)}</p>
+          {vehicle.availability === "inventory" ? (
+            <p className="mt-4 rounded-2xl bg-mist px-4 py-3 text-xs leading-5 text-graphite">
+              {locale === "zh" ? "该车型以进口现车形式销售，颜色、轮毂与内饰以到港库存为准；提交后交付顾问会为您匹配最接近的现车。" : "This model is sold from imported inventory; colour, wheels and interior are subject to stock on hand — a delivery specialist will match the closest available car."}
+            </p>
+          ) : null}
         </div>
 
         {/* Trim */}
         <Step index={1} title={t.configurator.trim}>
-          <div className="space-y-3">
+          <div className="space-y-3" role="radiogroup" aria-labelledby="step-1">
             {vehicle.trims.map((tr) => {
               const active = tr.id === trimId;
               return (
                 <button
                   key={tr.id}
                   type="button"
+                  role="radio"
                   onClick={() => update({ trimId: tr.id })}
-                  aria-pressed={active}
+                  aria-checked={active}
                   className={cn("w-full rounded-2xl border p-4 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}
                 >
                   <div className="flex items-start justify-between gap-3">
@@ -200,9 +222,9 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
 
         {/* Paint */}
         <Step index={2} title={t.configurator.color} meta={`${pick(quote.paint.name)} · ${quote.paint.price === 0 ? t.common.included : `+${formatCNY(quote.paint.price)}`}`}>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3" role="radiogroup" aria-labelledby="step-2">
             {paints.map((p) => (
-              <button key={p.id} type="button" onClick={() => update({ paintId: p.id })} aria-label={pick(p.name)} aria-pressed={p.id === selection.paintId} className="focus-ring rounded-full">
+              <button key={p.id} type="button" role="radio" onClick={() => update({ paintId: p.id })} aria-label={`${pick(p.name)} · ${p.price === 0 ? t.common.included : `+${formatCNY(p.price)}`}`} aria-checked={p.id === selection.paintId} className="focus-ring rounded-full">
                 <PaintSwatch paint={p} size={44} selected={p.id === selection.paintId} />
               </button>
             ))}
@@ -219,11 +241,11 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
 
         {/* Wheels */}
         <Step index={3} title={t.configurator.wheel} meta={`${pick(quote.wheel.name)} · ${quote.wheel.price === 0 ? t.common.included : `+${formatCNY(quote.wheel.price)}`}`}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-labelledby="step-3">
             {wheels.map((w) => {
               const active = w.id === selection.wheelId;
               return (
-                <button key={w.id} type="button" onClick={() => update({ wheelId: w.id })} aria-pressed={active} className={cn("flex items-center gap-3 rounded-2xl border p-3 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}>
+                <button key={w.id} type="button" role="radio" onClick={() => update({ wheelId: w.id })} aria-checked={active} className={cn("flex items-center gap-3 rounded-2xl border p-3 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}>
                   {w.image ? (
                     <span className="relative size-14 shrink-0 overflow-hidden rounded-xl bg-mist">
                       <Image src={w.image} alt="" fill sizes="56px" className="object-cover" />
@@ -243,11 +265,11 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
 
         {/* Interior */}
         <Step index={4} title={t.configurator.interior} meta={`${pick(quote.interior.name)} · ${quote.interior.price === 0 ? t.common.included : `+${formatCNY(quote.interior.price)}`}`}>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2" role="radiogroup" aria-labelledby="step-4">
             {interiors.map((i) => {
               const active = i.id === selection.interiorId;
               return (
-                <button key={i.id} type="button" onClick={() => update({ interiorId: i.id })} aria-pressed={active} className={cn("flex items-center gap-3 rounded-2xl border p-3 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}>
+                <button key={i.id} type="button" role="radio" onClick={() => update({ interiorId: i.id })} aria-checked={active} className={cn("flex items-center gap-3 rounded-2xl border p-3 text-left transition-all focus-ring", active ? "border-ink ring-1 ring-ink" : "border-line hover:border-ash")}>
                   {i.image ? (
                     <span className="relative size-11 shrink-0 overflow-hidden rounded-xl bg-mist">
                       <Image src={i.image} alt="" fill sizes="44px" className="object-cover" />
@@ -324,7 +346,7 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
             </div>
             <Row label={t.configurator.monthly} value={`${formatCNY(quote.monthly)}${t.common.perMonth}`} muted hint={t.configurator.monthlyNote} />
             <Row label={t.configurator.deliveryEta} value={`${quote.deliveryWeeks[0]}-${quote.deliveryWeeks[1]} ${t.common.weeks}`} muted />
-            <Row label={t.configurator.range} value={`${quote.rangeKm} km`} muted />
+            <Row label={vehicle.powertrain === "erev" ? (locale === "zh" ? "纯电续航" : "EV range") : t.configurator.range} value={`${quote.rangeKm} km`} muted />
           </dl>
           <div className="mt-6 flex flex-col gap-3">
             <Button href={orderHref} size="lg" fullWidth iconRight={<ChevronRight className="size-4" />}>
@@ -356,7 +378,7 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
       </div>
 
       {/* Mobile sticky bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 p-4 backdrop-blur lg:hidden" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 p-4 backdrop-blur lg:hidden print:hidden" style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}>
         <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-[11px] uppercase tracking-wider text-ash">{t.configurator.totalPrice}</p>
@@ -368,11 +390,9 @@ export function Configurator({ vehicle }: { vehicle: Vehicle }) {
         </div>
       </div>
 
-      {toast ? (
-        <div className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex justify-center lg:bottom-8">
-          <div role="status" className="rounded-2xl bg-ink px-4 py-2.5 text-sm text-white shadow-lift">{toast}</div>
-        </div>
-      ) : null}
+      <div className="pointer-events-none fixed inset-x-0 bottom-24 z-50 flex justify-center lg:bottom-8" role="status" aria-live="polite">
+        {toast ? <div className="rounded-2xl bg-ink px-4 py-2.5 text-sm text-white shadow-lift">{toast}</div> : null}
+      </div>
     </div>
   );
 }
@@ -385,7 +405,7 @@ function Step({ index, title, meta, children }: { index: number; title: string; 
           <span className="text-xs font-semibold tabular-nums text-ash">0{index}</span>
           {title}
         </h2>
-        {meta ? <p className="truncate text-xs text-slate">{meta}</p> : null}
+        {meta ? <span className="block truncate text-xs text-slate">{meta}</span> : null}
       </div>
       {children}
     </section>

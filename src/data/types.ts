@@ -17,6 +17,10 @@ export interface Trim {
   powerKw: number;
   powerPs: number;
   torqueNm?: number;
+  /** True when the published figure is wheel torque (Cybertruck), not motor torque. */
+  torqueAtWheels?: boolean;
+  /** Body dimensions that differ from the model (e.g. long-wheelbase Model Y L). */
+  dimensions?: Partial<{ length: number; width: number; height: number; wheelbase: number }>;
   batteryKwh: number;
   batteryType: L10n;
   rangeKm: number;
@@ -84,6 +88,8 @@ export interface ExtraOption {
   category: ExtraCategory;
   trims?: string[];
   includedIn?: string[];
+  /** Options that cannot be combined with this one (e.g. FSD supersedes EAP, 6- vs 7-seat). */
+  excludes?: string[];
 }
 
 export interface SpecRow {
@@ -125,7 +131,7 @@ export interface Vehicle {
   heroPaintId?: string;
   images: VehicleImage[];
   theme: "dark" | "light";
-  highlights: { value: string; unit?: string; label: L10n }[];
+  highlights: { value: string; unit?: string | L10n; label: L10n }[];
   trims: Trim[];
   paints: PaintOption[];
   wheels: WheelOption[];
@@ -141,6 +147,46 @@ export interface Vehicle {
   features: FeatureBlock[];
   tags: L10n[];
   order: number;
+}
+
+/**
+ * Vehicle without the long-form content (specs tables, feature blocks, gallery,
+ * marketing copy). Client components receive this shape so pages that list
+ * every vehicle don't ship ~15 KB of prose per car in the RSC payload.
+ */
+export type ClientVehicle = Omit<Vehicle, "specs" | "features" | "images" | "description" | "highlights" | "tags">;
+
+export function toClientVehicle(vehicle: Vehicle): ClientVehicle {
+  const { specs: _specs, features: _features, images: _images, description: _description, highlights: _highlights, tags: _tags, ...rest } = vehicle;
+  void _specs; void _features; void _images; void _description; void _highlights; void _tags;
+  return rest;
+}
+
+/** Minimal shape for pickers, forms and the trip planner (a few hundred bytes per vehicle). */
+export interface VehicleSummary {
+  slug: string;
+  brand: Brand;
+  name: L10n;
+  tagline: L10n;
+  hero: VehicleImage;
+  availability: Availability;
+  powertrain: Powertrain;
+  bodyType: BodyType;
+  trims: Pick<Trim, "id" | "name" | "price" | "rangeKm" | "evRangeKm">[];
+}
+
+export function toVehicleSummary(vehicle: Vehicle): VehicleSummary {
+  return {
+    slug: vehicle.slug,
+    brand: vehicle.brand,
+    name: vehicle.name,
+    tagline: vehicle.tagline,
+    hero: vehicle.hero,
+    availability: vehicle.availability,
+    powertrain: vehicle.powertrain,
+    bodyType: vehicle.bodyType,
+    trims: vehicle.trims.map((tr) => ({ id: tr.id, name: tr.name, price: tr.price, rangeKm: tr.rangeKm, evRangeKm: tr.evRangeKm })),
+  };
 }
 
 export interface VehicleSelection {

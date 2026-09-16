@@ -12,7 +12,9 @@ export function formatCNY(amount: number, options: { compact?: boolean; locale?:
   if (compact && Math.abs(amount) >= 10_000) {
     const wan = amount / 10_000;
     const text = Number.isInteger(wan) ? wan.toFixed(0) : wan.toFixed(2).replace(/\.?0+$/, "");
-    return locale === "zh" ? `${text} 万元` : `¥${text}0K`.replace("0K", "0k");
+    if (locale === "zh") return `${text} 万元`;
+    const thousands = amount / 1_000;
+    return `¥${(Number.isInteger(thousands) ? thousands.toFixed(0) : thousands.toFixed(1).replace(/\.0$/, ""))}k`;
   }
   return `¥${Math.round(amount).toLocaleString("en-US")}`;
 }
@@ -27,6 +29,12 @@ export function formatPriceHeadline(amount: number, locale: Locale): string {
   return `¥${Math.round(amount).toLocaleString("en-US")}`;
 }
 
+/** "21.99 万元起" / "From ¥219,900" — one place for the "from" wording. */
+export function formatPriceFrom(amount: number, locale: Locale): string {
+  const price = formatPriceHeadline(amount, locale);
+  return locale === "zh" ? `${price}起` : `From ${price}`;
+}
+
 export function formatUSD(amount: number): string {
   return `$${Math.round(amount).toLocaleString("en-US")}`;
 }
@@ -38,13 +46,25 @@ export function formatNumber(value: number, locale: Locale = "zh", fractionDigit
   });
 }
 
+/** Date-only ISO strings are calendar dates: parse them in local time so they never shift a day across time zones. */
+function parseIso(iso: string): Date {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : new Date(iso);
+}
+
+/** All customer-facing timestamps are shown in China Standard Time, on the server and in the browser alike (no hydration drift). */
+export const SITE_TIME_ZONE = "Asia/Shanghai";
+
 export function formatDate(iso: string, locale: Locale = "zh"): string {
-  const d = new Date(iso);
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(iso);
+  const d = parseIso(iso);
   if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
+    // Calendar dates were parsed in local time; instants are shown in CST.
+    ...(dateOnly ? {} : { timeZone: SITE_TIME_ZONE }),
   });
 }
 
@@ -57,7 +77,17 @@ export function formatDateTime(iso: string, locale: Locale = "zh"): string {
     day: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
+    timeZone: SITE_TIME_ZONE,
   });
+}
+
+/** YYYY-MM-DD for "today + n days" in China Standard Time; identical on server and client. */
+export function isoDateInCST(daysFromNow = 0): string {
+  const d = new Date(Date.now() + daysFromNow * 86_400_000);
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone: SITE_TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  return `${get("year")}-${get("month")}-${get("day")}`;
 }
 
 export function slugify(input: string): string {
@@ -90,8 +120,13 @@ export function seededRandom(seed: number): () => number {
   };
 }
 
+/** Strips spaces, hyphens and a +86 prefix so the same number always indexes the same way. */
+export function normalizePhone(value: string): string {
+  return value.trim().replace(/\s|-/g, "").replace(/^(\+?86)(?=1[3-9]\d{9}$)/, "");
+}
+
 export function isValidCNPhone(value: string): boolean {
-  return /^1[3-9]\d{9}$/.test(value.replace(/\s|-/g, ""));
+  return /^1[3-9]\d{9}$/.test(normalizePhone(value));
 }
 
 export function isValidEmail(value: string): boolean {
@@ -99,7 +134,8 @@ export function isValidEmail(value: string): boolean {
 }
 
 export function maskPhone(phone: string): string {
-  return phone.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2");
+  const digits = normalizePhone(phone);
+  return digits.length === 11 ? digits.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2") : phone.replace(/.(?=.{4})/g, "*");
 }
 
 const CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I to avoid misreads
@@ -123,4 +159,9 @@ export const SITE_URL = (process.env.SITE_URL ?? process.env.NEXT_PUBLIC_SITE_UR
 
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+/** Serialises structured data for an inline <script>; `<` is escaped so no value can close the tag. */
+export function jsonLd(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
 }

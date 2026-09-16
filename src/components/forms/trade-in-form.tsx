@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { ArrowLeftRight, CheckCircle2 } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { VehicleSummary } from "@/data/types";
 import type { TradeInEstimate } from "@/lib/trade-in";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
@@ -12,7 +12,7 @@ import { FieldError, Input, Label, Select } from "@/components/ui/primitives";
 
 const BRANDS = ["小米汽车 Xiaomi", "特斯拉 Tesla", "比亚迪 BYD", "蔚来 NIO", "小鹏 XPeng", "理想 Li Auto", "问界 AITO", "极氪 ZEEKR", "宝马 BMW", "奔驰 Mercedes-Benz", "奥迪 Audi", "丰田 Toyota", "本田 Honda", "大众 Volkswagen", "其他 Other"];
 
-export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
+export function TradeInForm({ vehicles }: { vehicles: VehicleSummary[] }) {
   const { t, pick, locale } = useI18n();
   const zh = locale === "zh";
   const [brand, setBrand] = useState(BRANDS[1]);
@@ -83,7 +83,7 @@ export function TradeInForm({ vehicles }: { vehicles: Vehicle[] }) {
             <Label htmlFor="ti-year" required>{t.forms.year}</Label>
             <Select id="ti-year" value={year} onChange={(e) => setYear(Number(e.target.value))}>
               {Array.from({ length: 12 }).map((_, i) => {
-                const y = 2026 - i;
+                const y = new Date().getFullYear() - i;
                 return <option key={y} value={y}>{y}</option>;
               })}
             </Select>

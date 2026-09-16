@@ -71,7 +71,7 @@ export const stations: Station[] = [
   { id: "sa-cangzhou-t", name: l("京沪高速沧州服务区 V4 超充站", "G2 Cangzhou Service Area V4 Supercharger"), network: "tesla", kind: TESLA_V4, cityId: "cangzhou", address: l("G2 京沪高速沧州服务区", "G2, Cangzhou SA"), stalls: 8, maxKw: 250, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("cangzhou"), corridor: "G2", hours: "24h", pricePerKwh: 1.75 },
   { id: "sa-taian-x", name: l("京台高速泰安服务区小米超充站", "G3 Tai'an Service Area Xiaomi Supercharger"), network: "xiaomi", kind: XIAOMI_600, cityId: "tai-an", address: l("G3 京台高速泰安服务区", "G3, Tai'an SA"), stalls: 8, maxKw: 600, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("tai-an"), corridor: "G3", hours: "24h", pricePerKwh: 1.72 },
   { id: "sa-xuzhou-t", name: l("京沪高速徐州服务区超充站", "G2 Xuzhou Service Area Supercharger"), network: "tesla", kind: TESLA_V3, cityId: "xuzhou", address: l("G2 京沪高速徐州东服务区", "G2, Xuzhou East SA"), stalls: 8, maxKw: 250, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("xuzhou"), corridor: "G2", hours: "24h", pricePerKwh: 1.75 },
-  { id: "sa-huaian-x", name: l("长深高速淮安服务区小米超充站", "G25 Huai'an Service Area Xiaomi Supercharger"), network: "xiaomi", kind: XIAOMI_600, cityId: "huaian", address: l("G25 长深高速淮安服务区", "G25, Huai'an SA"), stalls: 8, maxKw: 600, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("huaian"), corridor: "G2", hours: "24h", pricePerKwh: 1.72 },
+  { id: "sa-huaian-x", name: l("长深高速淮安服务区小米超充站", "G25 Huai'an Service Area Xiaomi Supercharger"), network: "xiaomi", kind: XIAOMI_600, cityId: "huaian", address: l("G25 长深高速淮安服务区", "G25, Huai'an SA"), stalls: 8, maxKw: 600, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("huaian"), corridor: "G25", hours: "24h", pricePerKwh: 1.72 },
   { id: "sa-jinhua-x", name: l("沪昆高速金华服务区小米超充站", "G60 Jinhua Service Area Xiaomi Supercharger"), network: "xiaomi", kind: XIAOMI_600, cityId: "jinhua", address: l("G60 沪昆高速金华服务区", "G60, Jinhua SA"), stalls: 8, maxKw: 600, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("jinhua"), corridor: "G60", hours: "24h", pricePerKwh: 1.72 },
   { id: "sa-nanchang-t", name: l("沪昆高速南昌服务区超充站", "G60 Nanchang Service Area Supercharger"), network: "tesla", kind: TESLA_V3, cityId: "nanchang", address: l("G60 沪昆高速南昌东服务区", "G60, Nanchang East SA"), stalls: 8, maxKw: 250, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("nanchang", 0.05, 0.1), corridor: "G60", hours: "24h", pricePerKwh: 1.75 },
   { id: "sa-yueyang-t", name: l("京港澳高速岳阳服务区超充站", "G4 Yueyang Service Area Supercharger"), network: "tesla", kind: TESLA_V3, cityId: "yueyang", address: l("G4 京港澳高速岳阳服务区", "G4, Yueyang SA"), stalls: 8, maxKw: 250, openToAll: true, amenities: ["restroom", "food", "24h"], ...at("yueyang"), corridor: "G4", hours: "24h", pricePerKwh: 1.75 },
@@ -152,8 +152,8 @@ export const homeChargers = [
     id: "xiaomi-7",
     brand: "xiaomi" as const,
     name: l("小米家用充电桩 7 kW", "Xiaomi Wall Connector 7 kW"),
-    price: 3999,
-    note: l("购车赠送并含基础安装服务", "Included with vehicle purchase, with standard installation"),
+    price: 0,
+    note: l("购车赠送并含基础安装服务（单独购买 ¥3,999）", "Complimentary with a vehicle purchase, standard installation included (¥3,999 sold separately)"),
     bullets: [l("770 g 超轻充电枪", "770 g lightweight plug"), l("蓝牙靠近自动解锁", "Bluetooth proximity unlock"), l("米家 App 远程管理", "Mi Home app control")],
   },
   {
@@ -180,3 +180,8 @@ export const chargingBenefits = [
   { icon: "map-pinned", title: l("实时可用率", "Live availability"), body: l("站点空闲桩、排队与功率实时可见，行程中自动推荐。", "See free stalls, queues and live power, with en-route suggestions.") },
   { icon: "badge-percent", title: l("会员权益", "Member benefits"), body: l("分时电价、停车费减免与小米积分抵扣服务费。", "Time-of-use rates, parking waivers and Xiaomi points toward service fees.") },
 ];
+
+/** Slim projection for the schematic map (client component); coordinates rounded to ~100 m. */
+export function toMapStation(s: Station): Pick<Station, "id" | "name" | "network" | "lat" | "lng" | "maxKw" | "cityId"> {
+  return { id: s.id, name: s.name, network: s.network, lat: Math.round(s.lat * 1000) / 1000, lng: Math.round(s.lng * 1000) / 1000, maxKw: s.maxKw, cityId: s.cityId };
+}

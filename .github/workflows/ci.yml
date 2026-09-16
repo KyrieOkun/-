@@ -17,6 +17,8 @@ jobs:
     env:
       NEXT_TELEMETRY_DISABLED: "1"
       AUTH_SECRET: ci-only-secret-not-for-production-0000
+      # The smoke test runs the production build without Redis on purpose.
+      ALLOW_MEMORY_STORE: "true"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

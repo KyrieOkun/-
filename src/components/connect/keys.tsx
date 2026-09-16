@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { KeyRound, Smartphone, Watch, Copy, Check } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { VehicleSummary } from "@/data/types";
 import type { GarageVehicle } from "@/lib/garage";
 import type { SharedKey } from "@/lib/orders";
 import { apiFetch } from "@/lib/client";
@@ -11,7 +11,7 @@ import { cn, formatDate, isValidCNPhone, isValidEmail } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge, FieldError, Input, Label, Select } from "@/components/ui/primitives";
 
-export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
+export function Keys({ vehicles }: { vehicles: VehicleSummary[] }) {
   const { t, pick, locale } = useI18n();
   const [garage, setGarage] = useState<GarageVehicle[]>([]);
   const [keys, setKeys] = useState<SharedKey[]>([]);
@@ -113,8 +113,8 @@ export function Keys({ vehicles }: { vehicles: Vehicle[] }) {
               </div>
             </fieldset>
             <div>
-              <Label htmlFor="key-days" hint={`${days} ${locale === "zh" ? "天" : "days"}`}>{t.connect.keyExpiry}</Label>
-              <input id="key-days" type="range" min={1} max={365} value={days} onChange={(e) => setDays(Number(e.target.value))} aria-valuetext={`${days} ${locale === "zh" ? "天" : "days"}`} className="w-full accent-ink" />
+              <Label htmlFor="key-days" hint={`${days} ${locale === "zh" ? t.common.days : days === 1 ? "day" : t.common.days}`}>{t.connect.keyExpiry}</Label>
+              <input id="key-days" type="range" min={1} max={365} value={days} onChange={(e) => setDays(Number(e.target.value))} aria-valuetext={`${days} ${locale === "zh" ? t.common.days : days === 1 ? "day" : t.common.days}`} className="w-full accent-ink" />
             </div>
             <FieldError>{error}</FieldError>
             <Button type="submit" loading={submitting} disabled={garage.length === 0}>{t.connect.createKey}</Button>

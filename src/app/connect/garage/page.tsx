@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getI18n } from "@/lib/i18n/server";
 import { getCurrentUser, toPublicUser } from "@/lib/auth";
 import { vehicles } from "@/data/vehicles";
+import { toClientVehicle } from "@/data/types";
 import { Container, Eyebrow } from "@/components/ui/primitives";
 import { AuthGate } from "@/components/auth/auth-gate";
 import { Garage } from "@/components/connect/garage";
@@ -26,7 +27,7 @@ export default async function GaragePage() {
       </section>
       <Container className="py-12 pb-24">
         <AuthGate title={t.connect.requireLogin} description={t.account.oneIdBody} initialUser={user ? toPublicUser(user) : null}>
-          <Garage vehicles={vehicles} />
+          <Garage vehicles={vehicles.map(toClientVehicle)} />
         </AuthGate>
       </Container>
     </div>

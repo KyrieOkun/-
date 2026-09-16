@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Check } from "lucide-react";
 import { getI18n } from "@/lib/i18n/server";
 import { pick } from "@/lib/i18n/types";
-import { chargingBenefits, homeChargers, networkStats } from "@/data/charging";
+import { chargingBenefits, homeChargers, networkStats, toMapStation } from "@/data/charging";
 import { cities } from "@/data/cities";
 import { HeroOverlay } from "@/components/layout/header-theme";
 import { Button } from "@/components/ui/button";
@@ -77,7 +77,7 @@ export default async function ChargingPage() {
         <Container>
           <SectionHeading eyebrow={t.charging.liveStatus} title={t.charging.stationsTitle} subtitle={zh ? "小米超充、特斯拉超充与合作运营商站点实时空闲情况，每分钟刷新。点击导航跳转高德地图。" : "Live availability across Xiaomi, Tesla and partner stations, refreshed every minute. Navigate opens Amap."} />
           <div className="mt-10">
-            <NetworkMap stations={stations.map((s) => ({ id: s.id, name: s.name, network: s.network, lat: s.lat, lng: s.lng, maxKw: s.maxKw, cityId: s.cityId }))} />
+            <NetworkMap stations={stations.map(toMapStation)} />
           </div>
           <div className="mt-8">
             <StationFinder cities={cities} />

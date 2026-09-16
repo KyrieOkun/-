@@ -3,7 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { randomBytes, scrypt as scryptCb, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { store } from "./store";
-import { generateId } from "./utils";
+import { generateId, isValidCNPhone, normalizePhone } from "./utils";
 
 const scrypt = promisify(scryptCb);
 
@@ -29,7 +29,7 @@ export function toPublicUser(user: UserRecord): PublicUser {
   return rest;
 }
 
-function secret(): Uint8Array {
+export function authSecret(): Uint8Array {
   const value = process.env.AUTH_SECRET;
   if (!value || value.length < 16) {
     if (process.env.NODE_ENV === "production" && process.env.ALLOW_INSECURE_AUTH_SECRET !== "true") {
@@ -54,23 +54,48 @@ export async function verifyPassword(password: string, stored: string): Promise<
   return expected.length === derived.length && timingSafeEqual(derived, expected);
 }
 
+// Sessions are JWTs whose `jti` must also exist server-side, so logout (or an
+// operator) can revoke a token before it expires.
 export async function createSessionToken(userId: string): Promise<string> {
+  const jti = generateId("S");
+  await store.setValue(`session:${jti}`, { userId, createdAt: new Date().toISOString() }, SESSION_TTL_SECONDS);
   return new SignJWT({ sub: userId })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_TTL_SECONDS}s`)
-    .setJti(generateId("S"))
-    .sign(secret());
+    .setJti(jti)
+    .sign(authSecret());
 }
 
 export async function readSessionToken(token: string | undefined): Promise<string | null> {
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, secret());
-    return typeof payload.sub === "string" ? payload.sub : null;
+    const { payload } = await jwtVerify(token, authSecret());
+    if (typeof payload.sub !== "string" || typeof payload.jti !== "string") return null;
+    const live = await store.getValue<{ userId: string }>(`session:${payload.jti}`);
+    return live && live.userId === payload.sub ? payload.sub : null;
   } catch {
     return null;
   }
+}
+
+export async function revokeSessionToken(token: string | undefined): Promise<void> {
+  if (!token) return;
+  try {
+    const { payload } = await jwtVerify(token, authSecret());
+    if (typeof payload.jti === "string") await store.deleteValue(`session:${payload.jti}`);
+  } catch {
+    /* already invalid */
+  }
+}
+
+// Hash of a random password; used so a login for an unknown identifier costs
+// the same scrypt work as a wrong password (no timing-based account enumeration).
+const DUMMY_HASH_PROMISE = hashPassword(randomBytes(24).toString("hex"));
+export async function verifyPasswordOrDummy(password: string, stored: string | undefined): Promise<boolean> {
+  if (stored) return verifyPassword(password, stored);
+  await verifyPassword(password, await DUMMY_HASH_PROMISE);
+  return false;
 }
 
 export function sessionCookieOptions() {
@@ -92,8 +117,8 @@ export async function getCurrentUser(): Promise<UserRecord | null> {
 
 export function normalizeIdentifier(input: string): { field: "phone" | "email"; value: string } | null {
   const trimmed = input.trim();
-  if (/^1[3-9]\d{9}$/.test(trimmed.replace(/\s|-/g, ""))) {
-    return { field: "phone", value: trimmed.replace(/\s|-/g, "") };
+  if (isValidCNPhone(trimmed)) {
+    return { field: "phone", value: normalizePhone(trimmed) };
   }
   if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)) {
     return { field: "email", value: trimmed.toLowerCase() };
@@ -110,9 +135,6 @@ export async function findUserByIdentifier(identifier: string): Promise<UserReco
 export async function createUser(input: { name: string; identifier: string; password: string; city?: string }): Promise<UserRecord> {
   const normalized = normalizeIdentifier(input.identifier);
   if (!normalized) throw new Error("INVALID_IDENTIFIER");
-  const existing = await store.getByLookup<UserRecord>("users", normalized.field, normalized.value);
-  if (existing) throw new Error("USER_EXISTS");
-
   const user: UserRecord = {
     id: generateId("U"),
     name: input.name.trim(),
@@ -122,7 +144,9 @@ export async function createUser(input: { name: string; identifier: string; pass
     city: input.city,
     ...(normalized.field === "phone" ? { phone: normalized.value } : { email: normalized.value }),
   };
+  // Reserve the identifier first (SET NX) so two concurrent sign-ups cannot both succeed.
+  const claimed = await store.claimLookup("users", normalized.field, normalized.value, user.id);
+  if (!claimed) throw new Error("USER_EXISTS");
   await store.put("users", user);
-  await store.setLookup("users", normalized.field, normalized.value, user.id);
   return user;
 }

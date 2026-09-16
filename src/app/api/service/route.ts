@@ -2,12 +2,13 @@ import { z } from "zod";
 import { created, fail, parseBody, rateLimit } from "@/lib/api";
 import { store } from "@/lib/store";
 import { stores } from "@/data/site";
+import { getVehicle } from "@/data/vehicles";
 import { getCurrentUser } from "@/lib/auth";
-import { generateId, isValidCNPhone } from "@/lib/utils";
+import { generateId, isValidCNPhone, normalizePhone } from "@/lib/utils";
 
 const schema = z.object({
   name: z.string().trim().min(1).max(40),
-  phone: z.string().trim().refine(isValidCNPhone, "INVALID_PHONE"),
+  phone: z.string().trim().refine(isValidCNPhone, "INVALID_PHONE").transform(normalizePhone),
   brand: z.enum(["xiaomi", "tesla"]),
   vehicleSlug: z.string().optional(),
   plate: z.string().trim().max(10).optional(),
@@ -26,6 +27,7 @@ export async function POST(request: Request) {
   const parsed = await parseBody(request, schema);
   if ("error" in parsed) return parsed.error;
   if (parsed.data.storeId && !stores.some((s) => s.id === parsed.data.storeId)) return fail("Unknown store", 422);
+  if (parsed.data.vehicleSlug && !getVehicle(parsed.data.vehicleSlug)) return fail("Unknown vehicle", 422);
   const user = await getCurrentUser();
   const booking = { id: generateId("SV"), ownerId: user?.id, ...parsed.data, status: "confirmed", createdAt: new Date().toISOString() };
   await store.put("serviceBookings", booking, { owner: user?.id });

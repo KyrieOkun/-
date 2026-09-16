@@ -2,18 +2,19 @@
 
 import { useMemo, useState, type FormEvent } from "react";
 import { CheckCircle2, Wrench } from "lucide-react";
-import type { Vehicle } from "@/data/types";
+import type { VehicleSummary } from "@/data/types";
 import type { Store } from "@/data/site";
+import { contact } from "@/data/site";
 import type { City } from "@/data/cities";
 import { apiFetch } from "@/lib/client";
 import { useI18n } from "@/lib/i18n/provider";
-import { cn, isValidCNPhone } from "@/lib/utils";
+import { cn, isValidCNPhone, isoDateInCST } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FieldError, Input, Label, Select, Textarea } from "@/components/ui/primitives";
 
 const SLOTS = ["08:30-10:30", "10:30-12:30", "13:30-15:30", "15:30-17:30"];
 
-export function ServiceForm({ vehicles, stores, cities }: { vehicles: Vehicle[]; stores: Store[]; cities: City[] }) {
+export function ServiceForm({ vehicles, stores, cities }: { vehicles: VehicleSummary[]; stores: Store[]; cities: City[] }) {
   const { t, pick, locale } = useI18n();
   const zh = locale === "zh";
   const types = [
@@ -35,7 +36,7 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: Vehicle[];
   const [storeId, setStoreId] = useState("");
   const effectiveStore = cityStores.some((s) => s.id === storeId) ? storeId : cityStores[0]?.id ?? "";
   const [valet, setValet] = useState(false);
-  const days = useMemo(() => Array.from({ length: 10 }).map((_, i) => { const d = new Date(); d.setDate(d.getDate() + i + 1); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; }), []);
+  const days = useMemo(() => Array.from({ length: 10 }, (_, i) => isoDateInCST(i + 1)), []);
   const [date, setDate] = useState(days[0]);
   const [slot, setSlot] = useState(SLOTS[0]);
   const [name, setName] = useState("");
@@ -67,7 +68,18 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: Vehicle[];
         <p className="mt-2 text-slate">{zh ? "服务顾问将在 30 分钟内确认，取送车服务会提前一天与您联系。" : "A service advisor will confirm within 30 minutes; valet pick-up is arranged the day before."}</p>
         <p className="mt-4 font-mono text-sm font-semibold">{done.id}</p>
         <div className="mt-6 flex justify-center gap-3">
-          <Button variant="secondary" onClick={() => setDone(null)}>{zh ? "再预约一次" : "Book another"}</Button>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              // Fresh booking: clear the request-specific fields, keep the contact details.
+              setPlate("");
+              setNote("");
+              setAgree(false);
+              setDone(null);
+            }}
+          >
+            {zh ? "再预约一次" : "Book another"}
+          </Button>
           <Button href="/connect/garage">{t.connect.garage}</Button>
         </div>
       </div>
@@ -98,17 +110,17 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: Vehicle[];
           </div>
           <div>
             <Label htmlFor="sv-plate" hint={t.common.optionalField}>{t.forms.licensePlate}</Label>
-            <Input id="sv-plate" value={plate} onChange={(e) => setPlate(e.target.value.toUpperCase())} placeholder="京A·D12345" />
+            <Input id="sv-plate" value={plate} onChange={(e) => setPlate(e.target.value.toUpperCase())} placeholder={zh ? "例如：京A·D12345" : "e.g. 京A·D12345"} />
           </div>
         </div>
-        <div>
-          <Label>{zh ? "服务类型" : "Service type"}</Label>
+        <fieldset>
+          <legend className="mb-1.5 text-[13px] font-medium text-graphite">{zh ? "服务类型" : "Service type"}</legend>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {types.map((ty) => (
               <button key={ty.id} type="button" onClick={() => setServiceType(ty.id)} aria-pressed={serviceType === ty.id} className={cn("h-11 rounded-xl border px-2 text-xs font-medium transition-colors focus-ring", serviceType === ty.id ? "border-ink bg-ink text-white" : "border-line hover:border-ash")}>{ty.label}</button>
             ))}
           </div>
-        </div>
+        </fieldset>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="sv-city" required>{t.forms.city}</Label>
@@ -173,8 +185,8 @@ export function ServiceForm({ vehicles, stores, cities }: { vehicles: Vehicle[];
         <h2 className="font-semibold">{zh ? "服务承诺" : "Service promise"}</h2>
         <ul className="mt-4 space-y-2 text-sm text-graphite">
           {(zh
-            ? ["全国 300+ 服务中心与移动服务车", "原厂配件、原厂标准工时", "维保进度实时推送到账户与 App", "24 小时道路救援 400-800-0000"]
-            : ["300+ service centres and mobile vans", "Genuine parts, factory labour standards", "Live progress in your account and app", "24h roadside assistance 400-800-0000"]
+            ? ["全国 300+ 服务与交付中心（含合作网络）及移动服务车", "原厂配件、原厂标准工时", "维保进度实时推送到账户与 App", `24 小时道路救援 ${contact.roadside}`]
+            : ["300+ service and delivery centres (incl. partners) plus mobile vans", "Genuine parts, factory labour standards", "Live progress in your account and app", `24h roadside assistance ${contact.roadside}`]
           ).map((s) => (
             <li key={s} className="flex gap-2"><CheckCircle2 className="mt-0.5 size-4 shrink-0 text-success" />{s}</li>
           ))}

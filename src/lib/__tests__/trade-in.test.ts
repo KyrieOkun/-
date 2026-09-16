@@ -23,6 +23,12 @@ describe("estimateTradeIn", () => {
     expect(e.crossBrand).toBe(false);
     expect(e.subsidy).toBe(8_000);
   });
+  it("grants no bonus when trading in a third-party brand", () => {
+    const e = estimateTradeIn({ ...base, brand: "比亚迪 BYD", targetBrand: "xiaomi" }, now);
+    expect(e.crossBrand).toBe(false);
+    expect(e.subsidy).toBe(0);
+    expect(e.totalCredit).toBe(e.mid);
+  });
   it("values newer, lower-mileage cars higher", () => {
     const older = estimateTradeIn({ ...base, year: 2020, mileageKm: 120_000 }, now);
     const newer = estimateTradeIn({ ...base, year: 2025, mileageKm: 8_000 }, now);

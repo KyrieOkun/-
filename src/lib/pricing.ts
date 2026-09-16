@@ -1,12 +1,4 @@
-import type {
-  ExtraOption,
-  InteriorOption,
-  PaintOption,
-  Trim,
-  Vehicle,
-  VehicleSelection,
-  WheelOption,
-} from "@/data/types";
+import type { ExtraOption, InteriorOption, PaintOption, Trim, VehicleSelection, WheelOption, ClientVehicle } from "@/data/types";
 
 export interface Quote {
   trim: Trim;
@@ -60,23 +52,23 @@ export function isIncludedInTrim(option: { includedIn?: string[] }, trimId: stri
   return Boolean(option.includedIn?.includes(trimId));
 }
 
-export function availablePaints(vehicle: Vehicle, trimId: string): PaintOption[] {
+export function availablePaints(vehicle: ClientVehicle, trimId: string): PaintOption[] {
   return vehicle.paints.filter((p) => isAvailableForTrim(p, trimId));
 }
 
-export function availableWheels(vehicle: Vehicle, trimId: string): WheelOption[] {
+export function availableWheels(vehicle: ClientVehicle, trimId: string): WheelOption[] {
   return vehicle.wheels.filter((w) => isAvailableForTrim(w, trimId));
 }
 
-export function availableInteriors(vehicle: Vehicle, trimId: string): InteriorOption[] {
+export function availableInteriors(vehicle: ClientVehicle, trimId: string): InteriorOption[] {
   return vehicle.interiors.filter((i) => isAvailableForTrim(i, trimId));
 }
 
-export function availableExtras(vehicle: Vehicle, trimId: string): ExtraOption[] {
+export function availableExtras(vehicle: ClientVehicle, trimId: string): ExtraOption[] {
   return vehicle.extras.filter((e) => isAvailableForTrim(e, trimId));
 }
 
-export function defaultSelection(vehicle: Vehicle, trimId?: string): VehicleSelection {
+export function defaultSelection(vehicle: ClientVehicle, trimId?: string): VehicleSelection {
   const trim = vehicle.trims.find((t) => t.id === trimId) ?? vehicle.trims[0];
   const paints = availablePaints(vehicle, trim.id);
   const wheels = availableWheels(vehicle, trim.id);
@@ -91,7 +83,22 @@ export function defaultSelection(vehicle: Vehicle, trimId?: string): VehicleSele
 }
 
 /** Coerces a possibly-invalid selection (e.g. after a trim change) into a valid one. */
-export function normalizeSelection(vehicle: Vehicle, selection: Partial<VehicleSelection>): VehicleSelection {
+/** Keeps the first of any mutually exclusive pair (callers that add an option remove its rivals first). */
+function dedupeExclusive(ids: string[], extras: ExtraOption[]): string[] {
+  const kept: string[] = [];
+  for (const id of ids) {
+    if (kept.includes(id)) continue;
+    const option = extras.find((e) => e.id === id);
+    const conflicts = kept.some((k) => {
+      const other = extras.find((e) => e.id === k);
+      return option?.excludes?.includes(k) || other?.excludes?.includes(id);
+    });
+    if (!conflicts) kept.push(id);
+  }
+  return kept;
+}
+
+export function normalizeSelection(vehicle: ClientVehicle, selection: Partial<VehicleSelection>): VehicleSelection {
   const trim = vehicle.trims.find((t) => t.id === selection.trimId) ?? vehicle.trims[0];
   const base = defaultSelection(vehicle, trim.id);
   const paints = availablePaints(vehicle, trim.id);
@@ -103,11 +110,14 @@ export function normalizeSelection(vehicle: Vehicle, selection: Partial<VehicleS
     paintId: paints.some((p) => p.id === selection.paintId) ? (selection.paintId as string) : base.paintId,
     wheelId: wheels.some((w) => w.id === selection.wheelId) ? (selection.wheelId as string) : base.wheelId,
     interiorId: interiors.some((i) => i.id === selection.interiorId) ? (selection.interiorId as string) : base.interiorId,
-    extraIds: (selection.extraIds ?? []).filter((id) => extras.some((e) => e.id === id && !isIncludedInTrim(e, trim.id))),
+    extraIds: dedupeExclusive(
+      (selection.extraIds ?? []).filter((id) => extras.some((e) => e.id === id && !isIncludedInTrim(e, trim.id))),
+      extras,
+    ),
   };
 }
 
-export function computeQuote(vehicle: Vehicle, rawSelection: Partial<VehicleSelection>): Quote {
+export function computeQuote(vehicle: ClientVehicle, rawSelection: Partial<VehicleSelection>): Quote {
   const selection = normalizeSelection(vehicle, rawSelection);
   const trim = vehicle.trims.find((t) => t.id === selection.trimId) ?? vehicle.trims[0];
   const paint = vehicle.paints.find((p) => p.id === selection.paintId) ?? vehicle.paints[0];

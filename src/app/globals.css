@@ -131,7 +131,18 @@ body {
   color: #fff;
 }
 
+@media print {
+  /* Scroll-reveal states must never hide content on paper. */
+  [style*="transition-delay"] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .snap-page {
+    scroll-snap-type: none;
+  }
   *,
   *::before,
   *::after {

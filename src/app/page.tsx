@@ -77,8 +77,8 @@ export default async function HomePage() {
       </section>
 
       <div id="featured" />
-      {showcase.map((v, i) => (
-        <ShowcaseSection key={v.slug} vehicle={v} locale={locale} priority={i === 0} />
+      {showcase.map((v) => (
+        <ShowcaseSection key={v.slug} vehicle={v} locale={locale} priority={false} />
       ))}
 
       {/* Remaining line-up */}

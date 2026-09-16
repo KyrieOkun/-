@@ -3,7 +3,7 @@ import { z } from "zod";
 export const tradeInSchema = z.object({
   brand: z.string().trim().min(1).max(30),
   model: z.string().trim().min(1).max(60),
-  year: z.number().int().min(2010).max(2026),
+  year: z.number().int().min(2010).max(new Date().getFullYear() + 1),
   mileageKm: z.number().int().min(0).max(600_000),
   condition: z.enum(["excellent", "good", "fair"]),
   originalPrice: z.number().min(30_000).max(5_000_000),
@@ -50,7 +50,9 @@ export function estimateTradeIn(input: TradeInInput, now = new Date()): TradeInE
   const sourceIsXiaomi = brand.includes("xiaomi") || brand.includes("小米");
   const sourceIsTesla = brand.includes("tesla") || brand.includes("特斯拉");
   const crossBrand = Boolean(input.targetBrand && ((input.targetBrand === "xiaomi" && sourceIsTesla) || (input.targetBrand === "tesla" && sourceIsXiaomi)));
-  const subsidy = input.targetBrand ? (crossBrand ? CROSS_BRAND_BONUS : SAME_BRAND_BONUS) : 0;
+  const sameBrand = Boolean(input.targetBrand && ((input.targetBrand === "xiaomi" && sourceIsXiaomi) || (input.targetBrand === "tesla" && sourceIsTesla)));
+  // Third-party brands (BYD, BMW, …) get neither bonus — matches the published rule.
+  const subsidy = crossBrand ? CROSS_BRAND_BONUS : sameBrand ? SAME_BRAND_BONUS : 0;
   const validUntil = new Date(now.getTime() + 7 * 86_400_000).toISOString();
 
   return {

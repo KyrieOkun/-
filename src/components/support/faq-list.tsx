@@ -26,13 +26,14 @@ export function FaqList({ faqs }: { faqs: Faq[] }) {
   return (
     <div>
       <div className="flex flex-wrap items-center gap-2">
-        <button onClick={() => setGroup("all")} className={cn("h-9 rounded-pill px-4 text-sm font-medium transition-colors", group === "all" ? "bg-ink text-white" : "bg-mist text-graphite hover:bg-line")}>{t.common.all}</button>
+        <button type="button" aria-pressed={group === "all"} onClick={() => setGroup("all")} className={cn("h-9 rounded-pill px-4 text-sm font-medium transition-colors focus-ring", group === "all" ? "bg-ink text-white" : "bg-mist text-graphite hover:bg-line")}>{t.common.all}</button>
         {GROUPS.map((g) => (
-          <button key={g} onClick={() => setGroup(g)} className={cn("h-9 rounded-pill px-4 text-sm font-medium transition-colors", group === g ? "bg-ink text-white" : "bg-mist text-graphite hover:bg-line")}>{groupLabel[g]}</button>
+          <button key={g} type="button" aria-pressed={group === g} onClick={() => setGroup(g)} className={cn("h-9 rounded-pill px-4 text-sm font-medium transition-colors focus-ring", group === g ? "bg-ink text-white" : "bg-mist text-graphite hover:bg-line")}>{groupLabel[g]}</button>
         ))}
         <label className="relative ml-auto min-w-[220px] flex-1 sm:flex-none">
+          <span className="sr-only">{t.common.search}</span>
           <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-ash" />
-          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t.common.search} className="h-9 w-full rounded-pill border border-line bg-white pl-9 pr-4 text-sm focus:border-ink focus:outline-none" />
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t.common.search} className="h-9 w-full rounded-pill border border-line bg-white pl-9 pr-4 text-sm focus:border-ink focus:outline-none" />
         </label>
       </div>
       <ul className="mt-6 divide-y divide-line rounded-3xl bg-white px-6 hairline">
@@ -40,11 +41,13 @@ export function FaqList({ faqs }: { faqs: Faq[] }) {
           const expanded = open === f.id;
           return (
             <li key={f.id}>
-              <button type="button" onClick={() => setOpen(expanded ? null : f.id)} aria-expanded={expanded} className="flex w-full items-center justify-between gap-4 py-5 text-left focus-ring rounded">
-                <span className="font-medium">{pick(f.q)}</span>
-                <ChevronDown className={cn("size-5 shrink-0 text-ash transition-transform", expanded && "rotate-180")} />
-              </button>
-              <div className={cn("grid transition-all duration-300", expanded ? "grid-rows-[1fr] pb-5 opacity-100" : "grid-rows-[0fr] opacity-0")}>
+              <h3 className="m-0 text-base font-medium">
+                <button type="button" onClick={() => setOpen(expanded ? null : f.id)} aria-expanded={expanded} aria-controls={`faq-${f.id}`} className="flex w-full items-center justify-between gap-4 py-5 text-left focus-ring rounded">
+                  <span>{pick(f.q)}</span>
+                  <ChevronDown className={cn("size-5 shrink-0 text-ash transition-transform", expanded && "rotate-180")} />
+                </button>
+              </h3>
+              <div id={`faq-${f.id}`} aria-hidden={!expanded} className={cn("grid transition-[grid-template-rows,opacity] duration-300", expanded ? "grid-rows-[1fr] pb-5 opacity-100" : "invisible grid-rows-[0fr] opacity-0")}>
                 <p className="overflow-hidden text-sm leading-7 text-graphite">{pick(f.a)}</p>
               </div>
             </li>

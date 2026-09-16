@@ -8,8 +8,9 @@ import { ChevronDown, Globe, Menu, User, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n/provider";
 import { useHeaderTheme } from "./header-theme";
+import { useScrollLock } from "@/lib/use-scroll-lock";
 import type { L10n } from "@/lib/i18n/types";
-import { formatPriceHeadline } from "@/lib/utils";
+import { formatPriceFrom, formatPriceHeadline } from "@/lib/utils";
 
 export interface HeaderVehicle {
   slug: string;
@@ -28,17 +29,29 @@ export interface HeaderUser {
 interface Props {
   vehicles: HeaderVehicle[];
   user: HeaderUser | null;
+  /** Server-known hero routes so the very first paint is already transparent. */
+  heroRoutes?: Record<string, "overlay" | "overlay-dark">;
 }
 
-export function SiteHeader({ vehicles, user }: Props) {
-  const { t, locale, pick, setLocale } = useI18n();
-  const { mode } = useHeaderTheme();
+export function SiteHeader({ vehicles, user, heroRoutes }: Props) {
+  const { t, locale, pick, setLocale, switching } = useI18n();
+  const { mode: contextMode } = useHeaderTheme();
   const pathname = usePathname();
+  const mode = contextMode !== "solid" ? contextMode : heroRoutes?.[pathname] ?? "solid";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [mega, setMega] = useState<null | "vehicles" | "connect" | "discover">(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
+
+  // Move focus into the sheet when it opens; back to the burger when it closes.
+  useEffect(() => {
+    if (open) {
+      const first = sheetRef.current?.querySelector<HTMLElement>("a, button");
+      first?.focus();
+    }
+  }, [open]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -48,16 +61,14 @@ export function SiteHeader({ vehicles, user }: Props) {
   }, []);
 
   useEffect(() => {
-    setOpen(false);
+    setOpen((was) => {
+      if (was) menuButtonRef.current?.focus();
+      return false;
+    });
     setMega(null);
   }, [pathname]);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
+  useScrollLock(open);
 
   useEffect(() => {
     if (!open && !mega) return;
@@ -115,7 +126,7 @@ export function SiteHeader({ vehicles, user }: Props) {
       </a>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
+          "fixed inset-x-0 top-0 z-50 transition-colors duration-300 print:hidden",
           transparent ? "bg-transparent" : "glass border-b border-ink/5",
           textColor,
           overlay && "[text-shadow:0_1px_2px_rgba(0,0,0,0.35)]",
@@ -133,7 +144,7 @@ export function SiteHeader({ vehicles, user }: Props) {
             <span className={cn("ml-1 hidden text-[10px] font-semibold tracking-[0.3em] sm:inline", overlay ? "text-white/60" : "text-ash")}>ATELIER</span>
           </Link>
 
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          <nav className="hidden items-center gap-1 lg:flex" aria-label={t.a11y.primaryNav}>
             <NavItem label={t.nav.vehicles} active={mega === "vehicles"} current={isCurrent(["/vehicles", "/compare"])} onEnter={() => openMega("vehicles")} href="/vehicles" />
             <NavItem label={t.nav.connect} active={mega === "connect"} current={isCurrent(["/connect", "/service", "/trade-in"])} onEnter={() => openMega("connect")} href="/connect" />
             <NavItem label={t.nav.charging} current={isCurrent(["/charging"])} onEnter={() => setMega(null)} href="/charging" />
@@ -148,11 +159,13 @@ export function SiteHeader({ vehicles, user }: Props) {
             <button
               type="button"
               onClick={() => setLocale(locale === "zh" ? "en" : "zh")}
-              className="inline-flex h-9 items-center gap-1.5 rounded-pill px-3 text-sm font-medium hover:bg-current/5 focus-ring"
-              aria-label={t.nav.language}
+              className={cn("inline-flex h-9 items-center gap-1.5 rounded-pill px-3 text-sm font-medium hover:bg-current/5 focus-ring", switching && "opacity-60")}
+              aria-label={t.a11y.switchLang}
+              aria-busy={switching}
+              disabled={switching}
             >
-              <Globe className="size-4" />
-              <span>{locale === "zh" ? "EN" : "中文"}</span>
+              <Globe className={cn("size-4", switching && "animate-spin")} />
+              <span lang={locale === "zh" ? "en" : "zh-CN"}>{locale === "zh" ? "EN" : "中文"}</span>
             </button>
             <Link href={user ? "/account" : "/account?mode=login"} className="inline-flex h-9 items-center gap-1.5 rounded-pill px-3 text-sm font-medium hover:bg-current/5 focus-ring" aria-label={t.nav.account}>
               <User className="size-4" />
@@ -224,6 +237,10 @@ export function SiteHeader({ vehicles, user }: Props) {
       {/* Mobile sheet */}
       <div
         id="mobile-menu"
+        ref={sheetRef}
+        role="dialog"
+        aria-modal={open || undefined}
+        aria-label={t.a11y.primaryNav}
         className={cn(
           "fixed inset-0 z-40 bg-white text-ink transition-[opacity,visibility] duration-200 lg:hidden",
           open ? "visible pointer-events-auto opacity-100" : "invisible pointer-events-none opacity-0",
@@ -301,7 +318,7 @@ function BrandColumn({ title, tone, items, pick, locale }: { title: string; tone
               </span>
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{pick(v.name)}</span>
-                <span className="block text-xs text-slate">{formatPriceHeadline(v.price, locale)} {locale === "zh" ? "起" : ""}</span>
+                <span className="block text-xs text-slate">{formatPriceFrom(v.price, locale)}</span>
               </span>
             </Link>
           </li>

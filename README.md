@@ -12,7 +12,7 @@
 | 模块 | 路径 | 说明 |
 | --- | --- | --- |
 | 首页 | `/` | 全屏车型陈列（Tesla / 小米官网式分屏）、联动亮点、充电网络、定制工坊、资讯 |
-| 车型 | `/vehicles` `/vehicles/[slug]` | 10 款在售车型（新一代 SU7、YU7 系列、SU7 Ultra、YU7 GT、澎程 N90、Model 3 / Y / S / X、Cybertruck）品牌 / 车身 / 排序筛选，详情页含版本、亮点、颜色轮毂内饰、图集、参数、质保、JSON-LD |
+| 车型 | `/vehicles` `/vehicles/[slug]` | 10 款车型（9 款在售：新一代 SU7、YU7 系列、SU7 Ultra、YU7 GT、澎程 N90、Model 3 / Y / S / X；Cybertruck 为海外车型，仅登记关注）品牌 / 车身 / 排序筛选，详情页含版本、亮点、颜色轮毂内饰、图集、参数、质保、JSON-LD |
 | 在线选配 | `/vehicles/[slug]/design` | 版本 → 车漆 → 轮毂 → 内饰 → 选装，实时计价（含 2026-2027 购置税减半估算、月供、交付周期、续航修正），URL 可分享 |
 | 车型对比 | `/compare` | 最多 4 款跨品牌对比，版本切换，仅显示差异 |
 | 联动中心 | `/connect` | 九大联动能力总览与四步接入 |
@@ -51,7 +51,7 @@
 - **Tailwind CSS v4** 设计系统（Tesla 中性灰阶 + 小米橙 / 特斯拉红点缀 + 定制金）
 - **Zod** 请求校验，**jose** 会话 JWT（httpOnly Cookie），`scrypt` 密码哈希
 - 持久化：Upstash Redis（REST，零依赖）或内存存储（开发 / 预览）
-- **Vitest + Testing Library**：44 项单元 / 组件测试（计价、购置税、行程规划、置换、i18n 键一致性、数据完整性、鉴权、组件渲染）
+- **Vitest + Testing Library**：50 项单元 / 组件测试（计价、购置税、行程规划、置换、i18n 键一致性、数据完整性、鉴权、组件渲染）
 - SEO：`sitemap.xml`、`robots.txt`、Open Graph 图、Car / NewsArticle / FAQPage JSON-LD、canonical
 - PWA：`manifest.webmanifest` 与动态生成的图标
 - 安全：CSP、HSTS、X-Frame-Options、Referrer-Policy、Permissions-Policy、速率限制
@@ -79,6 +79,14 @@ npm run dev                  # http://localhost:3000
 | `npm run assets` | 从品牌官网增量拉取车型官方图片 |
 
 ---
+
+## 安全与订单访问模型
+
+- 会话为 HS256 JWT，`jti` 同时写入存储；登出即撤销，令牌失窃后无法继续使用。
+- 未登录下单的订单通过签名 httpOnly Cookie（`mta_orders`）绑定到当前浏览器；「订单查询」用订单号 + 手机号一次性 POST 换取授权，手机号不会出现在 URL 中，也不会与未验证的账号手机号合并。
+- 定金状态初始为「待支付」，由 `POST /api/orders/[id]/pay` 确认（生产环境替换为支付网关签名回调）。
+- `/api/*` 的写操作由 `src/middleware.ts` 做同源校验（`Origin` / `Sec-Fetch-Site`），请求体限制 32 KB，所有表单接口带速率限制并按目录校验车型 / 门店 / 项目 ID。
+- 生产环境缺少 Upstash 凭据时进程拒绝启动，避免误用易失的内存存储。
 
 ## 部署
 
@@ -108,7 +116,7 @@ docker run -d --name atelier -p 3000:3000 \
 ### 生产清单
 
 - [x] `AUTH_SECRET` 已设置（缺失时生产构建的鉴权接口会拒绝服务）
-- [x] Redis 持久化已配置（否则订单 / 账户在进程重启后丢失）
+- [x] Redis 持久化已配置（生产环境缺少 Upstash 凭据时进程会拒绝启动；仅调试可设 `ALLOW_MEMORY_STORE=true`）
 - [x] `NEXT_PUBLIC_SITE_URL` 指向正式域名（影响 sitemap / OG / JSON-LD）
 - [x] 中国大陆部署填写 ICP / 公安备案号
 - [ ] 接入正式支付（`/api/orders` 中标注了 PSP 回调位置）与短信服务商
