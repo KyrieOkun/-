@@ -118,6 +118,7 @@ export function SiteHeader({ vehicles, user }: Props) {
           "fixed inset-x-0 top-0 z-50 transition-colors duration-300",
           transparent ? "bg-transparent" : "glass border-b border-ink/5",
           textColor,
+          overlay && "[text-shadow:0_1px_2px_rgba(0,0,0,0.35)]",
         )}
         onMouseLeave={scheduleClose}
         onBlur={(e) => {
