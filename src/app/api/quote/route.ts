@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fail, ok, parseBody } from "@/lib/api";
+import { fail, ok, parseBody, rateLimit } from "@/lib/api";
 import { getVehicle } from "@/data/vehicles";
 import { computeQuote } from "@/lib/pricing";
 
@@ -9,10 +9,12 @@ const schema = z.object({
   paintId: z.string().optional(),
   wheelId: z.string().optional(),
   interiorId: z.string().optional(),
-  extraIds: z.array(z.string()).default([]),
+  extraIds: z.array(z.string().max(40)).max(32).default([]),
 });
 
 export async function POST(request: Request) {
+  const limited = rateLimit(request, "quote", 60);
+  if (limited) return limited;
   const parsed = await parseBody(request, schema);
   if ("error" in parsed) return parsed.error;
   const vehicle = getVehicle(parsed.data.vehicleSlug);

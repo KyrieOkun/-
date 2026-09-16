@@ -15,6 +15,7 @@ export type Collection =
   | "tradeIns"
   | "serviceBookings"
   | "consultations"
+  | "interests"
   | "garage"
   | "keys"
   | "newsletter";
@@ -23,6 +24,8 @@ interface Driver {
   get<T>(key: string): Promise<T | null>;
   mget<T>(keys: string[]): Promise<(T | null)[]>;
   set<T>(key: string, value: T, ttlSeconds?: number): Promise<void>;
+  /** Set only if the key does not exist; returns whether it was written. */
+  setnx<T>(key: string, value: T, ttlSeconds?: number): Promise<boolean>;
   del(key: string): Promise<void>;
   sadd(key: string, member: string): Promise<void>;
   srem(key: string, member: string): Promise<void>;
@@ -47,6 +50,11 @@ class MemoryDriver implements Driver {
   }
   async set<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
     this.data.set(key, { value, expiresAt: ttlSeconds ? Date.now() + ttlSeconds * 1000 : undefined });
+  }
+  async setnx<T>(key: string, value: T, ttlSeconds?: number): Promise<boolean> {
+    if ((await this.get(key)) !== null) return false;
+    await this.set(key, value, ttlSeconds);
+    return true;
   }
   async del(key: string): Promise<void> {
     this.data.delete(key);
@@ -93,6 +101,13 @@ class UpstashDriver implements Driver {
     if (ttlSeconds) await this.command("SET", key, payload, "EX", ttlSeconds);
     else await this.command("SET", key, payload);
   }
+  async setnx<T>(key: string, value: T, ttlSeconds?: number): Promise<boolean> {
+    const payload = JSON.stringify(value);
+    const result = ttlSeconds
+      ? await this.command<string | null>("SET", key, payload, "EX", ttlSeconds, "NX")
+      : await this.command<string | null>("SET", key, payload, "NX");
+    return result === "OK";
+  }
   async del(key: string): Promise<void> {
     await this.command("DEL", key);
   }
@@ -115,6 +130,11 @@ function createDriver(): Driver {
   const url = process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.UPSTASH_REDIS_REST_TOKEN;
   if (url && token) return new UpstashDriver(url, token);
+  if (process.env.NODE_ENV === "production" && process.env.ALLOW_MEMORY_STORE !== "true") {
+    throw new Error(
+      "No persistent store configured: set UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN (or ALLOW_MEMORY_STORE=true to knowingly run with a volatile in-memory store).",
+    );
+  }
   return new MemoryDriver();
 }
 
@@ -159,6 +179,26 @@ export const store = {
 
   async setLookup(col: Collection, field: string, value: string, id: string): Promise<void> {
     await driver().set(lookupKey(col, field, value), id);
+  },
+
+  /** Atomically reserves a unique lookup value (phone, email, VIN); false when already taken. */
+  async claimLookup(col: Collection, field: string, value: string, id: string): Promise<boolean> {
+    return driver().setnx(lookupKey(col, field, value), id);
+  },
+
+  async releaseLookup(col: Collection, field: string, value: string): Promise<void> {
+    await driver().del(lookupKey(col, field, value));
+  },
+
+  /** Small key/value helpers with TTL for sessions and similar ephemeral state. */
+  async setValue<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
+    await driver().set(`${PREFIX}:kv:${key}`, value, ttlSeconds);
+  },
+  async getValue<T>(key: string): Promise<T | null> {
+    return driver().get<T>(`${PREFIX}:kv:${key}`);
+  },
+  async deleteValue(key: string): Promise<void> {
+    await driver().del(`${PREFIX}:kv:${key}`);
   },
 
   async getByLookup<T>(col: Collection, field: string, value: string): Promise<T | null> {

@@ -1,14 +1,15 @@
 import { z } from "zod";
 import { created, ok, parseBody, rateLimit } from "@/lib/api";
 import { store } from "@/lib/store";
+import { getVehicle } from "@/data/vehicles";
 import { getCurrentUser } from "@/lib/auth";
-import { generateId, isValidCNPhone } from "@/lib/utils";
+import { generateId, isValidCNPhone, normalizePhone } from "@/lib/utils";
 import { estimateTradeIn, tradeInSchema } from "@/lib/trade-in";
 
 const applySchema = tradeInSchema.extend({
   name: z.string().trim().min(1).max(40),
-  phone: z.string().trim().refine(isValidCNPhone, "INVALID_PHONE"),
-  targetVehicleSlug: z.string().optional(),
+  phone: z.string().trim().refine(isValidCNPhone, "INVALID_PHONE").transform(normalizePhone),
+  targetVehicleSlug: z.string().refine((slug) => !!getVehicle(slug), "UNKNOWN_VEHICLE").optional(),
 });
 
 export async function POST(request: Request) {

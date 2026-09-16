@@ -37,7 +37,25 @@ describe("garage telemetry", () => {
   it("validates and generates VINs", () => {
     expect(isValidVin("HXMABC1234567890K")).toBe(true);
     expect(isValidVin("IOQ00000000000000")).toBe(false);
-    expect(isValidVin(generateDemoVin("tesla", "seed"))).toBe(true);
-    expect(generateDemoVin("tesla", "seed").startsWith("LRW")).toBe(true);
+    expect(isValidVin(generateDemoVin("tesla"))).toBe(true);
+    expect(generateDemoVin("tesla").startsWith("LRW")).toBe(true);
+  });
+});
+
+describe("charging progress", () => {
+  it("does not reset when unrelated commands are issued mid-charge", async () => {
+    const { applyCommand, computeStatus } = await import("@/lib/garage");
+    const base = {
+      id: "GV-1", ownerId: "u", vehicleSlug: "xiaomi-su7", trimId: "max", vin: "HXMABC1234567890K", nickname: "t", createdAt: new Date().toISOString(),
+      state: { locked: true, climateOn: false, targetTemp: 22, charging: false, pluggedIn: false, sentry: true },
+    };
+    const charging = applyCommand(base, "charge_start");
+    const startedAt = new Date(charging.state.chargeStartedAt!).getTime();
+    const later = startedAt + 30 * 60_000;
+    const before = computeStatus(charging, later).batteryPercent;
+    const locked = applyCommand(charging, "lock");
+    const after = computeStatus(locked, later).batteryPercent;
+    expect(after).toBe(before);
+    expect(after).toBeGreaterThan(computeStatus(charging, startedAt).batteryPercent);
   });
 });

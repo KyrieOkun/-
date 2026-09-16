@@ -23,10 +23,11 @@ export function OrderLookup() {
     setError(null);
     setLoading(true);
     const id = orderNo.trim().toUpperCase();
-    const res = await apiFetch(`/api/orders/${encodeURIComponent(id)}?phone=${encodeURIComponent(phone)}`);
+    // The phone is posted once; the server grants this browser access via a signed cookie.
+    const res = await apiFetch(`/api/orders/lookup`, { method: "POST", json: { orderId: id, phone } });
     setLoading(false);
-    if (!res.ok) return setError(t.order.notFound);
-    router.push(`/order/${id}?phone=${encodeURIComponent(phone)}`);
+    if (!res.ok) return setError(res.status === 429 ? t.common.error : t.order.notFound);
+    router.push(`/order/${id}`);
   }
 
   return (

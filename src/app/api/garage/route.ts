@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   const trim = getTrim(vehicle, parsed.data.trimId);
   const existing = await store.list<GarageVehicle>("garage", user.id);
   if (existing.length >= 6) return fail("GARAGE_FULL", 409);
-  const vin = parsed.data.vin && parsed.data.vin.length > 0 ? parsed.data.vin.toUpperCase() : generateDemoVin(vehicle.brand, user.id);
+  const vin = parsed.data.vin && parsed.data.vin.length > 0 ? parsed.data.vin.toUpperCase() : generateDemoVin(vehicle.brand);
   if (!isValidVin(vin)) return fail("INVALID_VIN", 422);
   if (existing.some((g) => g.vin === vin)) return fail("VIN_EXISTS", 409);
   const gv: GarageVehicle = {
@@ -51,6 +51,8 @@ export async function POST(request: Request) {
     createdAt: new Date().toISOString(),
     state: { locked: true, climateOn: false, targetTemp: 22, charging: false, pluggedIn: false, sentry: true },
   };
+  // A VIN can only live in one garage site-wide (atomic reservation).
+  if (!(await store.claimLookup("garage", "vin", vin, gv.id))) return fail("VIN_EXISTS", 409);
   await store.put("garage", gv, { owner: user.id });
   return created({ vehicle: { ...gv, status: computeStatus(gv) } });
 }

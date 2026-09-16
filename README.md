@@ -108,7 +108,7 @@ docker run -d --name atelier -p 3000:3000 \
 ### 生产清单
 
 - [x] `AUTH_SECRET` 已设置（缺失时生产构建的鉴权接口会拒绝服务）
-- [x] Redis 持久化已配置（否则订单 / 账户在进程重启后丢失）
+- [x] Redis 持久化已配置（生产环境缺少 Upstash 凭据时进程会拒绝启动；仅调试可设 `ALLOW_MEMORY_STORE=true`）
 - [x] `NEXT_PUBLIC_SITE_URL` 指向正式域名（影响 sitemap / OG / JSON-LD）
 - [x] 中国大陆部署填写 ICP / 公安备案号
 - [ ] 接入正式支付（`/api/orders` 中标注了 PSP 回调位置）与短信服务商
